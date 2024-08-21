@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/bs5/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+
+    {% block style %}{% endblock %}
+
+</head>
+<body>
+<div id="wrap" class="container">
+    {% include 'include/header.html' %}
+    <hr>
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+    <hr>
+    {% include 'include/footer.html' %}
+</div>
+{% block script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'include/base.html' %}
+
+{% block title %}홈페이지 - 세미프로젝트{% endblock %}
+
+{% block main %}
+        <main>
+            <h2>로그인</h2>
+            <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
+                <form name="loginfrm" method="post" class="col-5">
+                <div class="row my-2"><label for="userid" class="col-form-label col-4 text-end">아이디</label>
+                    <div class="col-7">
+                    <input type="text" name="userid" id="userid" required class="form-control"></div></div>
+                <div class="row my-2"><label for="passwd" class="col-form-label col-4 text-end">비밀번호</label>
+                    <div class="col-7">
+                    <input type="text" name="passwd" id="passwd" required class="form-control"></div></div>
+                <div class="row my-2"><label class="col-form-label col-4 text-end"></label>
+                    <div class="col-7">
+                    <button type="submit" id="loginbtn" class="btn btn-danger">로그인</button></div></div>
+                </form>
+            </div>
+        </main>
+{% endblock %}
