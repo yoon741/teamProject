@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 class NewMember(BaseModel):
     userid: str
     passwd: str

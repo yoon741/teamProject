@@ -56,10 +56,6 @@
                     <div id='captcha'></div>
                 </div>
             </div>
-
-            <!--css 스타일시트나 자바스크립트 연계용으로 쓰기위해
-                submit이 아닌 button으로 남겨둔다-->
-
             <div class="row my-2"><label class="col-4 text-end"></label>
                 <div class="col-7">
                     <button type="button" id="joinbtn" class="btn btn-primary">입력완료</button>
@@ -80,38 +76,33 @@
     let joinbtn = document.querySelector('#joinbtn');
     let joinfrm = document.joinfrm;
 
-    // 회원가입 폼 체크 함수
+    // 회원 가입 폼 체크 함수
     let checkjoinfrm = (frm) => {
-        if (frm.userid.value === ''){
+        if (frm.userid.value === '') {
             alert('아이디를 입력하세요!');
             frm.userid.focus();
             return false;
-        }
-        else if (frm.passwd.value === ''){
+        } else if (frm.passwd.value === '') {
             alert('비밀번호를 입력하세요!');
-            frm.userid.focus();
+            frm.passwd.focus();
             return false;
-        }
-        else if (frm.passwdre.value === ''){
+        } else if (frm.repasswd.value === '') {
             alert('비밀번호 확인을 입력하세요!');
-            frm.userid.focus();
+            frm.repasswd.focus();
             return false;
-        }
-        else if (frm.passwdre.value !== frm.passwd.value){
+        } else if (frm.repasswd.value !== frm.passwd.value) {
             alert('비밀번호가 일치하지 않아요!');
-            frm.userid.focus();
+            frm.repasswd.focus();
             return false;
-        }
-        else if (frm.name.value === ''){
+        } else if (frm.name.value === '') {
             alert('이름을 입력하세요!');
-            frm.userid.focus();
+            frm.name.focus();
             return false;
-        }
-        else if (frm.email.value === ''){
+        } else if (frm.email.value === '') {
             alert('이메일을 입력하세요!');
-            frm.userid.focus();
+            frm.email.focus();
             return false;
-        } else if (grecaptcha.getResponse() === ''){
+        } else if (grecaptcha.getResponse() === '') {
             alert('자동가입방지를 클릭하세요!');
             return false;
         } else {
@@ -121,25 +112,24 @@
     };
 
     joinbtn.addEventListener('click', () => {
-        // 회원정보 입력여부 검사
+        // 회원정보 입력 여부 검사
         if (!checkjoinfrm(joinfrm)) return;
 
-        //폼에 입력된 회원 정보를 초기화 함
-        const formData = new FormData(joinfrm)
-        console.log(formData)
+        // 폼에 입력된 회원 정보를 초기화함
+        const formData = new FormData(joinfrm);
+        console.log(formData);
 
-        //서버로 보내기 위해 폼데이터를 JSON객체로 변환
+        // 서버로 보내기 위해 폼데이터를 JSON객체로 변환
         let jsondata = {};
-        formData.forEach((val, key)=>{
+        formData.forEach((val, key) => {
             jsondata[key] = val;
         });
-
         // 캡챠 응답코드 추가
         jsondata['captcha'] = grecaptcha.getResponse();
 
         console.log(jsondata);
 
-        //ajax 이용해서 서버로 json데이터 전송하고, 결과 받음
+        // ajax를 이용해서 서버로 json 데이터 전송하고, 결과 받음
         fetch('/member/join', {
             method: 'POST',   // 데이터 전송방식
             headers: {        // 전송할 데이터 종류
@@ -147,13 +137,13 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(jsondata), // 전송할 데이터
-            //문자열을 json으로 변환
-            redirect: 'follow'             // 서버응답시 처리방식 지정
+            // 문자열을 json으로 변환
+            redirect: 'follow'       // 서버 응답시 처리방식 지정
         }).then((res) => {
             if (res.redirected) location.href = res.url;
-            // 서버에서 응답해준 url로 이동
-        }); //fetch
-    }); //addEventListener
+            // 서버에서 응답해 준 url로 이동
+        }); // fetch
+    }); // addEventListener
 
 </script>
 {% endblock %}
