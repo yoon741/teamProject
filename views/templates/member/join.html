@@ -1,7 +1,7 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-세미프로젝트 - 회원관리
+세미프로젝트 - 회원가입
 {% endblock %}
 
 {% block style %}
@@ -9,12 +9,10 @@
         async defer></script>
 <script type="text/javascript">
     var onloadCallback = () => {
-        // 구글 캡챠 사이트키 넣는곳
         grecaptcha.render('captcha', { 'sitekey' : '' });
     };
 </script>
 {% endblock %}
-
 
 {% block main %}
 <main>
@@ -25,53 +23,36 @@
                 <div class="col-7">
                     <input type="text" name="userid" id="userid"
                            minlength="6" maxlength="18" required class="form-control"></div></div>
-
             <div class="row my-2"><label for="passwd" class="col-form-label col-4 text-end">비밀번호</label>
                 <div class="col-7">
                     <input type="text" name="passwd" id="passwd"
                            minlength="6" maxlength="18" required class="form-control"></div></div>
-
-            <div class="row my-2"><label for="passwdre" class="col-form-label col-4 text-end">비밀번호 확인</label>
+            <div class="row my-2"><label for="repasswd" class="col-form-label col-4 text-end">비밀번호 확인</label>
                 <div class="col-7">
-                    <input type="text" name="passwdre" id="passwdre"
+                    <input type="text" name="repasswd" id="repasswd"
                            minlength="6" maxlength="18" required class="form-control"></div></div>
-
-            <div class="row my-2">
-                <label for="name" class="col-form-label col-4 text-end">이름</label>
+            <div class="row my-2"><label for="name" class="col-form-label col-4 text-end">이름</label>
                 <div class="col-7">
-                    <input type="text" name="name" id="name" required class="form-control">
-                </div>
-            </div>
-
-            <div class="row my-2">
-                <label for="email" class="col-form-label col-4 text-end">이메일</label>
+                    <input type="text" name="name" id="name" required class="form-control"></div></div>
+            <div class="row my-2"><label for="email" class="col-form-label col-4 text-end">이메일</label>
                 <div class="col-7">
-                    <input type="email" name="email" id="email" required class="form-control">
-                </div>
-            </div>
+                    <input type="email" name="email" id="email" required class="form-control"></div></div>
 
-            <div class="row my-2">
-                <label for="captcha" class="col-form-label col-4 text-end">자동가입방지</label>
-                <div class="col-7">
-                    <div id='captcha'></div>
-                </div>
-            </div>
+            <div class="row my-2"><label for="captcha" class="col-form-label col-4 text-end">자동가입방지</label>
+                <div class="col-7"><div id="captcha"></div></div></div>
+
             <div class="row my-2"><label class="col-4 text-end"></label>
                 <div class="col-7">
                     <button type="button" id="joinbtn" class="btn btn-primary">입력완료</button>
-                    <button type="reset" id="rstbtn" class="btn btn-danger">다시입력</button>
-                </div>
-            </div>
+                    <button type="reset" id="rstbtn" class="btn btn-danger">다시입력</button></div></div>
         </form>
     </div>
 </main>
 {% endblock %}
 
-
-
 {% block script %}
 <script>
-    //회원정보를 입력받아 폼 유효성 검사 수행 후
+    // 회원정보를 입력받아 폼 유효성 검사 수행 후
     // 입력한 정보를 json 형식으로 생성한 후 서버로 전송
     let joinbtn = document.querySelector('#joinbtn');
     let joinfrm = document.joinfrm;
@@ -147,5 +128,3 @@
 
 </script>
 {% endblock %}
-
-

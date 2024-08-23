@@ -1,0 +1,82 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - 게시판 목록
+{% endblock %}
+
+{% block style %}
+<style>
+    table { width: 850px; margin: 10px auto;
+        border-collapse: collapse; table-layout: fixed }
+    th, td { border: 1px solid black; padding: 5px 8px;
+        text-align: center; height: 30px }
+    td:nth-child(2) { text-align: left; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis }
+    thead td { border: none; }
+    thead td:first-child { text-align: left }
+    thead td:last-child { text-align: right }
+    select, input{ padding: 5px }
+    button { padding: 3.5px 5px }
+
+    .pagnation { width: 600px; margin: 0 auto }
+    div > ul { list-style: none; padding: 0; }
+    div > ul li { display: inline; padding: 0 15px; }
+    .cpg { color: red; font-size: 30px; font-weight: bold }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+    <h2>게시판 목록</h2>
+    <table>
+        <colgroup>
+            <col style="width: 10%">
+            <col>
+            <col style="width: 15%">
+            <col style="width: 15%">
+            <col style="width: 10%">
+        </colgroup>
+        <thead>
+        <tr><td colspan="3"><select name="findtype" id="findtype">
+            <option value="title">제 목</option>
+            <option value="userid">작성자</option>
+            <option value="contents">본 문</option>
+            <option value="titcont">제목+본문</option>
+        </select>
+            <input type="text" name="search" id="search">
+            <button type="button" id="findbtn">검색하기</button></td>
+            <td colspan="2"><button type="button" id="writebtn" onclick="location.href='/board/write'">글쓰기</button></td></tr>
+        <tr><th>번호</th><th>제목</th><th>작성자</th>
+            <th>작성일</th><th>조회</th></tr>
+        </thead>
+        <tbody>
+        {% for bd in bdlist %}
+        <tr>
+            <td>{{ bd.bno }}</td>
+            <td><a href="/board/view/{{ bd.bno }}">{{ bd.title }}</a></td>
+            <td>{{ bd.userid }}</td>
+            <td>{{ bd.regdate.strftime('%Y-%m-%d') }}</td>
+            <td>{{ bd.views }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagnation">
+        <ul>
+            {% if cpg > 1 %}
+            <li><a href="/board/list/{{ cpg - 1 }}">이전</a></li>
+            {% else %}
+            <li>이전</li>
+            {% endif %}
+
+            {% for idx in range(stpgb, stpgb+10) %}
+            {% if cpg != idx %}
+            <li><a href="/board/list/{{ idx }}">{{ idx }}</a></li>
+            {% else %}
+            <li class="cpg">{{ idx }}</li>
+            {% endif %}
+            {% endfor %}
+            <li><a href="/board/list/{{ cpg + 1 }}">다음</a></li></ul>
+    </div>
+</main>
+{% endblock %}
