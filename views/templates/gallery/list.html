@@ -1,0 +1,108 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - 갤러리 글쓰기
+{% endblock %}
+
+{% block style %}
+<style>
+    table { width: 850px; margin: 10px auto;
+        border-collapse: collapse; table-layout: fixed }
+    th, td { border: 1px solid black; padding: 5px 8px;
+        text-align: center; height: 30px }
+    td:nth-child(2) { text-align: left; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis }
+    thead td { border: none; }
+    thead td:first-child { text-align: left }
+    thead td:last-child { text-align: right }
+    select, input{ padding: 5px }
+    button { padding: 3.5px 5px }
+
+    .pagnation { width: 700px; margin: 0 auto }
+    div > ul { list-style: none; padding: 0; }
+    div > ul li { display: inline; padding: 0 15px; }
+    .cpg { color: red; font-size: 30px; font-weight: bold }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+    <body>
+    <div id="wrap">
+        <header><h1>갤러리 글쓰기</h1></header>
+        <main>
+            <table>
+                <colgroup>
+                    <col style="width: 10%">
+                    <col>
+                    <col style="width: 15%">
+                    <col style="width: 15%">
+                    <col style="width: 10%">
+                </colgroup>
+                <thead>
+                <tr><td colspan="3"><select name="findtype" id="findtype">
+                    <option value="title">제 목</option>
+                    <option value="userid">작성자</option>
+                    <option value="contents">본 문</option>
+                    <option value="titcont">제목+본문</option>
+                </select>
+                    <input type="text" name="search" id="search">
+                    <button type="button" id="findbtn">검색하기</button></td>
+                    <td colspan="2"><button type="button" id="writebtn" onclick="location.href='/gallery/write'">글쓰기</button></td></tr>
+                <tr><th>번호</th><th>제목</th><th>작성자</th>
+                    <th>작성일</th><th>조회</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>1</td><td><a href="/gallery/view?bid=1">시간은 금이라구, 친구!</a></td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                <tr><td>1</td><td>시간은 금이라구, 친구!</td>
+                    <td>zzyzzy</td><td>2024.07.30</td><td>123</td></tr>
+                </tbody>
+            </table>
+            <div class="pagnation">
+                <ul><li>이전</li><li>1</li><li>2</li><li>3</li>
+                    <li>4</li><li class="cpg">5</li><li>6</li><li>7</li>
+                    <li>8</li><li>9</li><li>10</li><li>다음</li></ul>
+            </div>
+</main>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - 게시판 본문보기
+{% endblock %}
+
+{% block style %}
+<style>
+    table { width: 650px; margin: 0 auto; }
+    tr { height: 40px }
+    th { width: 100px }
+    tr:nth-child(4) { vertical-align: top }
+    #listbtn { margin-left: 100px }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+    <h2>게시판 본문보기</h2>
+    <table>
+        <tr><th>제목</th><td>시간은 금이라구, 친구!</td></tr>
+        <tr><th>작성자</th><td>zzyzzy</td></tr>
+        <tr><th>작성일</th><td>2024-07-30 14:15:25</td></tr>
+        <tr><th>본문</th><td>시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구!
+            시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구!
+            시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! 시간은 금이라구, 친구! </td></tr>
+        <tr><td colspan="2">
+            <button type="button" id="listbtn" onclick="location.href='/gallery/list'">리스트로</button>
+            <button type="button" id="mdfybtn" onclick="location.href='/gallery/modify'">수정하기</button>
+            <button type="button" id="rmvbtn">삭제하기</button>
+        </td></tr>
+    </table>
+</main>
+{% endblock %}

@@ -1,3 +1,4 @@
+# 기존 수업 맴버 서비스
 import requests
 from sqlalchemy import insert, select, and_
 from sqlalchemy.exc import SQLAlchemyError
@@ -62,3 +63,4 @@ class MemberService:
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶ selectone_member 오류 발생 : {str(ex)}')
+

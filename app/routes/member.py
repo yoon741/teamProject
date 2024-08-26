@@ -1,3 +1,5 @@
+#기존 수업 member
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.requests import Request
@@ -91,3 +93,5 @@ async def error(req: Request):
 
 
 # 엔드포인트 설정
+
+

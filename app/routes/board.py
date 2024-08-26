@@ -1,3 +1,4 @@
+# 기존 수업 board
 from fastapi import APIRouter, Request
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
@@ -52,3 +53,4 @@ async def write(req: Request):
 @board_router.get('/view', response_class=HTMLResponse)
 async def view(req: Request):
     return templates.TemplateResponse('board/view.html', {'request': req})
+

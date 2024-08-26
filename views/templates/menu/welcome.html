@@ -3,29 +3,56 @@
 {% block title %}홈페이지 - 세미프로젝트{% endblock %}
 
 {% block main %}
+    <hr>
     <main>
-        <h2>회원정보</h2>
-        <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-            <table class="table w-25 table-bordered table-striped">
+        <h2>오시는 길</h2>
+        <div class="container">
+            <div class="row">
+                <!-- 지도 표시 -->
+                <div class="col-md-12 mb-4">
+                    <div id="map" style="width: 100%; height: 500px;"></div> <!-- 지도가 표시될 div -->
+                </div>
 
-                <tr>
-                    <td>아이디</td>
-                    <td>teamProject</td>
-                </tr>
-                <tr>
-                    <td>이름</td>
-                    <td>3조</td>
-                </tr>
-                <tr>
-                    <td>이메일</td>
-                    <td>teamProject@gmail.com</td>
-                </tr>
-                <tr>
-                    <td>가입일</td>
-                    <td>2024.08.21</td>
-                </tr>
-
-            </table>
+                <!-- 설명 텍스트 -->
+                <div class="col-md-12">
+                    <p>
+                        저희 회사는 서울시 강남구 테헤란로 123에 위치하고 있습니다.<br>
+                        지하철 2호선 서울대입구역에서 하차 후 3번 출구로 나와 도보 10초 거리에 있습니다.<br>
+                        차량 이용 시, 회사 건물에 바로 연결된 주차장이 마련되어 있습니다.<br>
+                        <br>
+                        <strong>주소:</strong> 서울시 강남구 테헤란로 123<br>
+                        <strong>전화:</strong> 02-1234-5678
+                    </p>
+                </div>
+            </div>
         </div>
     </main>
+
+    <!-- 네이버 지도 API 스크립트 -->
+    <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID"></script>
+    <script>
+        // 지도 초기화 함수
+        function initMap() {
+            var map = new naver.maps.Map('map', {
+                center: new naver.maps.LatLng(37.3595704, 127.105399), // 지도 중심 좌표
+                zoom: 14 // 줌 레벨
+            });
+
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(37.3595704, 127.105399), // 마커 위치
+                map: map
+            });
+
+            var infoWindow = new naver.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:10px;">서울대입구역</div>'
+            });
+
+            naver.maps.Event.addListener(marker, 'click', function() {
+                infoWindow.open(map, marker);
+            });
+        }
+
+        // 페이지 로드 시 지도 초기화
+        window.onload = initMap;
+    </script>
 {% endblock %}

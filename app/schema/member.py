@@ -1,3 +1,4 @@
+# 수업 맴버 스키마
 from pydantic import BaseModel
 
 class NewMember(BaseModel):
