@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'include/base.html' %}
 
-</body>
-</html>
+{% block title %}
+세미프로젝트 - 오류발생
+{% endblock %}
+
+{% block main %}
+    <main>
+        <h2>admin</h2>
+        <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
+            <img src="/static/img/fail.png">
+        </div>
+    </main>
+{% endblock %}
