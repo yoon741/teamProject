@@ -1,84 +1,81 @@
-<!--<header class="py-3"><h1>세미프로젝트 v1</h1></header>-->
-<!--<nav><ul class="nav nav-fill">-->
-<!--    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>-->
-
-<!--    {% if 'logined_uid' not in request.session %}-->
-<!--    <li class="nav-item"><a class="nav-link" href="/member/join">회원가입</a></li>-->
-<!--    <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>-->
-<!--    {% else %}-->
-<!--    <li class="nav-item"><a class="nav-link disabled">회원가입</a></li>-->
-<!--    <li class="nav-item"><a class="nav-link" href="/member/logout">로그아웃</a></li>-->
-<!--    {% endif %}-->
-
-<!--    <li class="nav-item"><a class="nav-link" href="/board/list">게시판</a></li>-->
-<!--    <li class="nav-item"><a class="nav-link" href="/member/myinfo">회원정보</a></li>-->
-<!--</ul>-->
-<!--    <hr>-->
-<!--</nav>-->
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>코캡 가구 쇼핑몰</title>
+{% block style %}
     <style>
         body {
             margin: 0;
-            background-color: #f5f5dc; /* 전체 페이지 배경색 */
+            background-color: white; /* 전체 페이지 배경색 */
+        }
+        .text-center {
+            position: relative;
+        }
+        a {font-size: 2em;
+            color: black;
+
         }
         header {
             position: relative;
-            height: 130px; /* 헤더의 높이 설정 */
-            background-color: #f5f5dc; /* 헤더 배경색을 베이지색으로 설정 */
-            overflow: hidden; /* 이미지가 헤더 영역을 넘어가지 않도록 설정 */
+            height: 100px; /* 헤더의 높이 설정 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px; /* 헤더 양옆에 패딩 추가 */
+
+            color: black;
         }
-        header img {
-            position: absolute;
-            top: 10px; /* 상단 여백 설정 */
-            left: 10px; /* 좌측 여백 설정 */
-            width: 130px; /* 로고의 너비 설정 */
-            height: auto; /* 로고의 비율 유지 */
-            /* 필요에 따라 이미지의 색상을 조정할 수 있음 */
+
+        nav {
+            flex-grow: 1; /* 네비게이션 바가 로고 옆에 붙고, 공간을 차지하도록 설정 */
         }
         .nav {
             display: flex;
-            justify-content: space-around;
+
             list-style: none;
+            margin: 0;
             padding: 0;
-            background-color: #ffffff; /* 네비게이션 배경색을 흰색으로 설정 */
         }
         .nav-item {
-            margin: 0;
+            margin: 0 10px;
         }
         .nav-link {
             text-decoration: none;
-            padding: 10px;
-            color: #000;
+            color: black;
+
         }
         .nav-link.active {
-            font-weight: bold;
+
         }
-        .nav {
+        .auth-links {
+            margin-left: 190px;
             display: flex;
-            justify-content: space-around;
-            list-style: none;
-            padding: 0;
-            background-color: #f5f5dc !important; /* 배경색 변경 */
+            align-items: center;
+            text-align: right;
+        }
+        .auth-links a {
+            text-decoration: none;
+            margin-left: 10px;
+            color: black;
+            font-size: 15px; /* 글자 크기 설정 */
         }
     </style>
-</head>
-<body>
+    {% endblock %}
+
 <header class="py-3">
-    <img src="/static/img/kocap.png" alt="코캡1 가구 쇼핑몰">
+    <a id="indexh1">KOCAP</a>
+    <nav>
+        <ul class="nav">
+            <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/menu/shop">Shop</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/menu/company">Company</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/menu/welcome">Welcome</a></li>
+        </ul>
+    </nav>
+    <!-- 우측 상단의 회원가입 및 로그인 링크 -->
+    <div class="auth-links">
+        {% if 'logined_uid' not in request.session %}
+        <a href="/member/join">Create an account</a>
+        <a href="/member/login">Sign in</a>
+        {% else %}
+        <a href="/member/logout">로그아웃</a>
+        {% endif %}
+    </div>
 </header>
-<nav>
-    <ul class="nav nav-fill">
-        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/menu/shop">shop</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/menu/company">company</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/menu/welcome">welcome</a></li>
-    </ul>
-</nav>
-</body>
-</html>
+

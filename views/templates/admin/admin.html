@@ -1,14 +1,55 @@
 {% extends 'include/base.html' %}
 
-{% block title %}
-세미프로젝트 - 오류발생
-{% endblock %}
+{% block title %}홈페이지 - 세미프로젝트{% endblock %}
 
 {% block main %}
-    <main>
-        <h2>admin</h2>
-        <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-            <img src="/static/img/fail.png">
-        </div>
-    </main>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .box {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .box:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+<body>
+<div class="container">
+    <div class="box">
+        <a href="/admin/mgproduct">Manage Products</a>
+    </div>
+    <div class="box">
+        <a href="/admin/mguser">Manage Users</a>
+    </div>
+    <div class="box">
+        <a href="/admin/mgorder">Manage Orders</a>
+    </div>
+    <div class="box">
+        <a href="/admin/rgproduct">Register Product</a>
+    </div>
+</div>
+</body>
 {% endblock %}

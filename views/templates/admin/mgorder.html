@@ -1,14 +1,103 @@
 {% extends 'include/base.html' %}
-
-{% block title %}
-세미프로젝트 - 오류발생
-{% endblock %}
+{% block title %}홈페이지 - 세미프로젝트{% endblock %}
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 6px 12px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-view {
+            background-color: #17a2b8;
+        }
+    </style>
 
 {% block main %}
-<main>
-    <h2>mgorder</h2>
-    <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-        <img src="/static/img/fail.png">
-    </div>
-</main>
+<body>
+<h1>Manage Orders</h1>
+<a href="/admin/admin">Back to Admin Dashboard</a>
+<table>
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Customer Name</th>
+        <th>Order Date</th>
+        <th>Status</th>
+        <th>Total Amount</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Sample Data Row -->
+    <tr>
+        <td>1001</td>
+        <td>John Doe</td>
+        <td>2024-08-25</td>
+        <td>Shipped</td>
+        <td>$250</td>
+        <td class="action-btns">
+            <button class="btn btn-view">View</button>
+        </td>
+    </tr>
+    <tr>
+        <td>1002</td>
+        <td>Jane Smith</td>
+        <td>2024-08-26</td>
+        <td>Pending</td>
+        <td>$125</td>
+        <td class="action-btns">
+            <button class="btn btn-view">View</button>
+        </td>
+    </tr>
+    <!-- More rows as needed -->
+    </tbody>
+</table>
+</body>
 {% endblock %}

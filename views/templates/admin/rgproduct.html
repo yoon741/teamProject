@@ -1,14 +1,102 @@
-{% extends 'include/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Register New Product</h1>
+<a href="/admin/admin">Back to Admin Dashboard</a>
+<form action="/submit_product" method="post">
+    <label for="name">Product Name</label>
+    <input type="text" id="name" name="name" placeholder="Enter product name" required>
 
-{% block title %}
-세미프로젝트 - 오류발생
-{% endblock %}
+    <label for="category">Category</label>
+    <select id="category" name="category" required>
+        <option value="">Select a category</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+        <option value="home">Home</option>
+        <option value="beauty">Beauty</option>
+        <option value="sports">Sports</option>
+    </select>
 
-{% block main %}
-<main>
-    <h2>rgproduct</h2>
-    <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-        <img src="/static/img/fail.png">
-    </div>
-</main>
-{% endblock %}
+    <label for="price">Price</label>
+    <input type="number" id="price" name="price" placeholder="Enter product price" required>
+
+    <label for="stock">Stock Quantity</label>
+    <input type="number" id="stock" name="stock" placeholder="Enter stock quantity" required>
+
+    <label for="description">Product Description</label>
+    <textarea id="description" name="description" placeholder="Enter product description"></textarea>
+
+    <button type="submit" class="btn-submit">Register Product</button>
+</form>
+</body>
+</html>
