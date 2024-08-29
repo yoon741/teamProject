@@ -17,3 +17,6 @@ async def order(req: Request):
 async def orderok(req: Request):
     return templates.TemplateResponse("order/orderok.html", {"request": req})
 
+@order_router.get("/myorder", response_class=HTMLResponse)
+async def myorder(req: Request):
+    return templates.TemplateResponse("order/myorder.html", {"request": req})
