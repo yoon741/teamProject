@@ -1,63 +1,54 @@
 {% block style %}
-    <style>
-        body {
-            margin: 0;
-            background-color: white; /* 전체 페이지 배경색 */
-        }
-        .text-center {
-            position: relative;
-        }
-        a {font-size: 2em;
-            color: black;
+<style>
+    body {
+        margin: 0;
+        background-color: white;
+    }
+    a {font-size: 2em;
+        color: black;
+    }
+    header {
+        position: relative;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        color: black;
+    }
+    nav {
+        flex-grow: 1;
+    }
+    .nav {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .nav-item {
+        margin: 0 10px;
+    }
+    .nav-link {
+        text-decoration: none;
+        color: black;
+    }
+    .nav-link.active {
 
-        }
-        header {
-            position: relative;
-            height: 100px; /* 헤더의 높이 설정 */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px; /* 헤더 양옆에 패딩 추가 */
-
-            color: black;
-        }
-
-        nav {
-            flex-grow: 1; /* 네비게이션 바가 로고 옆에 붙고, 공간을 차지하도록 설정 */
-        }
-        .nav {
-            display: flex;
-
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .nav-item {
-            margin: 0 10px;
-        }
-        .nav-link {
-            text-decoration: none;
-            color: black;
-
-        }
-        .nav-link.active {
-
-        }
-        .auth-links {
-            margin-left: 190px;
-            display: flex;
-            align-items: center;
-            text-align: right;
-        }
-        .auth-links a {
-            text-decoration: none;
-            margin-left: 10px;
-            color: black;
-            font-size: 15px; /* 글자 크기 설정 */
-        }
-    </style>
-    {% endblock %}
-
+    }
+    .auth-links {
+        margin-left: 190px;
+        display: flex;
+        align-items: center;
+        text-align: right;
+    }
+    .auth-links a {
+        text-decoration: none;
+        margin-left: 10px;
+        color: black;
+        font-size: 15px;
+    }
+</style>
+{% endblock %}
 <header class="py-3">
     <a id="indexh1">KOCAP</a>
     <nav>
@@ -68,7 +59,6 @@
             <li class="nav-item"><a class="nav-link active" href="/menu/welcome">Welcome</a></li>
         </ul>
     </nav>
-    <!-- 우측 상단의 회원가입 및 로그인 링크 -->
     <div class="auth-links">
         {% if 'logined_uid' not in request.session %}
         <a href="/member/join">Create an account</a>
@@ -78,4 +68,3 @@
         {% endif %}
     </div>
 </header>
-
