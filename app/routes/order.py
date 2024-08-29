@@ -1,29 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.model.order import Order
-from app.schema.order import OrderCreate, OrderRead
-from app.dbfactory import get_db
+from starlette.requests import Request
+from starlette.responses import HTMLResponse, RedirectResponse
+from starlette.templating import Jinja2Templates
 
 order_router = APIRouter()
+templates = Jinja2Templates(directory='views/templates')
 
-# order 라우터 주문번호에 따른 엔드포인트 지정
-# 관리자입장 / 회원입장 라우트 된 엔트포인트가 달라야 한다
+# 주문 페이지 (메인)
+@order_router.get("/order", response_class=HTMLResponse)
+async def order(req: Request):
+    return templates.TemplateResponse("order/order.html", {"request": req})
 
-# ex)
-# member/order/{prdno}
-# admin/order/{prdno}
+# 상품 관리 페이지
+@order_router.get("/orderok", response_class=HTMLResponse)
+async def orderok(req: Request):
+    return templates.TemplateResponse("order/orderok.html", {"request": req})
 
-@order_router.post("/order/", response_model=OrderRead)
-def create_order(order: OrderCreate, db: Session = Depends(get_db)):
-    new_order = Order(**order.dict())
-    db.add(new_order)
-    db.commit()
-    db.refresh(new_order)
-    return new_order
-
-@order_router.get("/order/{omno}", response_model=OrderRead)
-def read_order(omno: int, db: Session = Depends(get_db)):
-    db_order = db.query(Order).filter(Order.omno == omno).first()
-    if not db_order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return db_order
+@order_router.get("/myorder", response_class=HTMLResponse)
+async def myorder(req: Request):
+    return templates.TemplateResponse("order/myorder.html", {"request": req})

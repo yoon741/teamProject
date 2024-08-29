@@ -1,130 +1,223 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-세미프로젝트 - 회원가입
+    세미프로젝트
 {% endblock %}
-
 {% block style %}
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-        async defer></script>
-<script type="text/javascript">
-    var onloadCallback = () => {
-        grecaptcha.render('captcha', { 'sitekey' : '' });
-    };
-</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .header-container {
+            padding: 20px;
+            text-align: left;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .header-container h1 {
+            font-size: 2.4em;
+            margin: 0;
+            color: black;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .header-container h1:hover {
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            max-width: 75%;
+            margin: 20px auto;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+        h1 {
+            font-size: 2.4em;
+            margin-bottom: 50px;
+            color: black;
+            text-align: left;
+        }
+        hr {
+            border: 2px solid black;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="password"] {
+            font-family: Arial, sans-serif;
+        }
+        .btn {
+            display: block;
+            padding: 12px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            color: black;
+            margin-top: auto;
+            box-sizing: border-box;
+            width: 100%;
+        }
+    </style>
 {% endblock %}
-
 {% block main %}
-<main>
-    <h2>회원가입</h2>
-    <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-        <form name="joinfrm" method="post" class="col-5">
-            <div class="row my-2"><label for="userid" class="col-form-label col-4 text-end">아이디</label>
-                <div class="col-7">
-                    <input type="text" name="userid" id="userid"
-                           minlength="6" maxlength="18" required class="form-control"></div></div>
-            <div class="row my-2"><label for="passwd" class="col-form-label col-4 text-end">비밀번호</label>
-                <div class="col-7">
-                    <input type="text" name="passwd" id="passwd"
-                           minlength="6" maxlength="18" required class="form-control"></div></div>
-            <div class="row my-2"><label for="repasswd" class="col-form-label col-4 text-end">비밀번호 확인</label>
-                <div class="col-7">
-                    <input type="text" name="repasswd" id="repasswd"
-                           minlength="6" maxlength="18" required class="form-control"></div></div>
-            <div class="row my-2"><label for="name" class="col-form-label col-4 text-end">이름</label>
-                <div class="col-7">
-                    <input type="text" name="name" id="name" required class="form-control"></div></div>
-            <div class="row my-2"><label for="email" class="col-form-label col-4 text-end">이메일</label>
-                <div class="col-7">
-                    <input type="email" name="email" id="email" required class="form-control"></div></div>
-
-            <div class="row my-2"><label for="captcha" class="col-form-label col-4 text-end">자동가입방지</label>
-                <div class="col-7"><div id="captcha"></div></div></div>
-
-            <div class="row my-2"><label class="col-4 text-end"></label>
-                <div class="col-7">
-                    <button type="button" id="joinbtn" class="btn btn-primary">입력완료</button>
-                    <button type="reset" id="rstbtn" class="btn btn-danger">다시입력</button></div></div>
-        </form>
-    </div>
-</main>
+    <main>
+        <div class="container">
+            <h1>회원가입</h1>
+            <form action="/member/join" method="post" name="joinfrm">
+                <div class="form-group">
+                    <label for="username">name *</label>
+                    <input type="text" id="username" name="username" placeholder="이름을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="userid">ID *</label>
+                    <input type="text" id="userid" name="userid" placeholder="아이디를 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-Mail *</label>
+                    <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">password *</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password *</label>
+                    <input type="password" id="confirm_password" name="repassword" placeholder="비밀번호를 다시 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="전화번호를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" name="address" required placeholder="주소를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="postcode">우편번호 *</label>
+                    <input type="text" id="postcode" name="postcode" required placeholder="우편번호를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="birthdate">생년월일</label>
+                    <input type="date" id="birthdate" name="birthdate">
+                </div>
+                <div class="form-group">
+                    <label for="gender">성별</label>
+                    <select id="gender" name="gender">
+                        <option value="">선택하세요</option>
+                        <option value="male">남성</option>
+                        <option value="female">여성</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" id="joinbtn">회원가입</button>
+            </form>
+        </div>
+    </main>
 {% endblock %}
 
 {% block script %}
-<script>
-    // 회원정보를 입력받아 폼 유효성 검사 수행 후
-    // 입력한 정보를 json 형식으로 생성한 후 서버로 전송
-    let joinbtn = document.querySelector('#joinbtn');
-    let joinfrm = document.joinfrm;
+    <script>
+        // 회원정보를 입력받아 폼 유효성 검사 수행 후
+        // 입력한 정보를 json 형식으로 생성한 후 서버로 전송
+        document.addEventListener('DOMContentLoaded', () => {
+            let joinbtn = document.querySelector('#joinbtn');
+            let joinfrm = document.querySelector('form[name="joinfrm"]');
 
-    // 회원 가입 폼 체크 함수
-    let checkjoinfrm = (frm) => {
-        if (frm.userid.value === '') {
-            alert('아이디를 입력하세요!');
-            frm.userid.focus();
-            return false;
-        } else if (frm.passwd.value === '') {
-            alert('비밀번호를 입력하세요!');
-            frm.passwd.focus();
-            return false;
-        } else if (frm.repasswd.value === '') {
-            alert('비밀번호 확인을 입력하세요!');
-            frm.repasswd.focus();
-            return false;
-        } else if (frm.repasswd.value !== frm.passwd.value) {
-            alert('비밀번호가 일치하지 않아요!');
-            frm.repasswd.focus();
-            return false;
-        } else if (frm.name.value === '') {
-            alert('이름을 입력하세요!');
-            frm.name.focus();
-            return false;
-        } else if (frm.email.value === '') {
-            alert('이메일을 입력하세요!');
-            frm.email.focus();
-            return false;
-        } else if (grecaptcha.getResponse() === '') {
-            alert('자동가입방지를 클릭하세요!');
-            return false;
-        } else {
-            // console.log('--', grecaptcha.getResponse());
-            return true;
-        }
-    };
+            // 회원 가입 폼 체크 함수
+            let checkjoinfrm = (frm) => {
+                if (frm.userid.value === '') {
+                    alert('아이디를 입력하세요!');
+                    frm.userid.focus();
+                    return false;
+                } else if (frm.password.value === '') {
+                    alert('비밀번호를 입력하세요!');
+                    frm.password.focus();
+                    return false;
+                } else if (frm.repassword.value === '') {
+                    alert('비밀번호 확인을 입력하세요!');
+                    frm.repassword.focus();
+                    return false;
+                } else if (frm.repassword.value !== frm.password.value) {
+                    alert('비밀번호가 일치하지 않아요!');
+                    frm.repassword.focus();
+                    return false;
+                } else if (frm.username.value === '') {
+                    alert('이름을 입력하세요!');
+                    frm.username.focus();
+                    return false;
+                } else if (frm.email.value === '') {
+                    alert('이메일을 입력하세요!');
+                    frm.email.focus();
+                    return false;
+                } else {
+                    return true;
+                }
+            };
 
-    joinbtn.addEventListener('click', () => {
-        // 회원정보 입력 여부 검사
-        if (!checkjoinfrm(joinfrm)) return;
+            joinbtn.addEventListener('click', (event) => {
+                if (!checkjoinfrm(joinfrm)) {
+                    event.preventDefault();
+                    return;
+                }
 
-        // 폼에 입력된 회원 정보를 초기화함
-        const formData = new FormData(joinfrm);
-        console.log(formData);
+                const formData = new FormData(joinfrm);
+                let jsondata = {};
+                formData.forEach((val, key) => {
+                    jsondata[key] = val;
+                });
 
-        // 서버로 보내기 위해 폼데이터를 JSON객체로 변환
-        let jsondata = {};
-        formData.forEach((val, key) => {
-            jsondata[key] = val;
+                fetch('/member/join', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsondata),
+                    redirect: 'follow'
+                }).then((res) => {
+                    if (res.redirected) location.href = res.url;
+                });
+            });
         });
-        // 캡챠 응답코드 추가
-        jsondata['captcha'] = grecaptcha.getResponse();
-
-        console.log(jsondata);
-
-        // ajax를 이용해서 서버로 json 데이터 전송하고, 결과 받음
-        fetch('/member/join', {
-            method: 'POST',   // 데이터 전송방식
-            headers: {        // 전송할 데이터 종류
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jsondata), // 전송할 데이터
-            // 문자열을 json으로 변환
-            redirect: 'follow'       // 서버 응답시 처리방식 지정
-        }).then((res) => {
-            if (res.redirected) location.href = res.url;
-            // 서버에서 응답해 준 url로 이동
-        }); // fetch
-    }); // addEventListener
-
-</script>
+    </script>
 {% endblock %}

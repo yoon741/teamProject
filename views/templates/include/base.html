@@ -4,15 +4,74 @@
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="/static/css/bs5/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/project.css">
-    {% block style %} {% endblock %}
+    {% block style %}
+    <style>
+        body {
+        /*{#background-image: url('/static/img/showroom.png');#}*/
+            background-size: cover; /* 이미지가 화면을 채우도록 설정 */
+            background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
+            background-repeat: no-repeat; /* 이미지 반복 방지 */
+            min-height: 100vh; /* 화면의 전체 높이를 최소로 설정 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: white; /* 전체 페이지 배경색 */
+        }
+
+        /* 헤더와 푸터의 배경을 투명하게 설정 */
+        header {
+            position: relative;
+            height: 100px; /* 헤더의 높이 설정 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px; /* 헤더 양옆에 패딩 추가 */
+            z-index: 1000; /* 헤더를 배경 이미지 위에 배치 */
+            color: black;
+        }
+
+        header img {
+            width: 130px; /* 로고의 너비 설정 */
+            height: auto; /* 로고의 비율 유지 */
+            margin-top: 20px;
+            margin-right: 20px; /* 로고와 네비게이션 바 사이에 간격 추가 */
+        }
+
+        nav {
+            flex-grow: 1; /* 네비게이션 바가 로고 옆에 붙고, 공간을 차지하도록 설정 */
+        }
+
+
+        .auth-links a {
+            text-decoration: none;
+            margin-left: 10px;
+            color: black;
+            font-size: 15px; /* 글자 크기 설정 */
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            color: black;
+            margin-top: auto; /* 푸터를 페이지 하단에 위치 */
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
-<div id="wrap" class="container">
-    {% include 'include/header.html' %}
+{% include 'include/header.html' %}
+<div>
     {% block main %} {% endblock %}
-    {% include 'include/footer.html' %}
 </div>
+
+{% include 'include/footer.html' %}
+
 {% block script %} {% endblock %}
 </body>
 </html>

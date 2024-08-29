@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products</title>
-    <style>
+{% extends 'include/base.html' %}
+{% block title %}홈페이지 - 세미프로젝트{% endblock %}
+<style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -58,55 +54,50 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .btn-edit {
-            background-color: #28a745;
-        }
-        .btn-delete {
-            background-color: #dc3545;
+        .btn-view {
+            background-color: #17a2b8;
         }
     </style>
-</head>
+
+{% block main %}
 <body>
-<h1>Manage Products</h1>
+<h1>Manage Orders</h1>
 <a href="/admin/admin">Back to Admin Dashboard</a>
-<a href="/rgproduct" class="btn-add">Add New Product</a>
 <table>
     <thead>
     <tr>
-        <th>Product ID</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Stock</th>
+        <th>Order ID</th>
+        <th>Customer Name</th>
+        <th>Order Date</th>
+        <th>Status</th>
+        <th>Total Amount</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <!-- Sample Data Row -->
     <tr>
-        <td>101</td>
-        <td>Smartphone</td>
-        <td>Electronics</td>
-        <td>$600</td>
-        <td>50</td>
+        <td>1001</td>
+        <td>John Doe</td>
+        <td>2024-08-25</td>
+        <td>Shipped</td>
+        <td>$250</td>
         <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
+            <button class="btn btn-view">View</button>
         </td>
     </tr>
     <tr>
-        <td>102</td>
-        <td>Laptop</td>
-        <td>Electronics</td>
-        <td>$1200</td>
-        <td>30</td>
+        <td>1002</td>
+        <td>Jane Smith</td>
+        <td>2024-08-26</td>
+        <td>Pending</td>
+        <td>$125</td>
         <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
+            <button class="btn btn-view">View</button>
         </td>
     </tr>
     <!-- More rows as needed -->
     </tbody>
 </table>
 </body>
-</html>
+{% endblock %}

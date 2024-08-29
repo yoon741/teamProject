@@ -1,14 +1,12 @@
-#기존 수업 member
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
-from starlette.requests import Request
-from starlette.responses import HTMLResponse, RedirectResponse
+from starlette.responses import HTMLResponse, RedirectResponse, JSONResponse
 from starlette.templating import Jinja2Templates
-
 from app.dbfactory import get_db
+from app.model.member import Member
 from app.schema.member import NewMember
 from app.service.member import MemberService
+from pydantic import ValidationError
 
 member_router = APIRouter()
 templates = Jinja2Templates(directory='views/templates')
@@ -18,23 +16,17 @@ async def join(req: Request):
     return templates.TemplateResponse("member/join.html", {"request": req})
 
 @member_router.post("/join", response_class=HTMLResponse)
-async def joinok(member: NewMember, db: Session = Depends(get_db)):
+async def joinok(req: Request, db: Session = Depends(get_db)):
     try:
-        # 캡챠가 참이라면
-        if MemberService.check_captcha(member):
-            print(member)
-            result = MemberService.insert_member(db, member)
-            print('처리결과: ', result.rowcount)
-
-            #회원가입이 성공적으로 완료되면 로그인페이지로 전환
-            if result.rowcount > 0: #rowcount 변경된 행이 1개 이상이면 실행 = 회원가입 잘했으면 실행
-                return RedirectResponse(url='/member/login', status_code=303)
-        # 캡챠 실패시 에러
-        else:
-            return RedirectResponse(url='/member/error', status_code=303)
-    # 이외 오류 뜨면 실행
+        data = await req.json()
+        if MemberService.is_userid_taken(db, data["userid"]):
+            return JSONResponse(status_code=400, content={"message": "이미 사용 중인 아이디입니다."})
+        new_member = NewMember(**data)
+        MemberService.insert_member(db, new_member)
+        print("New member successfully inserted into the database.")
+        return RedirectResponse(url='/member/login', status_code=303)
     except Exception as ex:
-        print(f'▷▷▷ joinok 오류발생: {str(ex)}')
+        print(f'회원가입 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
 @member_router.get("/login", response_class=HTMLResponse)
@@ -43,55 +35,82 @@ async def login(req: Request):
 
 @member_router.post("/login", response_class=HTMLResponse)
 async def loginok(req: Request, db: Session = Depends(get_db)):
-    # 클라이언트가 보낸 데이터를 request 객체로 받음
-    data = await req.json()
     try:
-        print('전송한 데이터 : ', data)
-        redirect_url = '/member/loginfail' #로그인 실패시 loginfail 로 이동
+        form_data = await req.form()
+        userid = form_data.get("userid")
+        password = form_data.get("password")
 
-        # M.서비스에서 쿼리문으로 판별할거임 거기서 T/F 값 여기로 받는다 생각하면 될 듯
-        if MemberService.login_member(db, data):    #로그인 성공시 myinfo로 이동
-            req.session['logined_uid'] = data.get('userid') # 세션에 아이디 저장하고
-            redirect_url = '/member/myinfo'
-
-        return RedirectResponse(url=redirect_url, status_code=303)
-
+        # 로그인 로직
+        user = MemberService.login_member(db, {"userid": userid, "password": password})
+        if user:
+            req.session['userid'] = userid  # 세션에 userid 저장
+            print(f"Session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
+            return RedirectResponse(url='/', status_code=303)
+        else:
+            return RedirectResponse(url='/member/loginfail', status_code=303)
+    except ValidationError as e:
+        # Pydantic 유효성 검사 오류를 처리
+        errors = e.errors()
+        return JSONResponse(status_code=422, content={"errors": errors})
     except Exception as ex:
-        print(f'▶▶▶ loginok 오류: {str(ex)}')
+        print(f'로그인 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
-@member_router.get("/logout", response_class=HTMLResponse)
-async def logout(req: Request):
-    req.session.clear() # 생성된 세션 객체 제거
-    return RedirectResponse("/", status_code=303)
-
-@member_router.get('/myinfo', response_class=HTMLResponse)
+@member_router.get("/myinfo", response_class=HTMLResponse)
 async def myinfo(req: Request, db: Session = Depends(get_db)):
     try:
-        if 'logined_uid' not in req.session:  # 로그인하지 않았다면
+        # 세션에서 userid 가져오기
+        userid = req.session.get('userid')
+        print(f"Session userid: {userid}")  # 세션에서 가져온 userid 출력
+        if not userid:
             return RedirectResponse(url='/member/login', status_code=303)
 
-        # 로그인 했다면 아이디로 회원정보 조회 후 myinfo에 출력
-        myinfo = MemberService.selectone_member(db, req.session['logined_uid'])
-        print('--> ', myinfo)
-        return templates.TemplateResponse('member/myinfo.html', {'request': req, 'myinfo': myinfo})
+        # 데이터베이스에서 사용자 정보 가져오기
+        user = db.query(Member).filter(Member.userid == userid).first()
 
+        if user is None:
+            return RedirectResponse(url='/member/loginfail', status_code=303)
+
+        return templates.TemplateResponse("member/myinfo.html", {"request": req, "user": user})
     except Exception as ex:
-        print(f'▷▷▷ myinfo 오류 발생 : {str(ex)}')
+        print(f'회원 정보 페이지 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
+@member_router.post("/modify", response_class=HTMLResponse)
+async def modify_user_info(req: Request, db: Session = Depends(get_db)):
+    try:
+        form_data = await req.form()
+        userid = req.session.get('userid')
 
-@member_router.get('/error', response_class=HTMLResponse)
+        if not userid:
+            return RedirectResponse(url='/member/login', status_code=303)
+
+        user = db.query(Member).filter(Member.userid == userid).first()
+
+        if user:
+            if 'password' in form_data and form_data.get('password'):
+                user.password = MemberService.sha256_hash(form_data.get('password'))
+
+            user.email = form_data.get('email')
+            user.phone = form_data.get('phone')
+            user.address = form_data.get('address')
+
+            db.commit()
+
+            return HTMLResponse(content="Success", status_code=200)
+        else:
+            return HTMLResponse(content="User not found", status_code=404)
+
+    except Exception as ex:
+        db.rollback()  # 오류 발생 시 롤백
+        print(f'업데이트 오류: {str(ex)}')
+        return HTMLResponse(content="Error", status_code=500)
+@member_router.get("/logout", response_class=HTMLResponse)
+async def logout(req: Request):
+    req.session.clear()  # 세션 초기화
+    return RedirectResponse(url='/', status_code=303)
+
+
+@member_router.get("/error", response_class=HTMLResponse)
 async def error(req: Request):
-    return templates.TemplateResponse('member/error.html', {'request': req})
-
-
-@member_router.get('/loginfail', response_class=HTMLResponse)
-async def error(req: Request):
-    return templates.TemplateResponse('member/loginfail.html', {'request': req})
-
-
-
-# 엔드포인트 설정
-
-
+    return templates.TemplateResponse("member/error.html", {"request": req})

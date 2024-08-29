@@ -1,20 +1,43 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
-from app.model.cart import Cart
-from app.schema.cart import CartCreate
+from fastapi import HTTPException, status
+from app.model.cart import Cart as CartModel
+from app.schema.cart import CartCreate, CartUpdate
 
-def create_cart_item(db: Session, cart: CartCreate):
-    new_cart = Cart(**cart.dict())
-    db.add(new_cart)
-    db.commit()
-    db.refresh(new_cart)
-    return new_cart
+class CartService:
+    @staticmethod
+    def create_cart_item(db: Session, cart: CartCreate):
+        db_cart = CartModel(**cart.dict())
+        db.add(db_cart)
+        db.commit()
+        db.refresh(db_cart)
+        return db_cart
 
-def get_cart_item(db: Session, cno: int):
-    db_cart = db.query(Cart).filter(Cart.cno == cno).first()
-    if not db_cart:
-        raise HTTPException(status_code=404, detail="Cart item not found")
-    return db_cart
+    @staticmethod
+    def get_cart_item(db: Session, cno: int):
+        db_cart = db.query(CartModel).filter(CartModel.cno == cno).first()
+        if db_cart is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
+        return db_cart
 
-def get_cart_items(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Cart).offset(skip).limit(limit).all()
+    @staticmethod
+    def update_cart_item(db: Session, cno: int, cart: CartUpdate):
+        db_cart = db.query(CartModel).filter(CartModel.cno == cno).first()
+        if db_cart is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
+
+        for key, value in cart.dict().items():
+            setattr(db_cart, key, value)
+
+        db.commit()
+        db.refresh(db_cart)
+        return db_cart
+
+    @staticmethod
+    def delete_cart_item(db: Session, cno: int):
+        db_cart = db.query(CartModel).filter(CartModel.cno == cno).first()
+        if db_cart is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
+
+        db.delete(db_cart)
+        db.commit()
+        return db_cart

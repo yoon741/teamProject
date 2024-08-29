@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Product</title>
+    <title>Place an Order</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,17 +15,20 @@
             text-align: center;
             color: #333;
         }
-        form {
-            max-width: 600px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
         label {
-            display: block;
-            margin-bottom: 8px;
+            margin: 10px 0 5px;
             font-weight: bold;
         }
         input[type="text"],
@@ -55,7 +58,7 @@
         .btn-submit:hover {
             background-color: #0056b3;
         }
-        a {
+        .btn-back {
             display: block;
             margin: 20px 0;
             padding: 10px;
@@ -65,38 +68,39 @@
             text-align: center;
             border-radius: 4px;
         }
-        a:hover {
+        .btn-back:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-<h1>Register New Product</h1>
-<a href="/admin/admin">Back to Admin Dashboard</a>
-<form action="/submit_product" method="post">
-    <label for="name">Product Name</label>
-    <input type="text" id="name" name="name" placeholder="Enter product name" required>
+<div class="container">
+    <h1>Place an Order</h1>
+    <a href="/admin" class="btn-back">Back to Admin Dashboard</a>
+    <form action="/submit_order" method="post">
+        <label for="customer-name">Customer Name</label>
+        <input type="text" id="customer-name" name="customer_name" placeholder="Enter your name" required>
 
-    <label for="category">Category</label>
-    <select id="category" name="category" required>
-        <option value="">Select a category</option>
-        <option value="electronics">Electronics</option>
-        <option value="fashion">Fashion</option>
-        <option value="home">Home</option>
-        <option value="beauty">Beauty</option>
-        <option value="sports">Sports</option>
-    </select>
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" placeholder="Enter your email" required>
 
-    <label for="price">Price</label>
-    <input type="number" id="price" name="price" placeholder="Enter product price" required>
+        <label for="product">Product</label>
+        <select id="product" name="product" required>
+            <option value="">Select a product</option>
+            <!-- Populate this dynamically -->
+            <option value="product1">Product 1</option>
+            <option value="product2">Product 2</option>
+            <option value="product3">Product 3</option>
+        </select>
 
-    <label for="stock">Stock Quantity</label>
-    <input type="number" id="stock" name="stock" placeholder="Enter stock quantity" required>
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" min="1" required>
 
-    <label for="description">Product Description</label>
-    <textarea id="description" name="description" placeholder="Enter product description"></textarea>
+        <label for="address">Shipping Address</label>
+        <textarea id="address" name="address" placeholder="Enter your shipping address" required></textarea>
 
-    <button type="submit" class="btn-submit">Register Product</button>
-</form>
+        <button type="submit" class="btn-submit">Submit Order</button>
+    </form>
+</div>
 </body>
 </html>

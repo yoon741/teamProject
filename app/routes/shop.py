@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.model.product import Product
-from app.schema.product import ProductRead
-from app.dbfactory import get_db
+from fastapi import APIRouter, Request
+from starlette.responses import HTMLResponse
+from starlette.templating import Jinja2Templates
+
+menu_router = APIRouter()
+templates = Jinja2Templates(directory='views/templates')
 
 shop_router = APIRouter()
 
@@ -12,9 +13,11 @@ shop_router = APIRouter()
 # ex)
 # member/product/{prdno}
 # admin/product/{prdno}
-@shop_router.get("/product/{prdno}", response_model=ProductRead)
-def read_product(prdno: int, db: Session = Depends(get_db)):
-    db_product = db.query(Product).filter(Product.prdno == prdno).first()
-    if not db_product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return db_product
+@shop_router.get("/item_detail", response_class=HTMLResponse)
+async def item_detail(request: Request):
+    return templates.TemplateResponse("shop/item_detail.html", {"request": request})
+
+
+@shop_router.get("/item_gallery", response_class=HTMLResponse)
+async def item_gallery(request: Request):
+    return templates.TemplateResponse("shop/item_gallery.html", {"request": request})

@@ -1,21 +1,185 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-세미프로젝트 - 회원정보
+    세미프로젝트
 {% endblock %}
-
+{% block style %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .header-container {
+            padding: 20px;
+            text-align: left;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .header-container h1 {
+            font-size: 2.4em;
+            margin: 0;
+            color: black;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .header-container h1:hover {
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            max-width: 75%;
+            margin: 20px auto;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+        h1 {
+            font-size: 2.4em;
+            margin-bottom: 50px;
+            color: black;
+            text-align: left;
+        }
+        hr {
+            border: 2px solid black;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="password"] {
+            font-family: Arial, sans-serif;
+        }
+        .btn {
+            display: block;
+            padding: 12px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            color: black;
+            margin-top: auto;
+            box-sizing: border-box;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
 {% block main %}
-<main>
-    <h2>회원정보</h2>
-    <div class="d-flex justify-content-center align-items-center" style="height: 65vh">
-        <table class="table w-25 table-bordered table-striped">
-            {% for m in myinfo %}
-            <tr><th>아이디</th><td>{{ m.userid }}</td></tr>
-            <tr><th>이름</th><td>{{ m.name }}</td></tr>
-            <tr><th>이메일</th><td>{{ m.email }}</td></tr>
-            <tr><th>가입일</th><td>{{ m.regdate.strftime('%Y-%m-%d %H:%M:%S') }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-</main>
+    <main>
+        <div class="container">
+            <hr>
+            <h1>My Info</h1>
+            <form id="myInfoForm">
+                <div class="form-group">
+                    <label for="name">이름 *</label>
+                    <input type="text" id="name" name="name" value="{{ user.username }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="gender">성별 *</label>
+                    <input type="text" id="gender" name="gender" value="{{ user.gender }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="userid">아이디 *</label>
+                    <input type="text" id="userid" name="userid" value="{{ user.userid }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호 *</label>
+                    <input type="password" id="password" name="password" value="{{ user.password }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일 *</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="phone">전화번호 *</label>
+                    <input type="tel" id="phone" name="phone" value="{{ user.phone }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="address">주소 *</label>
+                    <input type="text" id="address" name="address" value="{{ user.address }}" readonly>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" id="editBtn" class="btn">수정</button>
+                    <button type="submit" id="saveBtn" class="btn" style="display:none;">수정 완료</button>
+                    <a href="/board/myorders" class="btn">내 주문 확인</a>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            document.getElementById('editBtn').addEventListener('click', function() {
+                // 수정 버튼 클릭 시 폼을 수정 가능하게 만듦
+                document.getElementById('password').removeAttribute('readonly');
+                document.getElementById('email').removeAttribute('readonly');
+                document.getElementById('phone').removeAttribute('readonly');
+                document.getElementById('address').removeAttribute('readonly');
+
+                // 수정 버튼 숨기고 수정 완료 버튼을 표시
+                document.getElementById('editBtn').style.display = 'none';
+                document.getElementById('saveBtn').style.display = 'inline-block';
+            });
+
+            document.getElementById('myInfoForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // 수정된 데이터를 가져옴
+                const formData = new FormData(event.target);
+
+                // 서버로 데이터 전송
+                fetch('/member/modify', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('수정이 완료되었습니다.');
+                            location.reload();  // 페이지 새로고침하여 변경된 내용 반영
+                        } else {
+                            alert('수정에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('오류가 발생했습니다.');
+                    });
+            });
+        </script>
+    </main>
 {% endblock %}

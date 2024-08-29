@@ -7,14 +7,8 @@ class Product(Base):
     prdno = Column(Integer, primary_key=True, autoincrement=True)
     prdname = Column(String(100), nullable=False)
     price = Column(String(20), nullable=False)
-    size = Column(String(50), nullable=False)
-    color = Column(String(20), nullable=False)
-    material = Column(String(100), nullable=False)
-    brand = Column(String(50), nullable=False)
-    style = Column(String(50), nullable=False)
-    weight = Column(String(20), nullable=False)
-    origin = Column(String(50), nullable=False)
-    description = Column(Text, nullable=False)
+    type = Column(String(50), nullable=False)
+    qty = Column(Integer, nullable=False, default=0)
     regdate = Column(DateTime, default=datetime.now, nullable=True)
 
 class PrdAttach(Base):
