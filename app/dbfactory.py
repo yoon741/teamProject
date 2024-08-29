@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # from app.model.base import Base
-from app.model import member, cart, order, product, shop
+from app.model import member, cart, order, product
 from app.settings import config
 
 
@@ -26,7 +26,6 @@ async def db_startup():
     cart.Base.metadata.create_all(engine)
     order.Base.metadata.create_all(engine)
     product.Base.metadata.create_all(engine)
-    shop.Base.metadata.create_all(engine)
 
 
 async def db_shutdown():
