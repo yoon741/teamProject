@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/bs5/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        {#background-color: #f5f5f5;#}
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .header-container {
+            padding: 20px;
+            text-align: left;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .header-container h1 {
+            font-size: 2.4em;
+            margin: 0;
+            color: black;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .header-container h1:hover {
+            color: black;
+        }
+        .container {
+            background-color: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 550px;
+            height: 100px;
+            max-width: 75%;
+            margin: 40px auto;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+        h1 {
+            font-size: 2.4em;
+            margin-bottom: 50px;
+            color: black;
+            text-align: left;
+        }
+        .container hr {
+            border: 1.5px solid black;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="password"] {
+            font-family: Arial, sans-serif;
+        }
+        .btn {
+            display: block;
+            padding: 12px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        .signup-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .signup-link a {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            color: black;
+            margin-top: auto;
+            box-sizing: border-box;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header-container">
+    <a href="/" style="text-decoration: none;">
+        <h1>KOCAP</h1>
+    </a>
+</div>
+
+<!-- Form Container -->
+<div class="container">
+    <h1>Login</h1>
+    <hr>
+    <form action="/member/login" method="post">
+        <div class="form-group">
+            <label for="userid">ID *</label>
+            <input type="text" id="userid" name="userid" placeholder="아이디를 입력하세요" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+        </div>
+        <button type="submit" class="btn">로그인</button>
+    </form>
+    <div class="signup-link">
+        <p>계정이 없으신가요? <a href="/member/join">회원가입</a></p>
+    </div>
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <hr>
+    <p>copyright &copy; 2024. kocap. all rights reserved.</p>
+</footer>
+
+</body>
+</html>
