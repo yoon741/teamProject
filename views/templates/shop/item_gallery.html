@@ -1,0 +1,104 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+상품 상세 페이지
+{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        font-family: 'Noto Sans KR', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fafafa;
+        color: #333;
+    }
+    .container {
+        width: 80%;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .product-detail {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .product-detail img {
+        flex: 1;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .product-info {
+        flex: 1;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .product-title {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        color: #222;
+    }
+    .product-price {
+        font-size: 2em;
+        color: #e60000;
+        margin-bottom: 20px;
+    }
+    .product-description {
+        font-size: 1.2em;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    .product-buttons {
+        display: flex;
+        gap: 15px;
+    }
+    .product-button {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #333;
+        color: white;
+        text-decoration: none;
+        font-size: 1.2em;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .product-button:hover {
+        background-color: #555;
+    }
+    .buy-button {
+        background-color: #e60000;
+    }
+    .buy-button:hover {
+        background-color: #c00000;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+    <div class="container">
+        <div class="product-detail">
+            <img src="/static/img/gagu1.jpg" alt="상품 1">
+            <div class="product-info">
+                <h1 class="product-title">상품 제목 1</h1>
+                <p class="product-price">₩2,500,000</p>
+                <p class="product-description">
+                    이 제품은 최고급 자재로 제작되었으며, 뛰어난 내구성과 편안함을 자랑합니다. 다양한 인테리어에 잘 어울리는 디자인으로,
+                    집안의 품격을 높여줍니다. 추가로 상세한 제품 설명이나 사용법을 여기에 추가할 수 있습니다.
+                </p>
+                <div class="product-buttons">
+                    <a href="/order/" class="product-button">장바구니에 추가</a>
+                    <a href="/purchase?product_id=1" class="product-button buy-button">구매하기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
