@@ -1,103 +1,134 @@
 {% extends 'include/base.html' %}
-{% block title %}홈페이지 - 세미프로젝트{% endblock %}
+
+{% block title %}
+Order Management
+{% endblock %}
+
+{% block style %}
 <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            text-align: center;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            padding: 6px 12px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-view {
-            background-color: #17a2b8;
-        }
-    </style>
+    .order-management-page {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .order-management-page h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .order-management-page a.back-to-dashboard {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+    }
+    .order-management-page a.back-to-dashboard:hover {
+        background-color: #0056b3;
+    }
+    .order-management-page table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .order-management-page table,
+    .order-management-page th,
+    .order-management-page td {
+        border: 1px solid #ccc;
+    }
+    .order-management-page th,
+    .order-management-page td {
+        padding: 12px;
+        text-align: left;
+    }
+    .order-management-page th {
+        background-color: #007bff;
+        color: white;
+    }
+    .order-management-page tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .order-management-page .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+    .order-management-page .btn {
+        padding: 6px 12px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .order-management-page .btn-view {
+        background-color: #17a2b8;
+    }
+    .order-management-page .btn-view:hover {
+        background-color: #138496;
+    }
+    .order-management-page .btn-edit {
+        background-color: #ffc107;
+    }
+    .order-management-page .btn-edit:hover {
+        background-color: #e0a800;
+    }
+    .order-management-page .btn-delete {
+        background-color: #dc3545;
+    }
+    .order-management-page .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
+{% endblock %}
 
 {% block main %}
-<body>
-<h1>Manage Orders</h1>
-<a href="/admin/admin">Back to Admin Dashboard</a>
-<table>
-    <thead>
-    <tr>
-        <th>Order ID</th>
-        <th>Customer Name</th>
-        <th>Order Date</th>
-        <th>Status</th>
-        <th>Total Amount</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Sample Data Row -->
-    <tr>
-        <td>1001</td>
-        <td>John Doe</td>
-        <td>2024-08-25</td>
-        <td>Shipped</td>
-        <td>$250</td>
-        <td class="action-btns">
-            <button class="btn btn-view">View</button>
-        </td>
-    </tr>
-    <tr>
-        <td>1002</td>
-        <td>Jane Smith</td>
-        <td>2024-08-26</td>
-        <td>Pending</td>
-        <td>$125</td>
-        <td class="action-btns">
-            <button class="btn btn-view">View</button>
-        </td>
-    </tr>
-    <!-- More rows as needed -->
-    </tbody>
-</table>
-</body>
+<div class="order-management-page">
+    <h1>Order Management</h1>
+    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
+    <table>
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Sample Data Row -->
+        <tr>
+            <td>1001</td>
+            <td>John Doe</td>
+            <td>2024-08-25</td>
+            <td>Shipped</td>
+            <td>$250</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>1002</td>
+            <td>Jane Smith</td>
+            <td>2024-08-26</td>
+            <td>Pending</td>
+            <td>$125</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <!-- More rows as needed -->
+        </tbody>
+    </table>
+</div>
 {% endblock %}

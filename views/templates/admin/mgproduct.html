@@ -1,112 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            text-align: center;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            padding: 6px 12px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-edit {
-            background-color: #28a745;
-        }
-        .btn-delete {
-            background-color: #dc3545;
-        }
-    </style>
-</head>
-<body>
-<h1>Manage Products</h1>
-<a href="/admin/admin">Back to Admin Dashboard</a>
-<a href="/rgproduct" class="btn-add">Add New Product</a>
-<table>
-    <thead>
-    <tr>
-        <th>Product ID</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Sample Data Row -->
-    <tr>
-        <td>101</td>
-        <td>Smartphone</td>
-        <td>Electronics</td>
-        <td>$600</td>
-        <td>50</td>
-        <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
-        </td>
-    </tr>
-    <tr>
-        <td>102</td>
-        <td>Laptop</td>
-        <td>Electronics</td>
-        <td>$1200</td>
-        <td>30</td>
-        <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
-        </td>
-    </tr>
-    <!-- More rows as needed -->
-    </tbody>
-</table>
-</body>
-</html>
+{% extends 'include/base.html' %}
+
+{% block title %}
+Product Management
+{% endblock %}
+
+{% block style %}
+<style>
+    .product-management-page {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .product-management-page h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .product-management-page a.back-to-dashboard {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+    }
+    .product-management-page a.back-to-dashboard:hover {
+        background-color: #0056b3;
+    }
+    .product-management-page table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .product-management-page table,
+    .product-management-page th,
+    .product-management-page td {
+        border: 1px solid #ccc;
+    }
+    .product-management-page th,
+    .product-management-page td {
+        padding: 12px;
+        text-align: left;
+    }
+    .product-management-page th {
+        background-color: #007bff;
+        color: white;
+    }
+    .product-management-page tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .product-management-page .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+    .product-management-page .btn {
+        padding: 6px 12px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .product-management-page .btn-view {
+        background-color: #17a2b8;
+    }
+    .product-management-page .btn-view:hover {
+        background-color: #138496;
+    }
+    .product-management-page .btn-edit {
+        background-color: #ffc107;
+    }
+    .product-management-page .btn-edit:hover {
+        background-color: #e0a800;
+    }
+    .product-management-page .btn-delete {
+        background-color: #dc3545;
+    }
+    .product-management-page .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="product-management-page">
+    <h1>Product Management</h1>
+    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
+    <table>
+        <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Sample Data Row -->
+        <tr>
+            <td>P001</td>
+            <td>Widget A</td>
+            <td>Electronics</td>
+            <td>$99.99</td>
+            <td>50</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>P002</td>
+            <td>Gadget B</td>
+            <td>Home Goods</td>
+            <td>$49.99</td>
+            <td>120</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <!-- More rows as needed -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}
