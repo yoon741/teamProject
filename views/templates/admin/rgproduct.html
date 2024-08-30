@@ -1,102 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Product</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn-submit:hover {
-            background-color: #0056b3;
-        }
-        a {
-            display: block;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 4px;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-<h1>Register New Product</h1>
-<a href="/admin/admin">Back to Admin Dashboard</a>
-<form action="/submit_product" method="post">
-    <label for="name">Product Name</label>
-    <input type="text" id="name" name="name" placeholder="Enter product name" required>
+{% extends 'include/base.html' %}
 
-    <label for="category">Category</label>
-    <select id="category" name="category" required>
-        <option value="">Select a category</option>
-        <option value="electronics">Electronics</option>
-        <option value="fashion">Fashion</option>
-        <option value="home">Home</option>
-        <option value="beauty">Beauty</option>
-        <option value="sports">Sports</option>
-    </select>
+{% block title %}
+Product Registration
+{% endblock %}
 
-    <label for="price">Price</label>
-    <input type="number" id="price" name="price" placeholder="Enter product price" required>
+{% block style %}
+<style>
+    .product-registration-page {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .product-registration-page h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .product-registration-page form {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    .product-registration-page label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    .product-registration-page input,
+    .product-registration-page select,
+    .product-registration-page textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .product-registration-page input[type="file"] {
+        padding: 0;
+    }
+    .product-registration-page .btn-submit {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+    }
+    .product-registration-page .btn-submit:hover {
+        background-color: #0056b3;
+    }
+    .product-registration-page .image-preview {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .product-registration-page .image-preview img {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
 
-    <label for="stock">Stock Quantity</label>
-    <input type="number" id="stock" name="stock" placeholder="Enter stock quantity" required>
+{% block main %}
+<div class="product-registration-page">
+    <h1>Product Registration</h1>
+    <form id="product-form">
+        <label for="product-name">Product Name</label>
+        <input type="text" id="product-name" name="product_name" required>
 
-    <label for="description">Product Description</label>
-    <textarea id="description" name="description" placeholder="Enter product description"></textarea>
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+            <option value="electronics">Electronics</option>
+            <option value="home-goods">Home Goods</option>
+            <option value="clothing">Clothing</option>
+            <!-- Add more categories as needed -->
+        </select>
 
-    <button type="submit" class="btn-submit">Register Product</button>
-</form>
-</body>
-</html>
+        <label for="price">Price ($)</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+
+        <label for="stock">Stock Quantity</label>
+        <input type="number" id="stock" name="stock" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="product-image">Product Image</label>
+        <input type="file" id="product-image" name="product_image" accept="image/*" onchange="previewImage(event)">
+
+        <div class="image-preview" id="image-preview">
+            <!-- Image preview will be shown here -->
+        </div>
+
+        <button type="submit" class="btn-submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{% endblock %}

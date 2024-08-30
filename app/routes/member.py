@@ -33,17 +33,29 @@ async def joinok(req: Request, db: Session = Depends(get_db)):
 async def login(req: Request):
     return templates.TemplateResponse("member/login.html", {"request": req})
 
+
 @member_router.post("/login", response_class=HTMLResponse)
 async def loginok(req: Request, db: Session = Depends(get_db)):
     try:
-        form_data = await req.form()
-        userid = form_data.get("userid")
-        password = form_data.get("password")
+        body = await req.body()
+        print(f"Request body: {body}")  # 로그에 요청 본문 출력
+        data = await req.json() # **JSON 데이터로 변경
+        userid = data.get("userid")
+        password = data.get("password")
 
-        # 로그인 로직
+        # 관리자 로그인 시도
+        admin_user = MemberService.login_admin(db, {"userid": userid, "password": password})
+        if admin_user:
+            req.session['userid'] = userid  # 세션에 userid 저장
+            req.session['is_admin'] = True  # **관리자 세션 설정
+            print(f"Admin session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
+            return RedirectResponse(url='/admin/admin', status_code=303)
+
+        # 일반 사용자 로그인 시도
         user = MemberService.login_member(db, {"userid": userid, "password": password})
         if user:
             req.session['userid'] = userid  # 세션에 userid 저장
+            req.session['is_admin'] = False  # **일반 사용자 세션 설정
             print(f"Session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
             return RedirectResponse(url='/', status_code=303)
         else:
@@ -55,6 +67,31 @@ async def loginok(req: Request, db: Session = Depends(get_db)):
     except Exception as ex:
         print(f'로그인 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
+
+
+# async def loginok(req: Request, db: Session = Depends(get_db)):
+#     try:
+#         form_data = await req.form()
+#         userid = form_data.get("userid")
+#         password = form_data.get("password")
+#
+#         # 로그인 로직
+#         user = MemberService.login_member(db, {"userid": userid, "password": password})
+#         if user:
+#             req.session['userid'] = userid  # 세션에 userid 저장
+#             print(f"Session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
+#             return RedirectResponse(url='/', status_code=303)
+#         else:
+#             return RedirectResponse(url='/member/loginfail', status_code=303)
+#     except ValidationError as e:
+#         # Pydantic 유효성 검사 오류를 처리
+#         errors = e.errors()
+#         return JSONResponse(status_code=422, content={"errors": errors})
+#     except Exception as ex:
+#         print(f'로그인 오류: {str(ex)}')
+#         return RedirectResponse(url='/member/error', status_code=303)
+
+
 
 @member_router.get("/myinfo", response_class=HTMLResponse)
 async def myinfo(req: Request, db: Session = Depends(get_db)):

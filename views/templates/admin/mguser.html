@@ -1,110 +1,134 @@
 {% extends 'include/base.html' %}
 
-{% block title %}홈페이지 - 세미프로젝트{% endblock %}
+{% block title %}
+User Management
+{% endblock %}
+
+{% block style %}
+<style>
+    .user-management-page {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .user-management-page h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .user-management-page a.back-to-dashboard {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+    }
+    .user-management-page a.back-to-dashboard:hover {
+        background-color: #0056b3;
+    }
+    .user-management-page table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .user-management-page table,
+    .user-management-page th,
+    .user-management-page td {
+        border: 1px solid #ccc;
+    }
+    .user-management-page th,
+    .user-management-page td {
+        padding: 12px;
+        text-align: left;
+    }
+    .user-management-page th {
+        background-color: #007bff;
+        color: white;
+    }
+    .user-management-page tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .user-management-page .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+    .user-management-page .btn {
+        padding: 6px 12px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .user-management-page .btn-view {
+        background-color: #17a2b8;
+    }
+    .user-management-page .btn-view:hover {
+        background-color: #138496;
+    }
+    .user-management-page .btn-edit {
+        background-color: #ffc107;
+    }
+    .user-management-page .btn-edit:hover {
+        background-color: #e0a800;
+    }
+    .user-management-page .btn-delete {
+        background-color: #dc3545;
+    }
+    .user-management-page .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
+{% endblock %}
 
 {% block main %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            text-align: center;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            padding: 6px 12px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-edit {
-            background-color: #28a745;
-        }
-        .btn-delete {
-            background-color: #dc3545;
-        }
-    </style>
-<body>
-<h1>Manage Users</h1>
-<a href="/admin/admin">Back to Admin Dashboard</a>
-<a href="/rguser" class="btn-add">Add New User</a>
-<table>
-    <thead>
-    <tr>
-        <th>User ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Sample Data Row -->
-    <tr>
-        <td>001</td>
-        <td>john_doe</td>
-        <td>john@example.com</td>
-        <td>Admin</td>
-        <td>Active</td>
-        <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
-        </td>
-    </tr>
-    <tr>
-        <td>002</td>
-        <td>jane_smith</td>
-        <td>jane@example.com</td>
-        <td>User</td>
-        <td>Inactive</td>
-        <td class="action-btns">
-            <button class="btn btn-edit">Edit</button>
-            <button class="btn btn-delete">Delete</button>
-        </td>
-    </tr>
-    <!-- More rows as needed -->
-    </tbody>
-</table>
-</body>
+<div class="user-management-page">
+    <h1>User Management</h1>
+    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
+    <table>
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Sample Data Row -->
+        <tr>
+            <td>U001</td>
+            <td>johndoe</td>
+            <td>johndoe@example.com</td>
+            <td>Admin</td>
+            <td>Active</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>U002</td>
+            <td>janesmith</td>
+            <td>janesmith@example.com</td>
+            <td>User</td>
+            <td>Inactive</td>
+            <td class="action-btns">
+                <button class="btn btn-view">View</button>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+            </td>
+        </tr>
+        <!-- More rows as needed -->
+        </tbody>
+    </table>
+</div>
 {% endblock %}
