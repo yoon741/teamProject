@@ -57,7 +57,22 @@
     }
     .product-buttons {
         display: flex;
-        gap: 11px;
+        flex-direction: column; /* 세로 방향으로 배치 */
+        gap: 15px; /* 버튼 사이의 간격을 조정 */
+    }
+    .quantity-section {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* 수량 선택기와 버튼 사이의 간격 */
+    }
+    .quantity-input {
+        width: 70px;
+        padding: 8px;
+        font-size: 1em;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        margin: 15px;
+        text-align: center;
     }
     .product-button {
         display: inline-block;
@@ -74,7 +89,6 @@
         background-color: #555;
     }
     .buy-button {
-        /* 폰트 크기를 줄임 */
         background-color: #e60000;
     }
     .buy-button:hover {
@@ -87,22 +101,47 @@
 <main>
     <div class="container">
         <div class="product-detail">
-            <img src="/static/img/gagu1.jpg" alt="상품 1">
+            <img src="/static/img/gagu1.jpg" alt="{{ product.prdname }}">
             <div class="product-info">
-                <h1 class="product-title">상품 제목 1</h1>
-                <p class="product-price">₩3,300,000</p>
+                <h1 class="product-title">{{ product.prdname }}</h1>
+                <p class="product-price">{{ product.price }}</p>
                 <p class="product-description">
-                    이 제품은 최고급 자재로 제작되었으며, 뛰어난 내구성과 편안함을 자랑합니다. 다양한 인테리어에 잘 어울리는 디자인으로,
-                    집안의 품격을 높여줍니다. 추가로 상세한 제품 설명이나 사용법을 여기에 추가할 수 있습니다.
+                    {{ product.description }}
                 </p>
+                <div class="quantity-section">
+                    <label for="quantity" style="font-size: 1.2em;">수량:</label>
+                    <input type="number" id="qty" name="qty" value="1" min="1" max="{{ product.qty }}">
+                </div>
                 <div class="product-buttons">
                     <a href="/order/order" class="product-button buy-button">구매하기</a>
-                    <a href="/order/cart" class="product-button">장바구니에 추가</a>
+                    <a href="/shop/cart" class="product-button" onclick="addToCart({{ product.prdno }}, document.getElementById('qty').value)">장바구니에 추가</a>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        async function addToCart(prdno, qty) {
+            try {
+                const response = await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prdno: prdno, qty: qty }),  // prdno와 qty를 명확하게 설정
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('장바구니에 추가되었습니다.');
+                } else {
+                    alert(`에러 발생: ${result.detail}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('장바구니에 추가하는 중 오류가 발생했습니다.');
+            }
+        }
+
+    </script>
 </main>
 {% endblock %}
-
-
