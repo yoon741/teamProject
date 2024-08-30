@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from app.dbfactory import get_db
-from app.model.cart import Cart as CartModel
+from app.model.product import Cart as CartModel
 from app.model.product import Product as ProductModel
 
 
