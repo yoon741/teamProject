@@ -1,42 +1,68 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Request, Depends, HTTPException
 from sqlalchemy.orm import Session
+from starlette.responses import HTMLResponse
+from app.routes.shop import templates
 
 from app.dbfactory import get_db
-from app.model.cart import Cart as CartModel
+from app.model.product import Cart as CartModel
 from app.model.product import Product as ProductModel
 
-
+# APIRouter를 인스턴스화
 cart_router = APIRouter()
 
 @cart_router.post("/add")
 async def add_to_cart(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
-    product_id = data.get('prdno')
+    prdno = data.get('prdno')
     qty = data.get('qty')
 
-    user_id = request.session.get("userid")
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Unauthorized: Please log in to add items to the cart.")
+    try:
+        qty = int(qty)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="유효하지 않은 수량입니다.")
 
-    # 상품 정보 조회
-    product = db.query(ProductModel).filter(ProductModel.prdno == product_id).first()
+    userid = request.session.get("userid")
+    if not userid:
+        raise HTTPException(status_code=401, detail="로그인이 필요합니다.")
+
+    product = db.query(ProductModel).filter(ProductModel.prdno == prdno).first()
     if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail="상품을 찾을 수 없습니다.")
 
-    if product.stock < qty:
-        raise HTTPException(status_code=400, detail="Not enough stock available")
+    if product.qty < qty:
+        raise HTTPException(status_code=400, detail="재고가 부족합니다.")
 
-    # 장바구니에 동일한 상품이 있는지 확인
-    cart_item = db.query(CartModel).filter(CartModel.mno == user_id, CartModel.prdno == product_id).first()
+    cart_item = db.query(CartModel).filter(CartModel.mno == userid, CartModel.prdno == prdno).first()
 
     if cart_item:
-        # 기존 장바구니 항목 업데이트
         cart_item.qty += qty
-        cart_item.price += product.price * qty
+        cart_item.price += int(product.price.replace("₩", "").replace(",", "")) * qty
     else:
-        # 새로운 장바구니 항목 추가
-        cart_item = CartModel(mno=user_id, prdno=product_id, qty=qty, price=product.price * qty)
+        cart_item = CartModel(mno=userid, prdno=prdno, qty=qty, price=int(product.price.replace("₩", "").replace(",", "")) * qty)
         db.add(cart_item)
 
+    product.qty -= qty
     db.commit()
-    return {"message": "Item added to cart successfully"}
+
+    return {"message": "장바구니에 추가되었습니다."}
+
+
+@cart_router.get("/cart", response_class=HTMLResponse)
+async def view_cart(request: Request, db: Session = Depends(get_db)):
+    userid = request.session.get("userid")
+    if not userid:
+        raise HTTPException(status_code=401, detail="로그인이 필요합니다.")
+
+    # 장바구니 항목 가져오기 (Product 정보 포함)
+    cart_items = db.query(CartModel).filter(CartModel.mno == userid).all()
+
+    if not cart_items:
+        return templates.TemplateResponse("shop/cart.html", {"request": request, "cart_items": [], "total_price": 0})
+
+    total_price = sum(item.price * item.qty for item in cart_items)
+
+    return templates.TemplateResponse("shop/cart.html", {
+        "request": request,
+        "cart_items": cart_items,
+        "total_price": total_price
+    })

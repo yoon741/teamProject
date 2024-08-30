@@ -2,23 +2,18 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel
-
+# ProductBase 모델
 class ProductBase(BaseModel):
     prdname: str
     price: str
-    size: str
-    color: str
-    material: str
-    brand: str
-    style: str
-    weight: str
-    origin: str
-    description: str
+    type: str
+    qty: int
 
+# ProductCreate 모델: 생성 시 사용
 class ProductCreate(ProductBase):
     pass
 
+# ProductRead 모델: 조회 시 사용
 class ProductRead(ProductBase):
     prdno: int
     regdate: datetime
@@ -26,6 +21,7 @@ class ProductRead(ProductBase):
     class Config:
         from_attributes = True
 
+# PrdAttachBase 모델
 class PrdAttachBase(BaseModel):
     prdno: int
     img1: str
@@ -33,8 +29,10 @@ class PrdAttachBase(BaseModel):
     img3: str
     img4: str
 
+# PrdAttachCreate 모델: 생성 시 사용
 class PrdAttachCreate(PrdAttachBase):
     pass
 
+# PrdAttachRead 모델: 조회 시 사용
 class PrdAttachRead(PrdAttachBase):
     prdatno: int

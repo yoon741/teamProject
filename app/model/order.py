@@ -8,7 +8,6 @@ class Order(Base):
     omno = Column(Integer, primary_key=True, autoincrement=True)
     mno = Column(Integer,nullable=False)
     prdno = Column(Integer, nullable=False)
-    size = Column(String(50), nullable=False)
     qty = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)
     postcode = Column(String(10), nullable=False)
