@@ -32,6 +32,7 @@ app.include_router(member_router, prefix='/member')
 app.include_router(menu_router, prefix="/menu")
 app.include_router(shop_router, prefix='/shop')
 app.include_router(order_router, prefix='/order')
+app.include_router(cart_router, prefix='/shop')
 app.include_router(cart_router, prefix='/cart')
 app.include_router(admin_router, prefix='/admin')
 
