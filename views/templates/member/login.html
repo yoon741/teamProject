@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-        {#background-color: #f5f5f5;#}
             margin: 0;
             padding: 0;
             display: flex;
@@ -38,7 +37,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             width: 550px;
-            height: 100px;
+            height: auto;
             max-width: 75%;
             margin: 40px auto;
             box-sizing: border-box;
@@ -127,7 +126,7 @@
 <div class="container">
     <h1>Login</h1>
     <hr>
-    <form action="/member/login" method="post">
+    <form id="login-form">
         <div class="form-group">
             <label for="userid">ID *</label>
             <input type="text" id="userid" name="userid" placeholder="아이디를 입력하세요" required>
@@ -148,6 +147,45 @@
     <hr>
     <p>copyright &copy; 2024. kocap. all rights reserved.</p>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('login-form');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // 기본 폼 제출 방지
+
+            const formData = new FormData(form);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            fetch('/member/login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData),
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json(); // JSON 응답 처리
+                }
+            }).then(data => {
+                // 서버에서 JSON 응답이 있는 경우 처리
+                if (data && data.error) {
+                    alert(data.error);
+                }
+            }).catch(error => {
+                console.error('로그인 오류:', error);
+                alert('로그인 중 오류가 발생했습니다.');
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

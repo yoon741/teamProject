@@ -9,7 +9,7 @@ templates = Jinja2Templates(directory='views/templates')
 
 # 관리자 페이지 (메인)
 @admin_router.get("/admin", response_class=HTMLResponse)
-async def admin(req: Request):
+async def adminok(req: Request):
     return templates.TemplateResponse("admin/admin.html", {"request": req})
 
 # 상품 관리 페이지
