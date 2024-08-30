@@ -4,7 +4,8 @@
         margin: 0;
         background-color: white;
     }
-    a {font-size: 2em;
+    a {
+        font-size: 2em;
         color: black;
     }
     header {
@@ -49,6 +50,7 @@
     }
 </style>
 {% endblock %}
+
 <header class="py-3">
     <a id="indexh1">KOCAP</a>
     <nav>
@@ -60,11 +62,23 @@
         </ul>
     </nav>
     <div class="auth-links">
-        {% if 'logined_uid' not in request.session %}
+        {% if 'logined_uid' in request.session %}
+        <!-- 일반 회원으로 로그인했을 때 -->
+        <a href="/member/myinfo">My Info</a>
+        <a href="/cart/mycart">My Cart</a>
+        <a href="/member/logout">로그아웃</a>
+
+
+        {% elif request.session.get('is_admin') %}
+        <!-- Admin으로 로그인했을 때 -->
+        <a href="/admin/admin">관리자페이지</a>
+        <a href="/member/logout">로그아웃</a>
+
+        {% else %}
+        <!-- 로그인하지 않았을 때 -->
         <a href="/member/join">Create an account</a>
         <a href="/member/login">Sign in</a>
-        {% else %}
-        <a href="/member/logout">로그아웃</a>
+
         {% endif %}
     </div>
 </header>
