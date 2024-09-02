@@ -1,38 +1,39 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.model.product import Product, PrdAttach
-from app.schema.product import ProductCreate, PrdAttachCreate
+from app.model.product import Product
 
-@staticmethod
-def create_product(db: Session, product: ProductCreate):
-    new_product = Product(**product.dict())
-    db.add(new_product)
-    db.commit()
-    db.refresh(new_product)
-    return new_product
+class ProductService:
+    @staticmethod
+    def get_all_products(db: Session):
+        try:
+            products = db.query(Product).all()
+            return products
+        except Exception as ex:
+            print(f'Get All Products Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Failed to retrieve products")
 
-@staticmethod
-def get_product(db: Session, prdno: int):
-    db_product = db.query(Product).filter(Product.prdno == prdno).first()
-    if not db_product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return db_product
+    @staticmethod
+    def get_product_detail(db: Session, prdno: int):
+        try:
+            product = db.query(Product).filter(Product.prdno == prdno).first()
+            if not product:
+                raise HTTPException(status_code=404, detail="Product not found")
+            return product
+        except Exception as ex:
+            print(f'Get Product Detail Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Failed to retrieve product detail")
 
-@staticmethod
-def get_products(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Product).offset(skip).limit(limit).all()
+    @staticmethod
+    def update_product_qty(db: Session, prdno: int, qty: int):
+        try:
+            product = db.query(Product).filter(Product.prdno == prdno).first()
+            if not product:
+                raise HTTPException(status_code=404, detail="Product not found")
 
-@staticmethod
-def create_prd_attach(db: Session, prd_attach: PrdAttachCreate):
-    new_prd_attach = PrdAttach(**prd_attach.dict())
-    db.add(new_prd_attach)
-    db.commit()
-    db.refresh(new_prd_attach)
-    return new_prd_attach
-
-@staticmethod
-def get_prd_attach(db: Session, prdatno: int):
-    db_prd_attach = db.query(PrdAttach).filter(PrdAttach.prdatno == prdatno).first()
-    if not db_prd_attach:
-        raise HTTPException(status_code=404, detail="Product attachment not found")
-    return db_prd_attach
+            product.qty -= qty
+            db.commit()
+            return product
+        except Exception as ex:
+            db.rollback()
+            print(f'Update Product Quantity Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Failed to update product quantity")

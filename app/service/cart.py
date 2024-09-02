@@ -1,7 +1,10 @@
 import logging
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException, status
+
+from app.model.member import Member
 from app.model.product import Cart as CartModel
+from app.model.product import Product as ProductModel
 from app.schema.cart import CartCreate, CartUpdate
 
 logger = logging.getLogger(__name__)
@@ -35,10 +38,8 @@ class CartService:
     def update_cart_item(db: Session, cno: int, cart_update: CartUpdate):
         try:
             cart_item = CartService.get_cart_item_by_cno(db, cno)
-
             for key, value in cart_update.dict(exclude_unset=True).items():
                 setattr(cart_item, key, value)
-
             db.commit()
             db.refresh(cart_item)
             return cart_item
@@ -51,7 +52,6 @@ class CartService:
     def delete_cart_item(db: Session, cno: int):
         try:
             cart_item = CartService.get_cart_item_by_cno(db, cno)
-
             db.delete(cart_item)
             db.commit()
             return cart_item
@@ -59,3 +59,41 @@ class CartService:
             db.rollback()
             logger.error(f"Failed to delete cart item: {str(e)}")
             raise HTTPException(status_code=500, detail="Failed to delete cart item")
+
+    @staticmethod
+    def get_cart_items_by_userid(db: Session, userid: str):
+        member = db.query(Member).filter(Member.userid == userid).first()
+        if not member:
+            raise HTTPException(status_code=404, detail="User not found")
+        cart_items = db.query(CartModel).options(joinedload(CartModel.product)).filter(CartModel.mno == member.mno).all()
+        if not cart_items:
+            raise HTTPException(status_code=404, detail="No items in cart")
+        return cart_items
+
+    @staticmethod
+    def add_to_cart(db: Session, userid: str, prdno: int, qty: int):
+        member = db.query(Member).filter(Member.userid == userid).first()
+        if not member:
+            raise HTTPException(status_code=404, detail="User not found")
+        product = db.query(ProductModel).filter_by(prdno=prdno).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        if product.qty < qty:
+            raise HTTPException(status_code=400, detail="Not enough stock available")
+        cart_item = db.query(CartModel).filter(CartModel.mno == member.mno, CartModel.prdno == prdno).first()
+        if cart_item:
+            cart_item.qty += qty
+            cart_item.price = cart_item.qty * product.price
+        else:
+            cart_item = CartModel(mno=member.mno, prdno=prdno, qty=qty, price=qty * product.price)
+            db.add(cart_item)
+        product.qty -= qty
+        db.commit()
+
+    @staticmethod
+    def clear_cart_items(db: Session, userid: str):
+        member = db.query(Member).filter(Member.userid == userid).first()
+        if not member:
+            raise HTTPException(status_code=404, detail="User not found")
+        db.query(CartModel).filter(CartModel.mno == member.mno).delete()
+        db.commit()
