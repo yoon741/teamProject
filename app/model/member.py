@@ -1,8 +1,7 @@
-from sqlalchemy import String, Integer, Date, DateTime, func
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy import Column, Integer, String, Date, DateTime, func
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.model.base import Base
-from datetime import datetime, date
-
+from datetime import datetime
 
 class Member(Base):
     __tablename__ = 'member'
@@ -12,9 +11,12 @@ class Member(Base):
     userid: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)
     email: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(100), nullable=False)
-    phone: Mapped[str] = mapped_column(String(15))  # 전화번호를 문자열로 처리
+    phone: Mapped[str] = mapped_column(String(15))
     address: Mapped[str] = mapped_column(String(255))
     postcode: Mapped[str] = mapped_column(String(20))
-    birthdate: Mapped[date] = mapped_column(Date)  # 생년월일을 Date 타입으로 처리
+    birthdate: Mapped[Date] = mapped_column(Date)
     gender: Mapped[str] = mapped_column(String(10))
-    regdate: Mapped[datetime] = mapped_column(DateTime, default=func.now())  # 등록일 기본값을 데이터베이스 함수로 설정
+    regdate: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
+
+    orders = relationship("Order", back_populates="member")
+    carts = relationship("Cart", back_populates="member")
