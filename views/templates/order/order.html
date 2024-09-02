@@ -1,16 +1,11 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-세미프로젝트
+Order
 {% endblock %}
+
 {% block style %}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-    }
     .container {
         max-width: 800px;
         margin: 20px auto;
@@ -21,278 +16,158 @@
     }
     h1 {
         text-align: left;
-        margin-bottom: 50px;
-        font-size: 4em;
-    }
-    .section-title {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 15px;
-        border-bottom: 4px solid #333;
-        padding-bottom: 5px;
+        margin-bottom: 40px;
     }
     .form-group {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
     .form-group label {
         display: block;
         margin-bottom: 8px;
         font-weight: bold;
     }
-    .form-group input, .form-group select {
+    .form-group input {
         width: 100%;
         padding: 12px;
+        margin-bottom: 15px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box;
-        margin-bottom: 15px;
     }
-    .form-group input[type="password"] {
-        font-family: Arial, sans-serif;
+    .product-summary {
+        margin-bottom: 30px;
+    }
+    .product-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .product-item p {
+        margin: 0;
+    }
+    .total-price {
+        text-align: right;
+        font-size: 1.5em;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+    .payment-option img {
+        width: 160px;
+        border-radius: 6px;
     }
     .btn {
         display: block;
         width: 100%;
-        padding: 16px;
-        border: none;
-        border-radius: 4px;
+        padding: 15px;
         background-color: #333;
         color: white;
+        text-align: center;
+        border: none;
+        border-radius: 4px;
         font-size: 18px;
         cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        margin-top: 25px;
     }
     .btn:hover {
         background-color: #555;
     }
-    .order-summary {
-        padding: 20px;
-        border: 1px solid #ccc;
-        margin-top: 25px;
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-    }
-    .order-summary .product-info {
-        flex: 2;
-        display: flex;
-        flex-direction: column;
-    }
-    .order-summary .product-info h2 {
-        margin-top: 0;
-    }
-    .order-summary .product-image {
-        flex: 1;
-        text-align: right;
-    }
-    .order-summary img {
-        width: 200px;
-        height: auto;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-    }
-    .order-summary table {
-        width: 100%;
-        margin-top: 10px;
-    }
-    .order-summary table th, .order-summary table td {
-        padding: 12px;
-        border-bottom: 1px solid #ccc;
-        text-align: left;
-    }
-    .order-summary table th {
-        font-weight: bold;
-    }
-    .order-summary table td {
-        color: #333;
-    }
-    .order-summary .total-price {
-        font-size: 20px;
-        font-weight: bold;
-        color: #333;
-    }
-    .agreement, .payment-methods {
-        margin-top: 20px;
-    }
-    .agreement label, .payment-methods label {
-        display: inline-block;
-        margin-right: 20px;
-        margin-bottom: 0;
-    }
-    .agreement input[type="checkbox"], .payment-methods input[type="radio"] {
-        margin-right: 10px;
-    }
-    .payment-options, .bank-options {
+    #bank-info {
         display: none;
-        margin-top: 10px;
-        gap: 10px;
-        flex-wrap: wrap;
+        padding: 10px 0;
+        font-size: 1em;
     }
-    .payment-options img, .bank-options img {
-        width: 150px;
-        height: auto;
-        cursor: pointer;
-        transition: opacity 0.3s;
-    }
-    .payment-options img:hover, .bank-options img:hover {
-        opacity: 0.7;
-    }
-    /*.payment-options.active, .bank-options.active {*/
-    /*    display: flex;*/
-    /*}*/
 </style>
 {% endblock %}
+
 {% block main %}
 <main>
-    <body>
-
     <div class="container">
-        <h1>ORDER</h1>
+        <h1>Order</h1>
+        <!-- 주문자 정보 -->
+        <div style="padding: 15px 0; font-size: 1.2em; font-weight: bold;">주문자</div>
+        <hr>
+        <form action="/order/order" method="post">
+            <div class="form-group">
+                <label for="buyer_name">이름</label>
+                <input id="buyer_name" type="text" name="buyer_name" value="{{ member_info.username }}" readonly>
 
-        <!-- 주문자 정보 섹션 -->
-        <div class="form-group">
-            <div class="section-title">주문자 정보</div>
-            <label for="buyer_name">주문자 *</label>
-            <input id="buyer_name" type="text" name="buyer_name" placeholder="주문자 성함을 입력하세요" required>
+                <label for="buyer_postcode">우편번호</label>
+                <input id="buyer_postcode" type="text" name="postcode" value="{{ member_info.postcode }}" readonly>
 
-            <label for="buyer_address">주소 *</label>
-            <input id="buyer_address" type="text" name="buyer_address" placeholder="주문자 주소를 입력하세요" required>
+                <label for="buyer_address">주소</label>
+                <input id="buyer_address" type="text" name="addr" value="{{ member_info.address }}" readonly>
 
-            <label for="buyer_postcode">우편번호 *</label>
-            <input id="buyer_postcode" type="text" name="buyer_postcode" placeholder="우편번호를 입력하세요" required>
-
-            <label for="buyer_phone">일반전화 *</label>
-            <input id="buyer_phone" type="text" name="buyer_phone" placeholder="일반전화를 입력하세요" required>
-
-            <label for="buyer_mobile">휴대전화</label>
-            <input id="buyer_mobile" type="text" name="buyer_mobile" placeholder="휴대전화를 입력하세요">
-
-            <label for="buyer_email">이메일 *</label>
-            <input id="buyer_email" type="email" name="buyer_email" placeholder="이메일을 입력하세요" required>
-
-            <label for="order_password">주문조회 비밀번호 *</label>
-            <input id="order_password" type="password" name="order_password" placeholder="비밀번호를 입력하세요" required>
-
-            <label for="order_password_confirm">주문조회 비밀번호 확인 *</label>
-            <input id="order_password_confirm" type="password" name="order_password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
-        </div>
-
-        <!-- 배송정보 섹션 -->
-        <div class="form-group">
-            <div class="section-title">배송정보</div>
-            <label for="shipping_name">이름 *</label>
-            <input id="shipping_name" type="text" name="shipping_name" placeholder="수령인 이름을 입력하세요" required>
-
-            <label for="shipping_address">주소 *</label>
-            <input id="shipping_address" type="text" name="shipping_address" placeholder="수령인 주소를 입력하세요" required>
-
-            <label for="shipping_postcode">우편번호 *</label>
-            <input id="shipping_postcode" type="text" name="shipping_postcode" placeholder="우편번호를 입력하세요" required>
-
-            <label for="shipping_phone">일반전화 *</label>
-            <input id="shipping_phone" type="text" name="shipping_phone" placeholder="일반전화를 입력하세요" required>
-
-            <label for="shipping_mobile">휴대전화</label>
-            <input id="shipping_mobile" type="text" name="shipping_mobile" placeholder="휴대전화를 입력하세요">
-        </div>
-
-        <!-- 결제정보 섹션 -->
-        <div class="form-group">
-            <div class="section-title">결제정보 선택</div>
-            <div class="payment-methods">
-                <label>
-                    <input type="radio" name="payment-method" value="bank-transfer" checked>
-                    무통장입금
-                </label>
-                <label>
-                    <input type="radio" name="payment-method" value="pay">
-                    페이결제
-                </label>
+                <label for="buyer_phone">전화번호</label>
+                <input id="buyer_phone" type="text" name="phone" value="{{ member_info.phone }}" readonly>
             </div>
 
-            <!-- 은행 선택 옵션 -->
-            <div class="bank-options" id="bank-options">
-                <label><input type="radio" name="bank" value="bank1"> 신한은행</label>
-                <label><input type="radio" name="bank" value="bank2"> 국민은행</label>
-                <label><input type="radio" name="bank" value="bank3"> 우리은행</label>
-                <label><input type="radio" name="bank" value="bank4"> 하나은행</label>
-                <label><input type="radio" name="bank" value="bank5"> 농협은행</label>
+            <!-- 상품 정보 -->
+            <div class="product-summary">
+                {% if cart_items %}
+                {% for item in cart_items %}
+                <div class="product-item" style="padding: 20px 0">
+                    <p>{{ item.product.prdname }} - [ 수량 : {{ item.qty }}]</p>
+                    <p>₩{{ "{:,}".format(item.price) }}</p>
+                    <input type="hidden" name="prdno" value="{{ item.product.prdno }}">
+                    <input type="hidden" name="qty" value="{{ item.qty }}">
+                    <input type="hidden" name="price" value="{{ item.price }}">
+                </div>
+                {% endfor %}
+                {% elif product %}
+                <div class="product-item">
+                    <p>{{ product.prdname }} - [ 수량 : 1]</p>
+                    <p>₩{{ "{:,}".format(product.price) }}</p>
+                    <input type="hidden" name="prdno" value="{{ product.prdno }}">
+                    <input type="hidden" name="qty" value="1">
+                    <input type="hidden" name="price" value="{{ product.price }}">
+                </div>
+                {% else %}
+                <p>No items to order.</p>
+                {% endif %}
+            </div>
+            <div style="text-align: right">배송비 : 무료</div>
+            <div class="total-price">
+                Total: ₩{{ "{:,}".format(total_price) }}
             </div>
 
-            <!-- 페이결제 옵션 -->
-            <div class="payment-options" id="payment-options">
-                <img src="/static/img/product/kakao.jpg" alt="카카오페이" onclick="selectPayment('kakao-pay')">
-                <img src="/static/img/product/naver.jpg" alt="네이버페이" onclick="selectPayment('naver-pay')">
-            </div>
-        </div>
+            <input type="hidden" name="omno" value="{{ order_number }}">
+            <input type="hidden" name="mno" value="{{ member_info.mno }}">
 
-        <!-- 주문 요약 섹션 -->
-        <div class="order-summary">
-            <div class="product-info">
-                <h2>상품 요약</h2>
-                <p>배송: 무료 / 개별배송</p>
-                <table>
-                    <tr>
-                        <th>상품금액</th>
-                        <td>₩0</td>
-                    </tr>
-                    <tr>
-                        <th>배송비</th>
-                        <td>₩0</td>
-                    </tr>
-                    <tr>
-                        <th>총 할인금액</th>
-                        <td>₩0</td>
-                    </tr>
-                    <tr class="total-price">
-                        <th>총 결제예정 금액</th>
-                        <td>₩0</td>
-                    </tr>
-                </table>
+            <!-- 결제 수단 -->
+            <div style="padding: 15px 0; font-size: 1.5em; font-weight: bold;">결제수단</div>
+            <div class="payment-option" style="padding: 15px 0; font-size: 1em;">
+                <input type="radio" id="bank_transfer" name="payment" value="bank_transfer" required>
+                <label for="bank_transfer">무통장 입금</label>
             </div>
-            <div class="product-image">
-                <img src="/static/img/product/pno1.jpg" alt="상품 이미지">
+            <div id="bank-info">코캅은행(가상계좌생성) 계좌번호 : {{ member_info.phone }} 입금자명 : {{ member_info.username }}</div>
+            <div class="payment-option" style="padding: 10px 0; font-size: 1em;">
+                <input type="radio" id="kakao" name="payment" value="kakao">
+                <label for="kakao">카카오 페이 <img src="/static/img/kakao.jpg" alt="카카오페이"></label>
             </div>
-        </div>
-
-        <!-- 약관 동의 및 결제 버튼 -->
-        <div class="agreement">
-            <input type="checkbox" id="terms_agree" name="terms_agree" required>
-            <label for="terms_agree">쇼핑몰 이용약관에 동의합니다.</label>
-        </div>
-        <div class="agreement">
-            <input type="checkbox" id="privacy_policy_agree" name="privacy_policy_agree" required>
-            <label for="privacy_policy_agree">비회원 개인정보 취급방침에 동의합니다.</label>
-        </div>
-
-        <button type="submit" class="btn">결제하기</button>
+            <div class="payment-option" style="padding: 10px 0 50px 0; font-size: 1em;">
+                <input type="radio" id="naver" name="payment" value="naver">
+                <label for="naver">네이버 페이 <img src="/static/img/naver.jpg" alt="네이버페이"></label>
+            </div>
+            <button type="submit" class="btn">결제하기</button>
+        </form>
     </div>
 
+
     <script>
-        document.querySelectorAll('input[name="payment-method"]').forEach(input => {
-            input.addEventListener('change', function() {
-                const paymentOptions = document.getElementById('payment-options');
-                const bankOptions = document.getElementById('bank-options');
-                if (this.value === 'pay') {
-                    paymentOptions.classList.add('active');
-                    bankOptions.classList.remove('active');
-                } else if (this.value === 'bank-transfer') {
-                    paymentOptions.classList.remove('active');
-                    bankOptions.classList.add('active');
-                } else {
-                    paymentOptions.classList.remove('active');
-                    bankOptions.classList.remove('active');
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const bankInfo = document.getElementById('bank-info');
+            const bankTransferOption = document.getElementById('bank_transfer');
+            const paymentOptions = document.querySelectorAll('input[name="payment"]');
+
+            paymentOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (bankTransferOption.checked) {
+                        bankInfo.style.display = 'block';
+                    } else {
+                        bankInfo.style.display = 'none';
+                    }
+                });
             });
         });
-
-        function selectPayment(method) {
-            alert(method + ' 선택됨');
-            // 여기에 실제 결제 선택 처리 코드를 추가할 수 있습니다.
-        }
     </script>
-    </body>
 </main>
 {% endblock %}

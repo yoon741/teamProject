@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place an Order</title>
+    <title>My Orders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,40 +23,21 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        form {
-            display: flex;
-            flex-direction: column;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-        label {
-            margin: 10px 0 5px;
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
             font-weight: bold;
-        }
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn-submit:hover {
-            background-color: #0056b3;
         }
         .btn-back {
             display: block;
@@ -71,36 +52,46 @@
         .btn-back:hover {
             background-color: #0056b3;
         }
+        .total-price {
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Place an Order</h1>
-    <a href="/admin" class="btn-back">Back to Admin Dashboard</a>
-    <form action="/submit_order" method="post">
-        <label for="customer-name">Customer Name</label>
-        <input type="text" id="customer-name" name="customer_name" placeholder="Enter your name" required>
-
-        <label for="email">Email</label>
-        <input type="text" id="email" name="email" placeholder="Enter your email" required>
-
-        <label for="product">Product</label>
-        <select id="product" name="product" required>
-            <option value="">Select a product</option>
-            <!-- Populate this dynamically -->
-            <option value="product1">Product 1</option>
-            <option value="product2">Product 2</option>
-            <option value="product3">Product 3</option>
-        </select>
-
-        <label for="quantity">Quantity</label>
-        <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" min="1" required>
-
-        <label for="address">Shipping Address</label>
-        <textarea id="address" name="address" placeholder="Enter your shipping address" required></textarea>
-
-        <button type="submit" class="btn-submit">Submit Order</button>
-    </form>
+    <h1>My Orders</h1>
+    {% if orders %}
+    {% for order in orders %}
+    <h2>Order ID: {{ order.omno }}</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ order.product.prdname }}</td>
+            <td>{{ order.qty }}</td>
+            <td>₩{{ "{:,}".format(order.price) }}</td>
+            <td>{{ order.regdate }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="total-price">
+        Total Price: ₩{{ "{:,}".format(order.price * order.qty) }}
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No orders found.</p>
+    {% endif %}
+    <a href="/shop" class="btn-back">Back to Shop</a>
 </div>
 </body>
 </html>
