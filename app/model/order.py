@@ -4,7 +4,7 @@ from app.model.base import Base
 from datetime import datetime
 
 class Order(Base):
-    tablename = 'order'
+    __tablename__ = 'order'
 
     omno = Column(Integer, nullable=False)
     mno = Column(Integer, ForeignKey('member.mno'), nullable=False)
