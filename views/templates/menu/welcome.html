@@ -3,56 +3,57 @@
 {% block title %}홈페이지 - 세미프로젝트{% endblock %}
 
 {% block main %}
-    <hr>
-    <main>
-        <h2>오시는 길</h2>
-        <div class="container">
-            <div class="row">
-                <!-- 지도 표시 -->
-                <div class="col-md-12 mb-4">
-                    <div id="map" style="width: 100%; height: 500px;"></div> <!-- 지도가 표시될 div -->
-                </div>
+<hr>
+<main>
+    <div class="container" style="max-width: 800px">
+        <h2 style="margin: 35px 35px 35px 0; font-weight: bold;">오시는 길</h2>
+        <div class="row">
+            <!-- 지도 표시 -->
+            <div class="col-md-12 mb-4">
+                <div id="map" style="width: 100%; height: 500px; border-radius: 15px;"></div> <!-- 지도가 표시될 div -->
+            </div>
 
-                <!-- 설명 텍스트 -->
-                <div class="col-md-12">
-                    <p>
-                        저희 회사는 서울시 강남구 테헤란로 123에 위치하고 있습니다.<br>
-                        지하철 2호선 서울대입구역에서 하차 후 3번 출구로 나와 도보 10초 거리에 있습니다.<br>
-                        차량 이용 시, 회사 건물에 바로 연결된 주차장이 마련되어 있습니다.<br>
-                        <br>
-                        <strong>주소:</strong> 서울시 강남구 테헤란로 123<br>
-                        <strong>전화:</strong> 02-1234-5678
-                    </p>
-                </div>
+            <!-- 설명 텍스트 -->
+            <div class="col-md-12">
+                <p>
+                    저희 회사는 서울시 관악구에 위치하고 있습니다.<br>
+                    지하철 2호선 서울대입구역에서 하차 후 3번 출구로 나와 도보 10초 거리에 있습니다.<br>
+                    차량 이용 시, 회사 건물에 바로 연결된 주차장이 마련되어 있습니다.<br>
+                    <br>
+                    <strong>주소:</strong> 서울 관악구 남부순환로 1820 에그옐로우 00층<br>
+                    <strong>전화:</strong> 02-1234-5678
+                </p>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <!-- 네이버 지도 API 스크립트 -->
-    <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID"></script>
-    <script>
-        // 지도 초기화 함수
-        function initMap() {
-            var map = new naver.maps.Map('map', {
-                center: new naver.maps.LatLng(37.3595704, 127.105399), // 지도 중심 좌표
-                zoom: 14 // 줌 레벨
-            });
+<!-- 네이버 지도 API 스크립트 -->
+<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID"></script>
+<!--{#    <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=BDvMhBVy1WfoHXcsmRBX4XeurRWnhz1Df8VwOMUa"></script>#}-->
+<script>
+    // 지도 초기화 함수
+    function initMap() {
+        var map = new naver.maps.Map('map', {
+            center: new naver.maps.LatLng(37.481275, 126.952712), // 지도 중심 좌표
+            zoom: 14 // 줌 레벨
+        });
 
-            var marker = new naver.maps.Marker({
-                position: new naver.maps.LatLng(37.3595704, 127.105399), // 마커 위치
-                map: map
-            });
+        var marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(37.481275, 126.952712), // 마커 위치
+            map: map
+        });
 
-            var infoWindow = new naver.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:10px;">서울대입구역</div>'
-            });
+        var infoWindow = new naver.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:10px;">서울대입구역</div>'
+        });
 
-            naver.maps.Event.addListener(marker, 'click', function() {
-                infoWindow.open(map, marker);
-            });
-        }
+        naver.maps.Event.addListener(marker, 'click', function() {
+            infoWindow.open(map, marker);
+        });
+    }
 
-        // 페이지 로드 시 지도 초기화
-        window.onload = initMap;
-    </script>
+    // 페이지 로드 시 지도 초기화
+    window.onload = initMap;
+</script>
 {% endblock %}

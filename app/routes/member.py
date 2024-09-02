@@ -15,18 +15,48 @@ templates = Jinja2Templates(directory='views/templates')
 async def join(req: Request):
     return templates.TemplateResponse("member/join.html", {"request": req})
 
+
 @member_router.post("/join", response_class=HTMLResponse)
 async def joinok(req: Request, db: Session = Depends(get_db)):
     try:
         data = await req.json()
         if MemberService.is_userid_taken(db, data["userid"]):
             return JSONResponse(status_code=400, content={"message": "이미 사용 중인 아이디입니다."})
-        new_member = NewMember(**data)
+
+        try:
+            new_member = NewMember(**data)
+        except ValidationError as e:
+            # 오류 메시지를 한글로 수정하여 반환
+            errors = {}
+            for error in e.errors():
+                field = error['loc'][0]
+                if field == 'username':
+                    errors[field] = '이름을 입력해주세요.'
+                elif field == 'userid':
+                    errors[field] = '아이디를 입력해주세요.'
+                elif field == 'email':
+                    errors[field] = '올바른 이메일 주소를 입력해주세요.'
+                elif field == 'password':
+                    errors[field] = '비밀번호를 입력해주세요.'
+                elif field == 'phone':
+                    errors[field] = '전화번호를 입력해주세요.'
+                elif field == 'address':
+                    errors[field] = '주소를 입력해주세요.'
+                elif field == 'postcode':
+                    errors[field] = '우편번호를 입력해주세요.'
+                elif field == 'birthdate':
+                    errors[field] = '생년월일을 입력해주세요.'
+                elif field == 'gender':
+                    errors[field] = '성별을 선택해주세요.'
+                else:
+                    errors[field] = error['msg']  # 기타 메시지는 기본 메시지 사용
+
+            return JSONResponse(status_code=422, content={"errors": errors})
+
         MemberService.insert_member(db, new_member)
-        print(f"[INFO] New member inserted: {new_member.userid}")
         return RedirectResponse(url='/member/login', status_code=303)
+
     except Exception as ex:
-        print(f'[ERROR] 회원가입 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
 @member_router.get("/login", response_class=HTMLResponse)

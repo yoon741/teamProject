@@ -1,97 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-            font-weight: bold;
-        }
-        .btn-back {
-            display: block;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 4px;
-        }
-        .btn-back:hover {
-            background-color: #0056b3;
-        }
-        .total-price {
-            text-align: right;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h1>My Orders</h1>
-    {% if orders %}
-    {% for order in orders %}
-    <h2>Order ID: {{ order.omno }}</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ order.product.prdname }}</td>
-            <td>{{ order.qty }}</td>
-            <td>₩{{ "{:,}".format(order.price) }}</td>
-            <td>{{ order.regdate }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="total-price">
-        Total Price: ₩{{ "{:,}".format(order.price * order.qty) }}
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - My Orders
+{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+    .container {
+        max-width: 750px;
+        margin: 40px auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        font-size: 2.5em;
+        margin: 50px;
+        color: #333;
+        text-align: left;
+    }
+    .order-list {
+        margin-top: 30px;
+    }
+    .order-item {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+    }
+    .order-item h2 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .order-item p {
+        margin: 5px 0;
+        color: #555;
+    }
+    .order-item table {
+        width: 100%;
+        margin-top: 10px;
+        border-collapse: collapse;
+    }
+    .order-item table th, .order-item table td {
+        padding: 12px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+    .order-item table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+    .order-item .total-price {
+        text-align: right;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #333;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 20px 0 30px 50px;
+        border: none;
+        border-radius: 4px;
+        background-color: #333;
+        color: white;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .btn:hover {
+        background-color: #555;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+    <div class="container">
+        <hr>
+        <h1>MY ORDERS</h1>
+
+        <div class="order-list">
+            {% if orders %}
+            {% for order in orders %}
+            <div class="order-item">
+                <p>주문자 이름: {{ order.member.username }}</p>
+                <p>우편번호: {{ order.postcode }}</p>
+                <p>주소: {{ order.addr }}</p>
+                <p>전화번호: {{ order.phone }}</p>
+                <p>결제 방식: {{ order.payment }}</p>
+                <p>주문 날짜: {{ order.regdate }}</p>
+                <p>주문 상태: 주문 완료</p>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>가격</th>
+                        <th>날짜</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ order.product.prdname }}</td>
+                        <td>{{ order.qty }}</td>
+                        <td>₩{{ "{:,}".format(order.price) }}</td>
+                        <td>{{ order.regdate }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="total-price">총 결제 금액: ₩{{ "{:,}".format(order.price * order.qty) }}</p>
+                <a href="/order-detail.html?orderId={{ order.omno }}" class="btn">주문 상세 보기</a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="margin-left: 50px; font-weight: bold; font-size: 1.5em;">주문 내역이 없습니다.</p>
+            {% endif %}
+        </div>
+        <a href="/shop/item_gallery" class="btn">Back to Shop</a>
     </div>
-    {% endfor %}
-    {% else %}
-    <p>No orders found.</p>
-    {% endif %}
-    <a href="/shop" class="btn-back">Back to Shop</a>
-</div>
-</body>
-</html>
+</main>
+{% endblock %}
