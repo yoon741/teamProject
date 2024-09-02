@@ -4,8 +4,7 @@
         margin: 0;
         background-color: white;
     }
-    a {
-        font-size: 2em;
+    a {font-size: 2em;
         color: black;
     }
     header {
@@ -16,6 +15,7 @@
         align-items: center;
         padding: 0 20px;
         color: black;
+        background-color: rgba(0, 0, 0, 0);
     }
     nav {
         flex-grow: 1;
@@ -50,9 +50,8 @@
     }
 </style>
 {% endblock %}
-
 <header class="py-3">
-    <a id="indexh1">KOCAP</a>
+    <a id="indexh1" href="/" style="text-decoration: none; color: black;">KOCAP</a>
     <nav>
         <ul class="nav">
             <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
@@ -82,3 +81,4 @@
         {% endif %}
     </div>
 </header>
+
