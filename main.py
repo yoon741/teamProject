@@ -25,7 +25,7 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key='20240822110005')
 
 templates = Jinja2Templates(directory='views/templates')
-app.mount('/static', StaticFiles(directory='views/static'),name='static')
+# app.mount('/static', StaticFiles(directory='views/static'),name='static')
 
 app.include_router(member_router, prefix='/member')
 app.include_router(menu_router, prefix="/menu")
