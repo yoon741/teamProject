@@ -1,127 +1,214 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-Product Registration
+세미프로젝트 - 상품 등록
 {% endblock %}
 
 {% block style %}
 <style>
-    .product-registration-page {
+    body {
         font-family: Arial, sans-serif;
+        background-color: white;
         margin: 0;
-        padding: 20px;
-        background-color: #f4f4f4;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        box-sizing: border-box;
     }
-    .product-registration-page h1 {
-        text-align: center;
+    .header-container h1 {
+        font-size: 2.4em;
+        margin: 0;
+        color: black;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .header-container h1:hover {
         color: #333;
+    }
+    .container {
+        background-color: white;
+        padding: 50px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 800px;
+        max-width: 75%;
+        margin: 20px auto;
+        box-sizing: border-box;
+        flex-grow: 1;
+    }
+    h1, h2 {
+        font-size: 2.4em;
+        margin-bottom: 50px;
+        color: black;
+        text-align: left;
+    }
+    hr {
+        border: 2px solid black;
         margin-bottom: 20px;
     }
-    .product-registration-page form {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
     }
-    .product-registration-page label {
+    .form-group label {
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-weight: bold;
     }
-    .product-registration-page input,
-    .product-registration-page select,
-    .product-registration-page textarea {
+    .form-group input, .form-group textarea {
         width: 100%;
         padding: 10px;
-        margin-bottom: 15px;
+        font-size: 1em;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 5px;
+        box-sizing: border-box;
     }
-    .product-registration-page input[type="file"] {
-        padding: 0;
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-    .product-registration-page .btn-submit {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
+    button {
+        padding: 12px 20px;
+        font-size: 1em;
         color: white;
+        background-color: #333;
         border: none;
-        border-radius: 4px;
+        border-radius: 5px;
+        text-decoration: none;
         cursor: pointer;
+        width: 100%;
         text-align: center;
-        font-size: 16px;
+        box-sizing: border-box;
     }
-    .product-registration-page .btn-submit:hover {
-        background-color: #0056b3;
+    button:hover {
+        background-color: #555;
     }
-    .product-registration-page .image-preview {
-        margin-top: 10px;
+    .error-message {
+        color: forestgreen;
+        margin-top: 5px;
+        font-size: 0.9em;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
+    footer {
         text-align: center;
+        padding: 10px 0;
+        color: black;
+        margin-top: auto;
+        box-sizing: border-box;
+        width: 100%;
     }
-    .product-registration-page .image-preview img {
-        max-width: 100%;
-        height: auto;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .custom-file-input {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        margin-bottom: 0;
+        opacity: 0;
+    }
+    .custom-file-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+    .custom-file-label::after {
+        content: "Browse";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: calc(1.5em + .75rem);
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #e9ecef;
+        border-left: inherit;
+        border-radius: 0 .25rem .25rem 0;
     }
 </style>
 {% endblock %}
 
 {% block main %}
-<div class="product-registration-page">
-    <h1>Product Registration</h1>
-    <form id="product-form">
-        <label for="product-name">Product Name</label>
-        <input type="text" id="product-name" name="product_name" required>
+<main>
+    <div class="container">
+        <h2>상품 등록</h2>
+        <form name="productfrm" enctype='multipart/form-data' method="post">
+            <div class="form-group">
+                <label for="prdname">상품명 *</label>
+                <input type="text" name="prdname" id="prdname" required placeholder="상품명">
+            </div>
+            <div class="form-group">
+                <label for="price">가격 *</label>
+                <input type="text" name="price" id="price" required placeholder="숫자만 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="type">타입 *</label>
+                <input type="text" name="type" id="type" required placeholder="예시) 쇼파, 의자, 테이블 등">
+            </div>
+            <div class="form-group">
+                <label for="qty">수량 *</label>
+                <input type="text" name="qty" id="qty" required placeholder="상품수량">
+            </div>
+<!--            {# 수량 딱히 필요없을 것 같은데 의논해서 결정하기 #}-->
+            <div class="form-group">
+                <label for="description">상품 설명 *</label>
+                <textarea name="description" id="description" rows="10" required placeholder="상품설명"></textarea>
+            </div>
+            <div class="form-group">
+                <div><label for="imgfile">상품이미지</label></div>
+                <div><input type="file" name="files" id="file1" required></div>
 
-        <label for="category">Category</label>
-        <select id="category" name="category" required>
-            <option value="living-room">Living Room Furniture</option>
-            <option value="bedroom">Bedroom Furniture</option>
-            <option value="dining">Dining Furniture</option>
-            <option value="office">Office Furniture</option>
-            <option value="outdoor">Outdoor Furniture</option>
-            <option value="storage">Storage Furniture</option>
-        </select>
+            </div>
+            <div class="button-group">
+<!--                {#                    <button type="button" id="listbtn" onclick="location.href='/admin/mgproduct'">상품리스트로</button>#}-->
+                <button type="submit" id="writeokbtn">입력완료</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
 
-        <label for="price">Price ($)</label>
-        <input type="number" id="price" name="price" step="0.01" required>
-
-        <label for="stock">Stock Quantity</label>
-        <input type="number" id="stock" name="stock" required>
-
-        <label for="description">Description</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
-
-        <label for="product-image">Product Image</label>
-        <input type="file" id="product-image" name="product_image" accept="image/*" onchange="previewImage(event)">
-
-        <div class="image-preview" id="image-preview">
-            <!-- Image preview will be shown here -->
-        </div>
-
-        <button type="submit" class="btn-submit">Submit</button>
-    </form>
-</div>
-
+{% block script %}
 <script>
-    function previewImage(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById('image-preview');
-        preview.innerHTML = '';
+    // {#document.querySelector('.custom-file-input').addEventListener('change', function(e) {#}
+        // {#    var fileName = document.getElementById("imgfile").files[0].name;#}
+        // {#    var nextSibling = e.target.nextElementSibling#}
+        // {#    nextSibling.innerText = fileName#}
+        // {# });#}
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
+    let productfrm = document.productfrm;
+    productfrm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(productfrm);
+
+        const response = await fetch('/admin/rgproduct', {
+            method: 'post',
+            body: formData
+        });
+
+        // 서버에서 응답이 성공적으로 반환되면 리디렉션
+        if (response.ok) {
+            window.location.href = '/admin/admin';
+        } else {
+            alert('오류가 발생했습니다. 다시 시도해주세요.');
         }
-    }
+    });
 </script>
 {% endblock %}
