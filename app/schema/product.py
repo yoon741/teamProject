@@ -36,3 +36,11 @@ class PrdAttachCreate(PrdAttachBase):
 # PrdAttachRead 모델: 조회 시 사용
 class PrdAttachRead(PrdAttachBase):
     prdatno: int
+
+
+class NewProduct(BaseModel):
+    prdname: str
+    price: int
+    type: str
+    qty: int
+    description: str
