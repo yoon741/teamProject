@@ -120,3 +120,24 @@ class MemberService:
             db.rollback()
             print(f'Update Member Info Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    @staticmethod
+    def login_admin(db: Session, data: dict):
+        """
+        Admin 로그인 함수: mno가 1인 사용자를 관리자 계정으로 간주하여 로그인 처리
+        """
+        try:
+            hashed_password = MemberService.sha256_hash(data['password'])
+            admin = db.query(Member).filter(
+                Member.userid == data['userid'],
+                Member.password == hashed_password,
+                Member.mno == 1  # mno가 1인 사용자를 관리자로 설정
+            ).first()
+
+            if not admin:
+                raise HTTPException(status_code=403, detail="Forbidden: Not an admin or incorrect credentials")
+
+            return admin
+        except SQLAlchemyError as ex:
+            print(f'Admin Login Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Internal Server Error")
