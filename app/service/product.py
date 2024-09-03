@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.model.product import Product
 
+UPLOAD_PATH = '/usr/share/nginx/html/cdn/img'
+
 class ProductService:
     @staticmethod
     def get_all_products(db: Session):
