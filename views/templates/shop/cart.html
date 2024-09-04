@@ -35,6 +35,13 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    .cart-item img {
+        max-width: 100px; /* 이미지 크기 조정 */
+        height: auto;
+        border-radius: 8px; /* 모서리 둥글기 조정 */
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
+       margin-right: 10px; /* 이미지와 텍스트 사이에 간격 추가 */
+    }
     .cart-info {
         flex: 2;
         padding: 20px;
@@ -115,6 +122,7 @@
         width: 100%;
     }
 </style>
+
 {% endblock %}
 
 {% block main %}
@@ -138,22 +146,9 @@
                 <p class="cart-total-item">합계: ₩{{ "{:,}".format(item.price * item.qty) }}</p>
             </a>
         </div>
-
-        <!-- 수량 및 버튼들을 수직 배치 -->
-        <div class="quantity-control">
-            <!-- 수량 변경을 위한 부트스트랩 input-group -->
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1, {{ item.cno }})">-</button>
-                </div>
-                <input type="number" id="qty-{{ item.cno }}" class="form-control text-center" value="{{ item.qty }}" min="1">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1, {{ item.cno }})">+</button>
-                </div>
-            </div>
-            <button class="btn update-button" onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
-            <button class="btn remove-button" onclick="removeFromCart({{ item.cno }})">제거</button>
-        </div>
+        <input type="number" id="qty-{{ item.cno }}" value="{{ item.qty }}" min="1">
+        <button class="update-button" onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
+        <button class="remove-button" onclick="removeFromCart({{ item.cno }})">제거</button>
     </div>
     {% endfor %}
     <div class="cart-total">
@@ -166,15 +161,6 @@
 </div>
 
 <script>
-    function changeQuantity(amount, cno) {
-        const qtyInput = document.getElementById(`qty-${cno}`);
-        let qty = parseInt(qtyInput.value);
-
-        qty += amount;
-        if (qty < 1) qty = 1;
-        qtyInput.value = qty;
-    }
-
     function removeFromCart(cno) {
         fetch(`/cart/remove/${cno}`, {
             method: 'DELETE'
