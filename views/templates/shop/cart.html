@@ -110,10 +110,10 @@
             <div>
                 <label for="qty-{{ item.cno }}">수량:</label>
                 <input type="number" id="qty-{{ item.cno }}" value="{{ item.qty }}" min="1">
-                <button onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
+                <button onclick="updateCartItem({{ item.cno }})" alt="...">수량 업데이트</button>
             </div>
             <p class="cart-total-item">합계: ₩{{ "{:,}".format(item.price * item.qty) }}</p>
-            <button onclick="removeFromCart({{ item.cno }})">제거</button>
+            <button onclick="removeFromCart({{ item.cno }})" alt="...">제거</button>
         </div>
     </div>
     {% endfor %}
