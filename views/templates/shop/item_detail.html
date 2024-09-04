@@ -112,7 +112,7 @@
         <h1 style="margin: 30px; text-align: left; font-size: 3em;">Product Detail</h1>
         <div class="product-detail">
             <!-- item_detail.html or item_gallery.html -->
-            <img src="https://54.180.202.98/static/img/{{ prdattach.fname if prdattach else 'default.jpg' }}" alt="{{ product.prdname }}">
+            <img src="/static/img/{{ prdattach.fname }}" alt="...">
             <div class="product-info">
                 <h1 class="product-prdname">{{ product.prdname }}</h1>
                 <p class="product-price">₩{{ "{:,}".format(product.price) }}</p>

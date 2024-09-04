@@ -96,7 +96,7 @@
             <tr>
                 <td>
                     <div class="product">
-                        <img src="https://54.180.202.98/static/img/{{ prdlist[i].fname }}" alt="...">
+                        <img src="/static/img/{{ prdlist[i].fname }}" alt="...">
                         <div class="product-info">
                             <p class="product-price">₩{{ "{:,}".format(prdlist[i].price) }}</p>
                             <a href="/shop/item_detail/{{ prdlist[i].prdno }}" class="product-button">{{ prdlist[i].prdname }}</a>
@@ -106,7 +106,7 @@
                 {% if i + 1 < prdlist|length %}
                 <td>
                     <div class="product">
-                        <img src="https://54.180.202.98/static/img/{{ prdlist[i + 1].fname }}" alt="...">
+                        <img src="/static/img/{{ prdlist[i + 1].fname }}" alt="...">
                         <div class="product-info">
                             <p class="product-price">₩{{ "{:,}".format(prdlist[i + 1].price) }}</p>
                             <a href="/shop/item_detail/{{ prdlist[i + 1].prdno }}" class="product-button">{{ prdlist[i + 1].prdname }}</a>
