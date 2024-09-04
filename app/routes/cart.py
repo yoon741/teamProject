@@ -20,7 +20,7 @@ async def add_to_cart(request: Request, db: Session = Depends(get_db)):
     except ValueError:
         raise HTTPException(status_code=400, detail="유효하지 않은 수량입니다.")
 
-    userid = request.session.get("userid", "test_user")
+    userid = request.session.get("userid")
 
     member = db.query(Member).filter(Member.userid == userid).first()
     if not member:
@@ -51,7 +51,10 @@ async def add_to_cart(request: Request, db: Session = Depends(get_db)):
 
 @cart_router.get("/cart", response_class=HTMLResponse)
 async def view_cart(request: Request, db: Session = Depends(get_db)):
-    userid = request.session.get("userid", "test_user")
+    userid = request.session.get("userid")
+
+    if not userid:
+        raise HTTPException(status_code=401, detail="로그인이 필요합니다.")
 
     member = db.query(Member).filter(Member.userid == userid).first()
     if not member:
