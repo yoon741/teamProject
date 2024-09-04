@@ -71,3 +71,49 @@ async def view_cart(request: Request, db: Session = Depends(get_db)):
         "cart_items": cart_items,
         "total_price": total_price
     })
+
+@cart_router.delete("/remove/{cno}")
+async def remove_item_from_cart(cno: int, db: Session = Depends(get_db)):
+    cart_item = db.query(CartModel).filter(CartModel.cno == cno).first()
+
+    if not cart_item:
+        raise HTTPException(status_code=404, detail="장바구니에서 해당 항목을 찾을 수 없습니다.")
+
+    try:
+        db.delete(cart_item)
+        db.commit()
+        return {"message": "장바구니에서 항목이 제거되었습니다."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="장바구니에서 항목을 제거하는 중 오류가 발생했습니다.")
+
+@cart_router.put("/update/{cno}")
+async def update_cart_item(cno: int, qty: int, db: Session = Depends(get_db)):
+    cart_item = db.query(CartModel).filter(CartModel.cno == cno).first()
+
+    if not cart_item:
+        raise HTTPException(status_code=404, detail="장바구니에서 해당 항목을 찾을 수 없습니다.")
+
+    if qty <= 0:
+        raise HTTPException(status_code=400, detail="수량은 1 이상이어야 합니다.")
+
+    try:
+        product = db.query(ProductModel).filter(ProductModel.prdno == cart_item.prdno).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="해당 상품을 찾을 수 없습니다.")
+
+        if product.qty + cart_item.qty < qty:
+            raise HTTPException(status_code=400, detail="재고가 부족합니다.")
+
+        product.qty += cart_item.qty
+        cart_item.qty = qty
+        cart_item.price = qty * product.price
+        product.qty -= qty
+
+        db.commit()
+        return {"message": "장바구니 항목이 업데이트되었습니다."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="장바구니 항목을 업데이트하는 중 오류가 발생했습니다.")
+
+

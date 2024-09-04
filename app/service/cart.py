@@ -51,14 +51,26 @@ class CartService:
     @staticmethod
     def delete_cart_item(db: Session, cno: int):
         try:
+            logger.info(f"Trying to delete cart item with cno: {cno}")
+
             cart_item = CartService.get_cart_item_by_cno(db, cno)
+
+            if not cart_item:
+                logger.error(f"No cart item found with cno: {cno}")
+                raise HTTPException(status_code=404, detail="Cart item not found")
+
             db.delete(cart_item)
             db.commit()
-            return cart_item
+
+            logger.info(f"Cart item with cno: {cno} deleted successfully")
+            return {"message": "Cart item deleted successfully"}
+        except HTTPException as he:
+            raise he
         except Exception as e:
-            db.rollback()
+            db.rollback()  # 오류 발생 시 롤백
             logger.error(f"Failed to delete cart item: {str(e)}")
             raise HTTPException(status_code=500, detail="Failed to delete cart item")
+
 
     @staticmethod
     def get_cart_items_by_userid(db: Session, userid: str):
