@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 import os
 from datetime import datetime
 from fastapi import Form
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 from sqlalchemy.exc import SQLAlchemyError
 from app.model.product import Product, PrdAttach
 from app.schema.product import NewProduct
@@ -90,4 +90,32 @@ class ProductService:
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶ insert_gallery에서 오류발생 : {str(ex)} ')
+            db.rollback()
+
+    @staticmethod
+    def select_product(db):
+        try:
+            stmt = select(Product.prdno, Product.prdname, Product.price, PrdAttach.fname) \
+                .join(PrdAttach) \
+                .group_by(Product.prdno, PrdAttach.fname) \
+                .order_by(Product.prdno.desc()).limit(25)
+            result = db.execute(stmt).all()
+
+            return result
+
+        except SQLAlchemyError as ex:
+            print(f'▶▶▶ select_product에서 오류발생 : {str(ex)}')
+            db.rollback()
+
+    @staticmethod
+    def selectone_product(prdno, db):
+        try:
+            stmt = select(Product).options(joinedload(Product.attachs)) \
+                .where(Product.prdno == prdno)
+            result = db.execute(stmt).scalars().first()
+
+            return result
+
+        except SQLAlchemyError as ex:
+            print(f'▶▶▶ selectone_product 오류발생 : {str(ex)}')
             db.rollback()
