@@ -102,15 +102,8 @@
     {% if cart_items %}
     {% for item in cart_items %}
     <div class="cart-item">
-        <img src="/static/img/{{ prdattach.fname }}" alt="...">
-        <!--        <div class="cart-info">-->
-        <!--            <div href="/shop/item_detail/{{ item.product.prdno }}" class="item-detail-button">-->
-        <!--                <h2 class="cart-title">{{ item.product.prdname }}</h2>-->
-        <!--                <p class="cart-price">가격 : ₩{{ "{:,}".format(item.price) }}</p>-->
-        <!--                <p class="cart-qty">수량 : {{ item.qty }}</p>-->
-        <!--                <p class="cart-total-item">합계 : ₩{{ "{:,}".format(item.price * item.qty) }}</p>-->
-        <!--            </div>-->
-
+<!--        이미지 임시 삭제 2024.09.04 15:57-->
+<!--        <img src="/static/img/{{ prdattach.fname }}" alt="...">-->
         <div class="cart-info">
             <h2 class="cart-title">{{ item.product.prdname }}</h2>
             <p class="cart-price">가격: ₩{{ "{:,}".format(item.price) }}</p>
