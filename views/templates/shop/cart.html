@@ -68,17 +68,27 @@
     .checkout-button:hover {
         background-color: #555;
     }
-    .remove-button {
+    .remove-button, .update-button {
         padding: 10px 15px;
-        background-color: #e60000;
-        color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
+        margin-right: 10px;
+    }
+    .remove-button {
+        background-color: #e60000;
+        color: white;
     }
     .remove-button:hover {
         background-color: #c00000;
+    }
+    .update-button {
+        background-color: #007bff;
+        color: white;
+    }
+    .update-button:hover {
+        background-color: #0056b3;
     }
 </style>
 {% endblock %}
@@ -100,13 +110,13 @@
             <a href="/shop/item_detail/{{ item.product.prdno }}" class="item-detail-button">
                 <h2 class="cart-title">{{ item.product.prdname }}</h2>
                 <p class="cart-price">가격: ₩{{ "{:,}".format(item.price) }}</p>
-                <p class="cart-qty">수량 : {{ item.qty }}</p>
-                <p class="cart-total-item">합계 : ₩{{ "{:,}".format(item.price * item.qty) }}</p>
+                <p class="cart-qty">수량: {{ item.qty }}</p>
+                <p class="cart-total-item">합계: ₩{{ "{:,}".format(item.price * item.qty) }}</p>
             </a>
         </div>
         <input type="number" id="qty-{{ item.cno }}" value="{{ item.qty }}" min="1">
-        <button onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
-        <button onclick="removeFromCart({{ item.cno }})">제거</button>
+        <button class="update-button" onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
+        <button class="remove-button" onclick="removeFromCart({{ item.cno }})">제거</button>
     </div>
     {% endfor %}
     <div class="cart-total">
