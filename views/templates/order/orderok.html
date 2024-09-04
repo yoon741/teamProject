@@ -1,133 +1,133 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-    주문 완료
+주문 완료
 {% endblock %}
 
 {% block style %}
-    <style>
-        body {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fafafa;
-            color: #333;
-        }
-        .container {
-            width: 100%;
-            margin: 45px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        .order-details {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 15px;
-            color: #222;
-        }
-        p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        .order-info {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 30px;
-        }
-        .order-info h2 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #222;
-        }
-        .order-info p {
-            margin: 5px 0;
-        }
-        .order-info p span {
-            font-weight: bold;
-            color: #333;
-        }
-        .product-summary {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 30px;
-        }
-        .product-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #ccc;
-        }
-        .product-item p {
-            margin: 0;
-            color: #333;
-        }
-        .total-price {
-            text-align: right;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-top: 20px;
-            color: #333;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            color: white;
-            background-color: #333;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #555;
-        }
-    </style>
+<style>
+    body {
+        font-family: 'Noto Sans KR', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fafafa;
+        color: #333;
+    }
+    .container {
+        width: 100%;
+        margin: 45px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .order-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+        color: #222;
+    }
+    p {
+        font-size: 1.2em;
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    .order-info {
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 30px;
+    }
+    .order-info h2 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #222;
+    }
+    .order-info p {
+        margin: 5px 0;
+    }
+    .order-info p span {
+        font-weight: bold;
+        color: #333;
+    }
+    .product-summary {
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 30px;
+    }
+    .product-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .product-item p {
+        margin: 0;
+        color: #333;
+    }
+    .total-price {
+        text-align: right;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-top: 20px;
+        color: #333;
+    }
+    .btn {
+        display: inline-block;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        color: white;
+        background-color: #333;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #555;
+    }
+</style>
 {% endblock %}
 
 {% block main %}
-    <main>
-        <div class="container">
-            <div class="order-details">
-                <h1>주문이 완료되었습니다!</h1>
-                <p>주문해주셔서 감사합니다. 주문 내역은 아래에서 확인하실 수 있습니다.</p>
+<main>
+    <div class="container">
+        <div class="order-details">
+            <h1>주문이 완료되었습니다!</h1>
+            <p>주문해주셔서 감사합니다. 주문 내역은 아래에서 확인하실 수 있습니다.</p>
 
-                <!-- 주문 정보 섹션 -->
-                <div class="order-info">
-                    <h2>주문 번호: #{{ order_id }}</h2>
-                    <p><span>주문자:</span> {{ customer_name }}</p>
-                    <p><span>배송 주소:</span> {{ shipping_address }}</p>
-                    <p><span>연락처:</span> {{ contact_number }}</p>
-                    <p><span>이메일:</span> {{ email }}</p>
-                </div>
-
-                <!-- 주문한 상품 요약 -->
-                <div class="product-summary">
-                    <h2>주문한 상품</h2>
-                    {% for item in order_items %}
-                        <div class="product-item">
-                            <p>상품명 : {{ item.product_name }} [수량 : {{ item.quantity }}]</p>
-                            <p>₩{{ "{:,}".format(item.price) }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <!-- 총 결제 금액 -->
-                <div class="total-price">
-                    총 결제 금액: ₩{{ "{:,}".format(total_price or 0) }}
-                </div>
-
-                <a href="/" class="btn">메인으로 돌아가기</a>
+            <!-- 주문 정보 섹션 -->
+            <div class="order-info">
+                <h2>주문 번호: #{{ order_id }}</h2>
+                <p><span>주문자:</span> {{ customer_name }}</p>
+                <p><span>배송 주소:</span> {{ shipping_address }}</p>
+                <p><span>연락처:</span> {{ contact_number }}</p>
+                <p><span>이메일:</span> {{ email }}</p>
             </div>
+
+            <!-- 주문한 상품 요약 -->
+            <div class="product-summary">
+                <h2>주문한 상품</h2>
+                {% for item in order_items %}
+                <div class="product-item">
+                    <p>상품명 : {{ item.product_name }} [수량 : {{ item.quantity }}]</p>
+                    <p>₩{{ "{:,}".format(item.price) }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 총 결제 금액 -->
+            <div class="total-price">
+                총 결제 금액: ₩{{ "{:,}".format(total_price or 0) }}
+            </div>
+
+            <a href="/" class="btn">메인으로 돌아가기</a>
         </div>
-    </main>
+    </div>
+</main>
 {% endblock %}

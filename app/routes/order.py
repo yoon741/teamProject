@@ -24,7 +24,7 @@ def check_login(req: Request):
     return True
 
 
-@order_router.post("/order", response_class=HTMLResponse)
+@order_router.post("/orderok", response_class=HTMLResponse)
 def orderok(
         req: Request,
         mno: int = Form(...),
@@ -37,13 +37,16 @@ def orderok(
         payment: str = Form(...),
         db: Session = Depends(get_db)
 ):
+    # 주문 정보 처리
     member = db.query(Member).filter(Member.mno == mno).first()
 
     if not member:
         raise HTTPException(status_code=404, detail="User not found")
 
+    # 주문 번호 생성
     order_number = db.query(func.max(Order.omno)).scalar() + 1 if db.query(func.count(Order.omno)).scalar() > 0 else 1
 
+    # 다중 제품 처리
     for i in range(len(prdno)):
         order = Order(
             omno=order_number,
@@ -57,13 +60,13 @@ def orderok(
             payment=payment
         )
         db.add(order)
-        db.commit()
 
-    # 포트원 결제 요청
-    payment_response = OrderService.create_payment_request(order)
-    if payment_response['code'] != 0:
-        raise HTTPException(status_code=400, detail="Payment request failed: " + payment_response['message'])
+    db.commit()
 
+    # 결제된 상품 장바구니에서 제거
+    CartService.clear_cart_items(db, member.userid)  # CartService에서 해당 사용자 장바구니를 비웁니다.
+
+    # 주문 완료 페이지 렌더링
     return templates.TemplateResponse("order/orderok.html", {
         "request": req,
         "order_id": order_number,
@@ -71,7 +74,7 @@ def orderok(
         "shipping_address": addr,
         "contact_number": phone,
         "email": member.email,
-        "order_items": [{"product_name": db.query(Product).filter(Product.prdno == prdno[i]).first().prdname,
+        "order_items": [{"product_name": db.query(ProductModel).filter(ProductModel.prdno == prdno[i]).first().prdname,
                          "quantity": qty[i],
                          "price": price[i]} for i in range(len(prdno))],
         "total_price": sum(price[i] * qty[i] for i in range(len(prdno)))

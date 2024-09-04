@@ -144,7 +144,7 @@ Order
                 <label for="kakao">카카오 페이 <img src="/static/img/kakao.jpg" alt="카카오페이"></label>
             </div>
             <div class="payment-option" style="padding: 10px 0 50px 0; font-size: 1em;">
-                <input type="radio" id="toss" name="payment" value="naver">
+                <input type="radio" id="toss" name="payment" value="toss">
                 <label for="toss">토스 페이 <img src="/static/img/toss.jpg" alt="토스페이"></label>
             </div>
             <button type="submit" class="btn" id="submit-btn">결제하기</button>
@@ -158,13 +158,17 @@ Order
             const submitBtn = document.getElementById('submit-btn');
 
             submitBtn.addEventListener('click', function(event) {
-                event.preventDefault(); // 기본 폼 제출 방지
+                event.preventDefault();
 
+                // 선택한 결제 수단에 따라 처리
                 const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
-                if (selectedPayment === 'kakao' || selectedPayment === 'naver') {
-                    requestPay(selectedPayment);
+
+                if (selectedPayment === 'bank_transfer') {
+                    orderForm.action = "/order/orderok";
+                    orderForm.submit();
                 } else {
-                    orderForm.submit(); // 무통장 입금 등의 경우 기본 폼 제출
+                    (selectedPayment === 'kakao' || selectedPayment === 'toss')
+                    requestPay(selectedPayment);
                 }
             });
 
@@ -186,9 +190,10 @@ Order
                 }, function (rsp) {
                     if (rsp.success) {
                         alert('결제가 완료되었습니다.');
-                        orderForm.submit(); // 결제 성공 시 폼 제출
+                        orderForm.action = "/order/orderok";
+                        orderForm.submit();
                     } else {
-                        alert('결제에 실패하였습니다. 에러내용: ' + rsp.error_msg);
+                        alert('결제에 실패했습니다. 사유: ' + rsp.error_msg);
                     }
                 });
             }
