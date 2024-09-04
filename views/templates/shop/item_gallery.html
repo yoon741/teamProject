@@ -92,22 +92,29 @@
         <h1>SHOP</h1>
         <table>
             <tbody>
-            {% for i in range(1, 21) %}
-            {% if i % 2 != 0 %}
+            {% for i in range(0, prdlist|length, 2) %}
             <tr>
-                {% endif %}
                 <td>
                     <div class="product">
-                        <img src="/static/img/gagu{{ i }}.jpg" alt="상품 {{ i }}">
+                        <img src="https://54.180.202.98/static/img/{{ prdlist[i].fname }}" alt="...">
                         <div class="product-info">
-                            <p class="product-price">₩{{ prices[i-1] }}</p>
-                            <a href="/shop/item_detail/{{ i }}" class="product-button">상품 제목 {{ i }}</a>
+                            <p class="product-price">₩{{ "{:,}".format(prdlist[i].price) }}</p>
+                            <a href="/shop/item_detail/{{ prdlist[i].prdno }}" class="product-button">{{ prdlist[i].prdname }}</a>
                         </div>
                     </div>
                 </td>
-                {% if i % 2 == 0 %}
+                {% if i + 1 < prdlist|length %}
+                <td>
+                    <div class="product">
+                        <img src="https://54.180.202.98/static/img/{{ prdlist[i + 1].fname }}" alt="...">
+                        <div class="product-info">
+                            <p class="product-price">₩{{ "{:,}".format(prdlist[i + 1].price) }}</p>
+                            <a href="/shop/item_detail/{{ prdlist[i + 1].prdno }}" class="product-button">{{ prdlist[i + 1].prdname }}</a>
+                        </div>
+                    </div>
+                </td>
+                {% endif %}
             </tr>
-            {% endif %}
             {% endfor %}
             </tbody>
         </table>
