@@ -49,6 +49,8 @@ async def add_to_cart(request: Request, db: Session = Depends(get_db)):
 
     return {"message": "장바구니에 추가되었습니다."}
 
+from sqlalchemy.orm import joinedload
+
 @cart_router.get("/cart", response_class=HTMLResponse)
 async def view_cart(request: Request, db: Session = Depends(get_db)):
     userid = request.session.get("userid")
@@ -62,10 +64,17 @@ async def view_cart(request: Request, db: Session = Depends(get_db)):
 
     mno = member.mno
 
-    cart_items = db.query(CartModel).filter(CartModel.mno == mno).all()
+    # 장바구니 항목과 연관된 상품과 첨부 파일을 함께 로드
+    cart_items = db.query(Cart).options(
+        joinedload(Cart.product).joinedload(Product.attachs)
+    ).filter(Cart.mno == mno).all()
 
     if not cart_items:
-        return templates.TemplateResponse("shop/cart.html", {"request": request, "cart_items": [], "total_price": 0})
+        return templates.TemplateResponse("shop/cart.html", {
+            "request": request,
+            "cart_items": [],
+            "total_price": 0
+        })
 
     total_price = sum(item.price * item.qty for item in cart_items)
 
@@ -74,6 +83,7 @@ async def view_cart(request: Request, db: Session = Depends(get_db)):
         "cart_items": cart_items,
         "total_price": total_price
     })
+
 
 @cart_router.delete("/remove/{cno}")
 async def remove_item_from_cart(cno: int, db: Session = Depends(get_db)):
