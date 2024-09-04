@@ -14,6 +14,7 @@
     }
     .container {
         width: 80%;
+        max-width: 1200px; /* 최대 너비 설정 */
         margin: 0 auto;
         padding: 20px;
     }
@@ -22,23 +23,23 @@
     }
     .cart-item {
         display: flex;
-        flex-wrap: wrap;
+        align-items: center; /* 수직 정렬 */
         background-color: #f5f5dc;
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        flex-wrap: nowrap; /* 항목을 한 줄로 배치 */
     }
     .cart-item img {
-        flex: 1;
         max-width: 150px;
         height: auto;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-right: 20px; /* 이미지와 텍스트 사이에 간격 추가 */
     }
     .cart-info {
-        flex: 2;
-        padding-left: 30px;
+        flex: 1; /* 남은 공간을 채움 */
     }
     .cart-title {
         font-size: 1.8em;
@@ -64,17 +65,20 @@
         font-size: 1.2em;
         border-radius: 5px;
         transition: background-color 0.3s;
+        text-align: center;
     }
     .checkout-button:hover {
         background-color: #555;
     }
     .remove-button, .update-button {
-        padding: 10px 15px;
+        padding: 10px 20px; /* 버튼 패딩 조정 */
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
+        font-size: 1em; /* 버튼 텍스트 크기 조정 */
         margin-right: 10px;
+        text-align: center;
     }
     .remove-button {
         background-color: #e60000;
@@ -90,7 +94,13 @@
     .update-button:hover {
         background-color: #0056b3;
     }
+    input[type="number"] {
+        width: 80px; /* 입력 요소의 너비 조정 */
+        padding: 5px;
+        margin-right: 10px;
+    }
 </style>
+
 {% endblock %}
 
 {% block main %}
