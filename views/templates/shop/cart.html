@@ -1,9 +1,7 @@
 {% extends 'include/base.html' %}
-
 {% block title %}
 장바구니
 {% endblock %}
-
 {% block style %}
 <style>
     body {
@@ -14,117 +12,94 @@
     }
     .container {
         width: 80%;
+        max-width: 1200px; /* 최대 너비 설정 */
         margin: 0 auto;
-        padding: 20px;
+        padding: 15px;
+    }
+    .cart-detail {
+        margin-bottom: 15px;
     }
     .cart-item {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        background-color: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        align-items: center;
-    }
-    .cart-item img {
-        flex: 1;
-        max-width: 150px;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        align-items: center; /* 수직 정렬 */
+        background-color: #f5f5dc;
+        padding: 10px; /* 패딩 조정 */
+        margin-bottom: 15px; /* 마진 조정 */
+        border-radius: 8px; /* 모서리 둥글기 조정 */
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
+        flex-wrap: nowrap; /* 항목을 한 줄로 배치 */
     }
     .cart-item img {
         max-width: 100px; /* 이미지 크기 조정 */
         height: auto;
         border-radius: 8px; /* 모서리 둥글기 조정 */
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
-       margin-right: 10px; /* 이미지와 텍스트 사이에 간격 추가 */
+        margin-right: 10px; /* 이미지와 텍스트 사이에 간격 추가 */
     }
     .cart-info {
-        flex: 2;
-        padding: 20px;
-    }
-    .cart-info:hover {
-        background-color: whitesmoke;
+        flex: 1; /* 남은 공간을 채움 */
     }
     .cart-title {
-        font-size: 1.0em;
-        margin-bottom: 10px;
+        font-size: 1.2em; /* 글씨 크기 조정 */
+        margin-bottom: 5px; /* 마진 조정 */
     }
     .cart-price, .cart-qty, .cart-total-item {
-        font-size: 0.8em;
-        color: gray;
-        margin-bottom: 10px;
-    }
-    .cart-total-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #e0e0e0;
+        font-size: 0.9em; /* 글씨 크기 조정 */
+        color: #333;
+        margin-bottom: 5px; /* 마진 조정 */
     }
     .cart-total {
-        font-size: 1.5em;
+        text-align: right;
+        font-size: 1.2em; /* 글씨 크기 조정 */
         color: #333;
+        margin-top: 15px; /* 마진 조정 */
     }
     .checkout-button {
         display: inline-block;
-        width: 180px;
-        text-align: center;
-        padding: 15px 30px;
+        padding: 10px 20px; /* 패딩 조정 */
         background-color: #333;
         color: white;
         text-decoration: none;
-        font-size: 1.2em;
+        font-size: 0.9em; /* 글씨 크기 조정 */
         border-radius: 5px;
         transition: background-color 0.3s;
+        text-align: center;
     }
     .checkout-button:hover {
         background-color: #555;
     }
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 1em;
+    .remove-button, .update-button {
+        padding: 8px 12px; /* 버튼 패딩 조정 */
+        border: none;
         border-radius: 5px;
-        text-align: center;
-        color: white;
-        text-decoration: none;
+        cursor: pointer;
         transition: background-color 0.3s;
-        width: 100%;
+        font-size: 0.8em; /* 글씨 크기 조정 */
+        margin-right: 8px;
+        text-align: center;
     }
     .remove-button {
-        background-color: #333;
+        background-color: #e60000;
+        color: white;
     }
     .remove-button:hover {
-        background-color: #555;
+        background-color: #c00000;
     }
     .update-button {
-        color: black;
-        background-color: white;
-        border: 1px solid grey;
+        background-color: #007bff;
+        color: white;
     }
     .update-button:hover {
-        background-color: lightgrey;
+        background-color: #0056b3;
     }
-
-    .quantity-control {
-        display: flex;
-        flex-direction: column; /* 수직 배치 */
-        gap: 10px;
-        align-items: flex-start;
-    }
-    .input-group {
-        max-width: 200px;
-        width: 100%;
+    input[type="number"] {
+        width: 50px; /* 입력 요소의 너비 조정 */
+        padding: 3px;
+        font-size: 0.9em; /* 글씨 크기 조정 */
+        margin-right: 8px;
     }
 </style>
-
 {% endblock %}
-
 {% block main %}
 <hr>
 <div class="container">
@@ -159,7 +134,6 @@
     <p>장바구니에 상품이 없습니다.</p>
     {% endif %}
 </div>
-
 <script>
     function removeFromCart(cno) {
         fetch(`/cart/remove/${cno}`, {
@@ -176,10 +150,8 @@
             })
             .catch(error => console.error('Error:', error));
     }
-
     function updateCartItem(cno) {
         const qty = document.getElementById(`qty-${cno}`).value;
-
         fetch(`/cart/update/${cno}?qty=${qty}`, {
             method: 'PUT'
         })
