@@ -13,7 +13,7 @@ from app.service.product import ProductService
 from app.service.order import OrderService
 from app.model.order import Order
 from app.schema.order import OrderRead
-from app.model.product import Product as ProductModel
+from app.model.product import Product as ProductModel, Product
 
 order_router = APIRouter()
 templates = Jinja2Templates(directory='views/templates')
@@ -22,6 +22,7 @@ def check_login(req: Request):
     if 'userid' not in req.session:
         return False
     return True
+
 
 @order_router.post("/order", response_class=HTMLResponse)
 def orderok(
@@ -36,18 +37,13 @@ def orderok(
         payment: str = Form(...),
         db: Session = Depends(get_db)
 ):
-    if not check_login(req):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-
     member = db.query(Member).filter(Member.mno == mno).first()
 
     if not member:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")
 
-    # 주문 번호를 가져오거나 새로 생성
     order_number = db.query(func.max(Order.omno)).scalar() + 1 if db.query(func.count(Order.omno)).scalar() > 0 else 1
 
-    # 다중 제품 처리: prdno, qty, price가 리스트 형태로 전달됨
     for i in range(len(prdno)):
         order = Order(
             omno=order_number,
@@ -61,18 +57,12 @@ def orderok(
             payment=payment
         )
         db.add(order)
+        db.commit()
 
-    db.commit()
-
-    # 세션에 단일 제품 정보가 있는 경우 삭제
-    if "product_info" in req.session:
-        del req.session["product_info"]
-
-    CartService.clear_cart_items(db, member.userid)
-
-    order_items = [{"product_name": db.query(ProductModel).filter(ProductModel.prdno == prdno[i]).first().prdname,
-                    "quantity": qty[i],
-                    "price": price[i]} for i in range(len(prdno))]
+    # 포트원 결제 요청
+    payment_response = OrderService.create_payment_request(order)
+    if payment_response['code'] != 0:
+        raise HTTPException(status_code=400, detail="Payment request failed: " + payment_response['message'])
 
     return templates.TemplateResponse("order/orderok.html", {
         "request": req,
@@ -81,9 +71,13 @@ def orderok(
         "shipping_address": addr,
         "contact_number": phone,
         "email": member.email,
-        "order_items": order_items,
+        "order_items": [{"product_name": db.query(Product).filter(Product.prdno == prdno[i]).first().prdname,
+                         "quantity": qty[i],
+                         "price": price[i]} for i in range(len(prdno))],
         "total_price": sum(price[i] * qty[i] for i in range(len(prdno)))
     })
+
+
 
 def generate_payment_info(payment_method: str, member: Member):
     if payment_method == "bank_transfer":

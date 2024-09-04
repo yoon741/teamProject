@@ -1,173 +1,201 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-    Order
+Order
 {% endblock %}
 
 {% block style %}
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: left;
-            margin-bottom: 40px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .product-summary {
-            margin-bottom: 30px;
-        }
-        .product-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #ccc;
-        }
-        .product-item p {
-            margin: 0;
-        }
-        .total-price {
-            text-align: right;
-            font-size: 1.5em;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .payment-option img {
-            width: 160px;
-            border-radius: 6px;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 4px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #555;
-        }
-        #bank-info {
-            display: none;
-            padding: 10px 0;
-            font-size: 1em;
-        }
-    </style>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: left;
+        margin-bottom: 40px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .product-summary {
+        margin-bottom: 30px;
+    }
+    .product-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .product-item p {
+        margin: 0;
+    }
+    .total-price {
+        text-align: right;
+        font-size: 1.5em;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+    .payment-option img {
+        width: 160px;
+        border-radius: 6px;
+    }
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: #555;
+    }
+    #bank-info {
+        display: none;
+        padding: 10px 0;
+        font-size: 1em;
+    }
+</style>
 {% endblock %}
 
 {% block main %}
-    <main>
-        <div class="container">
-            <h1>Order</h1>
-            <!-- 주문자 정보 -->
-            <div style="padding: 15px 0; font-size: 1.2em; font-weight: bold;">주문자</div>
-            <hr>
-            <form action="/order/order" method="post">
-                <div class="form-group">
-                    <label for="buyer_name">이름</label>
-                    <input id="buyer_name" type="text" name="buyer_name" value="{{ member_info.username }}" readonly>
+<main>
+    <div class="container">
+        <h1>Order</h1>
+        <!-- 주문자 정보 -->
+        <div style="padding: 15px 0; font-size: 1.2em; font-weight: bold;">주문자</div>
+        <hr>
+        <form id="order-form" action="/order/order" method="post">
+            <div class="form-group">
+                <label for="buyer_name">이름</label>
+                <input id="buyer_name" type="text" name="buyer_name" value="{{ member_info.username }}" readonly>
 
-                    <label for="buyer_postcode">우편번호</label>
-                    <input id="buyer_postcode" type="text" name="postcode" value="{{ member_info.postcode }}" readonly>
+                <label for="buyer_postcode">우편번호</label>
+                <input id="buyer_postcode" type="text" name="postcode" value="{{ member_info.postcode }}" readonly>
 
-                    <label for="buyer_address">주소</label>
-                    <input id="buyer_address" type="text" name="addr" value="{{ member_info.address }}" readonly>
+                <label for="buyer_address">주소</label>
+                <input id="buyer_address" type="text" name="addr" value="{{ member_info.address }}" readonly>
 
-                    <label for="buyer_phone">전화번호</label>
-                    <input id="buyer_phone" type="text" name="phone" value="{{ member_info.phone }}" readonly>
+                <label for="buyer_phone">전화번호</label>
+                <input id="buyer_phone" type="text" name="phone" value="{{ member_info.phone }}" readonly>
+            </div>
+
+            <!-- 상품 정보 -->
+            <div class="product-summary">
+                {% if cart_items %}
+                {% for item in cart_items %}
+                <div class="product-item" style="padding: 20px 0">
+                    <p>{{ item.product.prdname }} - [ 수량 : {{ item.qty }}]</p>
+                    <p>₩{{ "{:,}".format(item.price) }}</p>
+                    <input type="hidden" name="prdno" value="{{ item.product.prdno }}">
+                    <input type="hidden" name="qty" value="{{ item.qty }}">
+                    <input type="hidden" name="price" value="{{ item.price }}">
                 </div>
-
-                <!-- 상품 정보 -->
-                <div class="product-summary">
-                    {% if cart_items %}
-                        {% for item in cart_items %}
-                            <div class="product-item" style="padding: 20px 0">
-                                <p>{{ item.product.prdname }} - [ 수량 : {{ item.qty }}]</p>
-                                <p>₩{{ "{:,}".format(item.price) }}</p>
-                                <input type="hidden" name="prdno" value="{{ item.product.prdno }}">
-                                <input type="hidden" name="qty" value="{{ item.qty }}">
-                                <input type="hidden" name="price" value="{{ item.price }}">
-                            </div>
-                        {% endfor %}
-                    {% elif product %}
-                        <div class="product-item">
-                            <p>{{ product.prdname }} - [ 수량 : 1]</p>
-                            <p>₩{{ "{:,}".format(product.price) }}</p>
-                            <input type="hidden" name="prdno" value="{{ product.prdno }}">
-                            <input type="hidden" name="qty" value="1">
-                            <input type="hidden" name="price" value="{{ product.price }}">
-                        </div>
-                    {% else %}
-                        <p>No items to order.</p>
-                    {% endif %}
+                {% endfor %}
+                {% elif product %}
+                <div class="product-item">
+                    <p>{{ product.prdname }} - [ 수량 : 1]</p>
+                    <p>₩{{ "{:,}".format(product.price) }}</p>
+                    <input type="hidden" name="prdno" value="{{ product.prdno }}">
+                    <input type="hidden" name="qty" value="1">
+                    <input type="hidden" name="price" value="{{ product.price }}">
                 </div>
-                <div style="text-align: right">배송비 : 무료</div>
-                <div class="total-price">
-                    Total: ₩{{ "{:,}".format(total_price) }}
-                </div>
+                {% else %}
+                <p>No items to order.</p>
+                {% endif %}
+            </div>
+            <div style="text-align: right">배송비 : 무료</div>
+            <div class="total-price">
+                Total: ₩{{ "{:,}".format(total_price) }}
+            </div>
 
-                <input type="hidden" name="omno" value="{{ order_number }}">
-                <input type="hidden" name="mno" value="{{ member_info.mno }}">
+            <input type="hidden" name="omno" value="{{ order_number }}">
+            <input type="hidden" name="mno" value="{{ member_info.mno }}">
 
-                <!-- 결제 수단 -->
-                <div style="padding: 15px 0; font-size: 1.5em; font-weight: bold;">결제수단</div>
-                <div class="payment-option" style="padding: 15px 0; font-size: 1em;">
-                    <input type="radio" id="bank_transfer" name="payment" value="bank_transfer" required>
-                    <label for="bank_transfer">무통장 입금</label>
-                </div>
-                <div id="bank-info">코캅은행(가상계좌생성) 계좌번호 : {{ member_info.phone }} 입금자명 : {{ member_info.username }}</div>
-                <div class="payment-option" style="padding: 10px 0; font-size: 1em;">
-                    <input type="radio" id="kakao" name="payment" value="kakao">
-                    <label for="kakao">카카오 페이 <img src="/static/img/kakao.jpg" alt="카카오페이"></label>
-                </div>
-                <div class="payment-option" style="padding: 10px 0 50px 0; font-size: 1em;">
-                    <input type="radio" id="naver" name="payment" value="naver">
-                    <label for="naver">네이버 페이 <img src="/static/img/naver.jpg" alt="네이버페이"></label>
-                </div>
-                <button type="submit" class="btn">결제하기</button>
-            </form>
-        </div>
+            <!-- 결제 수단 -->
+            <div style="padding: 15px 0; font-size: 1.5em; font-weight: bold;">결제수단</div>
+            <div class="payment-option" style="padding: 15px 0; font-size: 1em;">
+                <input type="radio" id="bank_transfer" name="payment" value="bank_transfer" required>
+                <label for="bank_transfer">무통장 입금</label>
+            </div>
+            <div id="bank-info">코캅은행(가상계좌생성) 계좌번호 : {{ member_info.phone }} 입금자명 : {{ member_info.username }}</div>
+            <div class="payment-option" style="padding: 10px 0; font-size: 1em;">
+                <input type="radio" id="kakao" name="payment" value="kakao">
+                <label for="kakao">카카오 페이 <img src="/static/img/kakao.jpg" alt="카카오페이"></label>
+            </div>
+            <div class="payment-option" style="padding: 10px 0 50px 0; font-size: 1em;">
+                <input type="radio" id="naver" name="payment" value="naver">
+                <label for="naver">네이버 페이 <img src="/static/img/naver.jpg" alt="네이버페이"></label>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">결제하기</button>
+        </form>
+    </div>
 
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderForm = document.getElementById('order-form');
+            const submitBtn = document.getElementById('submit-btn');
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const bankInfo = document.getElementById('bank-info');
-                const bankTransferOption = document.getElementById('bank_transfer');
-                const paymentOptions = document.querySelectorAll('input[name="payment"]');
+            submitBtn.addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 폼 제출 방지
 
-                paymentOptions.forEach(option => {
-                    option.addEventListener('change', function() {
-                        if (bankTransferOption.checked) {
-                            bankInfo.style.display = 'block';
-                        } else {
-                            bankInfo.style.display = 'none';
-                        }
-                    });
-                });
+                const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
+                if (selectedPayment === 'kakao' || selectedPayment === 'naver') {
+                    requestPay(selectedPayment);
+                } else {
+                    orderForm.submit(); // 무통장 입금 등의 경우 기본 폼 제출
+                }
             });
-        </script>
-    </main>
+
+            function requestPay(paymentMethod) {
+                var IMP = window.IMP;
+                IMP.init('imp02516422'); // 포트원에서 발급받은 가맹점 식별코드
+
+                IMP.request_pay({
+                    pg: paymentMethod === 'kakao' ? 'kakaopay' : 'tosspay',
+                    pay_method: 'card',
+                    merchant_uid: 'order_' + new Date().getTime(),
+                    name: '주문 결제',
+                    amount: '{{ total_price }}', // 서버에서 전달된 결제 금액
+                    buyer_email: '{{ member_info.email }}',
+                    buyer_name: '{{ member_info.username }}',
+                    buyer_tel: '{{ member_info.phone }}',
+                    buyer_addr: '{{ member_info.address }}',
+                    buyer_postcode: '{{ member_info.postcode }}'
+                }, function (rsp) {
+                    if (rsp.success) {
+                        alert('결제가 완료되었습니다.');
+                        orderForm.submit(); // 결제 성공 시 폼 제출
+                    } else {
+                        alert('결제에 실패하였습니다. 에러내용: ' + rsp.error_msg);
+                    }
+                });
+            }
+        });
+    </script>
+</main>
+
 {% endblock %}
+
+

@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -5,6 +7,7 @@ from app.model.order import Order as OrderModel
 from app.model.member import Member
 from app.model.product import Product
 from app.service.cart import CartService
+import requests
 
 class OrderService:
 
@@ -151,3 +154,44 @@ class OrderService:
         except Exception as ex:
             print(f'Get Member Info Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Failed to retrieve member info")
+
+class PaymentService:
+    @staticmethod
+    def create_payment_request(order):
+        url = "https://api.iamport.kr/payments/prepare"
+        headers = {
+            "Authorization": f"Bearer {PaymentService.get_portone_token()}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "merchant_uid": f"order_{order.omno}",
+            "amount": order.price,
+            "name": "주문 결제",
+            "buyer_email": "buyer@example.com",
+            "buyer_name": order.member.username,
+            "buyer_tel": order.phone,
+            "buyer_addr": order.addr,
+            "buyer_postcode": order.postcode,
+            "pg": order.payment,
+            "pay_method": "card" if order.payment == "kakaopay" else "trans"
+        }
+
+        response = requests.post(url, json=data, headers=headers)
+        return response.json()
+
+    @staticmethod
+    def get_portone_token():
+        url = "https://api.iamport.kr/users/getToken"
+
+        data = {
+            'imp_key': '2626764365826676',
+            'imp_secret': 'R1zu5CypLSXi0tVCA2lqNfF5JSMXHG2Wm0vONAeMoGFIeb8dRThiBdB19qfR7u8PZMvm4wbNeAS2Pwq6'
+        }
+
+        response = requests.post(url, data=data)
+        result = response.json()
+
+        if result['code'] == 0:
+            return result['response']['access_token']
+        else:
+            raise Exception("Failed to get PortOne token: " + result['message'])
