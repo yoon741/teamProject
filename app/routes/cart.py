@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse
 from app.dbfactory import get_db
-from app.model.product import Cart as CartModel
+from app.model.product import Cart as CartModel, Cart, Product
 from app.model.product import Product as ProductModel
 from app.model.member import Member
 from app.routes.shop import templates
