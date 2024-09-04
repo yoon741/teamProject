@@ -1,7 +1,9 @@
 {% extends 'include/base.html' %}
+
 {% block title %}
 장바구니
 {% endblock %}
+
 {% block style %}
 <style>
     body {
@@ -12,94 +14,109 @@
     }
     .container {
         width: 80%;
-        max-width: 1200px; /* 최대 너비 설정 */
         margin: 0 auto;
-        padding: 15px;
-    }
-    .cart-detail {
-        margin-bottom: 15px;
+        padding: 20px;
     }
     .cart-item {
         display: flex;
-        align-items: center; /* 수직 정렬 */
-        background-color: #f5f5dc;
-        padding: 10px; /* 패딩 조정 */
-        margin-bottom: 15px; /* 마진 조정 */
-        border-radius: 8px; /* 모서리 둥글기 조정 */
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
-        flex-wrap: nowrap; /* 항목을 한 줄로 배치 */
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        align-items: center;
     }
     .cart-item img {
-        max-width: 100px; /* 이미지 크기 조정 */
+        flex: 1;
+        max-width: 150px;
         height: auto;
-        border-radius: 8px; /* 모서리 둥글기 조정 */
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
-        margin-right: 10px; /* 이미지와 텍스트 사이에 간격 추가 */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .cart-info {
-        flex: 1; /* 남은 공간을 채움 */
+        flex: 2;
+        padding: 20px;
+    }
+    .cart-info:hover {
+        background-color: whitesmoke;
     }
     .cart-title {
-        font-size: 1.2em; /* 글씨 크기 조정 */
-        margin-bottom: 5px; /* 마진 조정 */
+        font-size: 1.0em;
+        margin-bottom: 10px;
     }
     .cart-price, .cart-qty, .cart-total-item {
-        font-size: 0.9em; /* 글씨 크기 조정 */
-        color: #333;
-        margin-bottom: 5px; /* 마진 조정 */
+        font-size: 0.8em;
+        color: gray;
+        margin-bottom: 10px;
+    }
+    .cart-total-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
     }
     .cart-total {
-        text-align: right;
-        font-size: 1.2em; /* 글씨 크기 조정 */
+        font-size: 1.5em;
         color: #333;
-        margin-top: 15px; /* 마진 조정 */
     }
     .checkout-button {
         display: inline-block;
-        padding: 10px 20px; /* 패딩 조정 */
+        width: 180px;
+        text-align: center;
+        padding: 15px 30px;
         background-color: #333;
         color: white;
         text-decoration: none;
-        font-size: 0.9em; /* 글씨 크기 조정 */
+        font-size: 1.2em;
         border-radius: 5px;
         transition: background-color 0.3s;
-        text-align: center;
     }
     .checkout-button:hover {
         background-color: #555;
     }
-    .remove-button, .update-button {
-        padding: 8px 12px; /* 버튼 패딩 조정 */
-        border: none;
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1em;
         border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 0.8em; /* 글씨 크기 조정 */
-        margin-right: 8px;
         text-align: center;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        width: 100%;
     }
     .remove-button {
-        background-color: #e60000;
-        color: white;
+        background-color: #333;
     }
     .remove-button:hover {
-        background-color: #c00000;
+        background-color: #555;
     }
     .update-button {
-        background-color: #007bff;
-        color: white;
+        color: black;
+        background-color: white;
+        border: 1px solid grey;
     }
     .update-button:hover {
-        background-color: #0056b3;
+        background-color: lightgrey;
     }
-    input[type="number"] {
-        width: 50px; /* 입력 요소의 너비 조정 */
-        padding: 3px;
-        font-size: 0.9em; /* 글씨 크기 조정 */
-        margin-right: 8px;
+
+    .quantity-control {
+        display: flex;
+        flex-direction: column; /* 수직 배치 */
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .input-group {
+        max-width: 200px;
+        width: 100%;
     }
 </style>
 {% endblock %}
+
 {% block main %}
 <hr>
 <div class="container">
@@ -121,9 +138,22 @@
                 <p class="cart-total-item">합계: ₩{{ "{:,}".format(item.price * item.qty) }}</p>
             </a>
         </div>
-        <input type="number" id="qty-{{ item.cno }}" value="{{ item.qty }}" min="1">
-        <button class="update-button" onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
-        <button class="remove-button" onclick="removeFromCart({{ item.cno }})">제거</button>
+
+        <!-- 수량 및 버튼들을 수직 배치 -->
+        <div class="quantity-control">
+            <!-- 수량 변경을 위한 부트스트랩 input-group -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1, {{ item.cno }})">-</button>
+                </div>
+                <input type="number" id="qty-{{ item.cno }}" class="form-control text-center" value="{{ item.qty }}" min="1">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1, {{ item.cno }})">+</button>
+                </div>
+            </div>
+            <button class="btn update-button" onclick="updateCartItem({{ item.cno }})">수량 업데이트</button>
+            <button class="btn remove-button" onclick="removeFromCart({{ item.cno }})">제거</button>
+        </div>
     </div>
     {% endfor %}
     <div class="cart-total">
@@ -134,7 +164,17 @@
     <p>장바구니에 상품이 없습니다.</p>
     {% endif %}
 </div>
+
 <script>
+    function changeQuantity(amount, cno) {
+        const qtyInput = document.getElementById(`qty-${cno}`);
+        let qty = parseInt(qtyInput.value);
+
+        qty += amount;
+        if (qty < 1) qty = 1;
+        qtyInput.value = qty;
+    }
+
     function removeFromCart(cno) {
         fetch(`/cart/remove/${cno}`, {
             method: 'DELETE'
@@ -150,8 +190,10 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
     function updateCartItem(cno) {
         const qty = document.getElementById(`qty-${cno}`).value;
+
         fetch(`/cart/update/${cno}?qty=${qty}`, {
             method: 'PUT'
         })
