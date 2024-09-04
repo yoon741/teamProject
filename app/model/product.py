@@ -1,39 +1,33 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.model.base import Base
 from datetime import datetime
+
 
 class Product(Base):
     __tablename__ = 'product'
 
-    prdno = Column(Integer, primary_key=True, autoincrement=True)
+    prdno: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     prdname = Column(String(100), nullable=False)
-    price = Column(Integer, nullable=False)
-    type = Column(String(50), nullable=False)
-    qty = Column(Integer, nullable=False, default=0)
-    description = Column(String(250))
-    image_url = Column(String(250))  # 이미지 URL을 포함한 속성
-    regdate = Column(DateTime, default=datetime.now, nullable=True)
+    price: Mapped[int] = mapped_column(Integer, nullable=False)
+    type: Mapped[str] = mapped_column (String(50), nullable=False)
+    qty: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    description: Mapped[int] = mapped_column(String(250))
+    regdate: Mapped[int] = mapped_column(default=datetime.now, nullable=True)
 
     carts = relationship("Cart", back_populates="product")
     orders = relationship("Order", back_populates="product")
-
-    def __repr__(self):
-        return f"<Product(prdno={self.prdno}, prdname='{self.prdname}', price={self.price}, image_url='{self.image_url}')>"
-
-
+    attachs = relationship("PrdAttach", back_populates="product")
 
 class PrdAttach(Base):
     __tablename__ = 'prdattach'
-    prdatno = Column(Integer, primary_key=True, autoincrement=True)
-    prdno = Column(Integer, ForeignKey('product.prdno'))
-    fname = Column(String(50), nullable=False)
-    fsize = Column(Integer, default=0)
 
-    # img1 = Column(String(50), nullable=False)
-    # img2 = Column(String(50), nullable=False)
-    # img3 = Column(String(50), nullable=False)
-    # img4 = Column(String(50), nullable=False)
+    prdatno: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    prdno: Mapped[int] = mapped_column(Integer, ForeignKey('product.prdno'))
+    fname: Mapped[str] = mapped_column(String(50), nullable=False)
+    fsize: Mapped[int] = mapped_column(Integer, default=0)
+
+    product = relationship("Product", back_populates="attachs")
 
 
 class Cart(Base):
