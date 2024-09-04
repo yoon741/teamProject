@@ -6,14 +6,9 @@ Login
 
 {% block style %}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5; /* 배경색을 약간 회색으로 변경 */
-    }
+
     .header-container-unique h1 {
-        font-size: 1.2em; /* 제목 글씨 크기 조정 */
+        font-size: 2.4em;
         margin: 0;
         color: black;
         text-decoration: none;
@@ -25,45 +20,43 @@ Login
     }
     .container-unique {
         background-color: white;
-        padding: 30px;
-        border-radius: 8px; /* 모서리 둥글기 조정 */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 조정 */
-        width: 90%; /* 너비를 90%로 설정 */
-        max-width: 400px; /* 최대 너비를 400px로 설정 */
-        margin: 60px auto; /* 상하 여백 조정 */
+        padding: 50px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 550px;
+        max-width: 75%;
+        margin: 110px auto auto auto;
         box-sizing: border-box;
+        flex-grow: 1;
     }
     .container-unique2 {
-        display: flex;
-        justify-content: center; /* 중앙 정렬 */
-        align-items: center; /* 수직 중앙 정렬 */
-        height: 100vh; /* 화면 전체 높이 */
+        height: 730px;
     }
     h1.login-title-unique {
-        font-size: 1.6em; /* 제목 글씨 크기 조정 */
-        margin-bottom: 30px;
+        font-size: 2.4em;
+        margin-bottom: 50px;
         color: black;
         text-align: left;
     }
     .container-unique hr {
-        border: 1px solid black;
-        margin-bottom: 15px; /* 마진 조정 */
+        border: 1.5px solid black;
+        margin-bottom: 20px;
+        width: 100%;
     }
     .form-group-unique {
-        margin-bottom: 15px; /* 마진 조정 */
+        margin-bottom: 20px;
     }
     .form-group-unique label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
-        font-size: 0.9em; /* 레이블 글씨 크기 조정 */
     }
     .form-group-unique input {
         width: 100%;
-        padding: 8px; /* 패딩 조정 */
-        font-size: 0.9em; /* 입력 글씨 크기 조정 */
+        padding: 10px;
+        font-size: 1em;
         border: 1px solid #ccc;
-        border-radius: 4px; /* 모서리 둥글기 조정 */
+        border-radius: 5px;
         box-sizing: border-box;
     }
     .form-group-unique input[type="password"] {
@@ -71,28 +64,28 @@ Login
     }
     .btn-unique {
         display: block;
-        padding: 10px 18px; /* 패딩 조정 */
-        font-size: 0.9em; /* 버튼 글씨 크기 조정 */
+        padding: 12px 20px;
+        font-size: 1em;
         color: white;
         background-color: #333;
         border: none;
-        border-radius: 4px; /* 모서리 둥글기 조정 */
+        border-radius: 5px;
         cursor: pointer;
         width: 100%;
         text-align: center;
         box-sizing: border-box;
-        margin-top: 15px; /* 마진 조정 */
+        margin-top: 20px;
     }
     .btn-unique:hover {
         background-color: #555;
     }
     .signup-link-unique {
-        margin-top: 15px; /* 마진 조정 */
+        margin-top: 20px;
         text-align: center;
     }
     .signup-link-unique a {
         color: #333;
-        font-size: 0.9em; /* 링크 글씨 크기 조정 */
+        font-size: 1.1em;
         font-weight: bold;
         text-decoration: none;
     }
@@ -100,7 +93,6 @@ Login
         text-decoration: underline;
     }
 </style>
-
 {% endblock %}
 
 {% block main %}
