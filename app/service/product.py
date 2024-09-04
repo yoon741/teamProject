@@ -89,7 +89,7 @@ class ProductService:
             return result
 
         except SQLAlchemyError as ex:
-            print(f'▶▶▶ insert_gallery에서 오류발생 : {str(ex)} ')
+            print(f'▶▶▶ insert_product에서 오류발생 : {str(ex)} ')
             db.rollback()
 
     @staticmethod

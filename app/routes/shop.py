@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 from app.dbfactory import get_db
-from app.model.product import Product as ProductModel, PrdAttach, Product
+from app.model.product import PrdAttach, Product
 from app.service.product import ProductService
 
 shop_router = APIRouter()
