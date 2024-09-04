@@ -24,75 +24,84 @@
     .product-detail {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center; /* 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        gap: 20px; /* 이미지와 정보 사이의 간격 조정 */
     }
     .product-detail img {
-        flex: 1;
-        max-width: 100%;
+        max-width: 70%;
         height: auto;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .product-info {
         flex: 1;
-        padding-left: 36px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center; /* 중앙 정렬 */
+        max-width: 500px; /* 최대 너비 조정 */
+        max-width: 400px; /* 최대 너비 조정 */
     }
-    .product-title {
-        font-size: 2.5em;
-        margin-bottom: 15px;
+
+    .product-prdname {
+        font-size: 2em;
+        margin: 15px 0;
         color: #222;
+        text-align: center; /* 제목 중앙 정렬 */
     }
+
     .product-price {
         font-size: 2em;
         color: #0b0707;
         margin-bottom: 20px;
+        text-align: center; /* 가격 중앙 정렬 */
     }
+
     .product-description {
         font-size: 1.2em;
         color: #666;
         margin-bottom: 30px;
         line-height: 1.6;
+        text-align: center; /* 설명 중앙 정렬 */
     }
+
     .product-buttons {
         display: flex;
-        flex-direction: column; /* 세로 방향으로 배치 */
-        gap: 15px; /* 버튼 사이의 간격을 조정 */
+        flex-direction: column;
+        gap: 15px;
+        align-items: center; /* 버튼 중앙 정렬 */
+        width: 100%;
     }
     .quantity-section {
         display: flex;
         align-items: center;
-        gap: 10px; /* 수량 선택기와 버튼 사이의 간격 */
-    }
-    .quantity-input {
-        width: 70px;
-        padding: 8px;
-        font-size: 1em;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        margin: 15px;
-        text-align: center;
+        gap: 10px;
+        margin-bottom: 30px;
     }
     .product-button {
         display: inline-block;
-        padding: 13px 10px; /* 패딩을 조정하여 버튼 크기와 텍스트가 잘 맞도록 수정 */
+    /*{#padding: 13px 20px;#}*/
         background-color: #333;
         color: white;
         text-decoration: none;
-        font-size: 1em; /* 폰트 크기를 줄임 */
+        font-size: 1em;
         border-radius: 5px;
         transition: background-color 0.3s;
-        text-align: center; /* 텍스트 중앙 정렬 */
+        text-align: center;
+        border: none;
     }
     .product-button:hover {
         background-color: #555;
     }
     .buy-button {
         background-color: #e60000;
+        padding: 13px 20px;
     }
     .buy-button:hover {
         background-color: #c00000;
+        padding: 13px 20px;
     }
 </style>
 {% endblock %}
@@ -100,34 +109,33 @@
 {% block main %}
 <main>
     <div class="container">
+        <h1 style="margin: 30px; text-align: left; font-size: 3em;">Product Detail</h1>
         <div class="product-detail">
-            <img src="/static/img/gagu1.jpg" alt="{{ product.prdname }}">
+            <img src="https://54.180.202.98/static/img/{{ prdattach.fname }}" class="img-fluid">
             <div class="product-info">
-                <h1 class="product-title">{{ product.prdname }}</h1>
-                <p class="product-price">{{ product.price }}</p>
-                <p class="product-description">
-                    {{ product.description }}
-                </p>
+                <h1 class="product-prdname">{{ product.prdname }}</h1>
+                <p class="product-price">₩{{ "{:,}".format(product.price) }}</p>
+                <p class="product-description">{{ product.description }}</p>
                 <div class="quantity-section">
                     <label for="quantity" style="font-size: 1.2em;">수량:</label>
                     <input type="number" id="qty" name="qty" value="1" min="1" max="{{ product.qty }}">
                 </div>
                 <div class="product-buttons">
-                    <a href="/order/order" class="product-button buy-button">구매하기</a>
-                    <a href="/shop/cart" class="product-button" onclick="addToCart({{ product.prdno }}, document.getElementById('qty').value)">장바구니에 추가</a>
+                    <a href="#" class="product-button buy-button" onclick="buy_now({{ product.prdno }}, document.getElementById('qty').value)">구매하기</a>
+                    <button class="product-button" onclick="add_to_cart({{ product.prdno }}, document.getElementById('qty').value)">장바구니에 추가</button>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        async function addToCart(prdno, qty) {
+        async function add_to_cart(prdno, qty) {
             try {
                 const response = await fetch('/cart/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ prdno: prdno, qty: qty }),  // prdno와 qty를 명확하게 설정
+                    body: JSON.stringify({ prdno: prdno, qty: qty }),
                 });
 
                 const result = await response.json();
@@ -141,6 +149,30 @@
                 alert('장바구니에 추가하는 중 오류가 발생했습니다.');
             }
         }
+
+        async function buy_now(prdno, qty) {
+            try {
+                const addToCartResponse = await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prdno: prdno, qty: qty }),
+                });
+
+                if (!addToCartResponse.ok) {
+                    const result = await addToCartResponse.json();
+                    alert(`장바구니에 추가하는 중 에러 발생: ${result.detail}`);
+                    return;
+                }
+
+                window.location.href = '/order/order';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('구매 과정에서 오류가 발생했습니다.');
+            }
+        }
+
 
     </script>
 </main>
