@@ -5,26 +5,8 @@
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-    .btn-custom-black {
-        color: black;
-        border-color: black;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn-custom-black:hover {
-        background-color: black;
-        color: white;
-    }
-
-    /* 선택된 버튼에 대한 스타일 */
-    .btn-custom-black.active {
-        background-color: black;
-        color: white;
-    }
+<style>
     body {
-        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: white;
@@ -99,11 +81,9 @@
     .product-button-unique:active {
         background-color: rgba(0, 0, 0, 0.4);
     }
-    .hidden {
-        display: none;
-    }
 </style>
 {% endblock %}
+
 
 {% block main %}
 <main>
