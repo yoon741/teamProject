@@ -3,25 +3,39 @@
 {% block title %}
 세미프로젝트
 {% endblock %}
-<hr>
 {% block style %}
 <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    .body {
         margin: 0;
         padding: 0;
-        background-color: #f9f9f9;
+        background-color: white;
     }
-
+    .containery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
     .container {
         width: 90%;
         max-width: 650px;
         margin: 0 auto;
         padding: 40px 20px;
     }
-
+    .boxfont {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
     .box {
-        background-color: lightgray; /* 더 밝은 파란색 */
+        background-color: lightgray;
         color: white;
         padding: 20px;
         text-align: center;
@@ -30,42 +44,33 @@
         transition: background-color 0.3s ease, transform 0.3s ease;
         margin-bottom: 20px;
     }
-
     .box:hover {
-        background-color: gray; /* 밝고 산뜻한 파란색 */
+        background-color: gray;
         transform: translateY(-5px);
     }
-
-    .abc {
-        color: black;
-        text-decoration: none;
-        font-size: 25px;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-        transition: color 0.3s ease;
-    }
-
-    a:hover {
-        color: #f0f0f0; /* 더 밝은 톤 */
+    .box:hover {
+        color: #f0f0f0;
     }
 </style>
 {% endblock %}
 {% block main %}
-<body>
-<div class="container">
-    <h1>관리자 페이지</h1>
-    <div class="box">
-        <a class=.abc href="/admin/mgproduct">ADMIN 상품 관리</a>
+<body class="body">
+    <div class="containery">
+        <div class="container">
+            <h2>관리자 페이지</h2>
+            <div class="box">
+                <a class="boxfont"  href="/admin/mgproduct">ADMIN 상품 관리</a>
+            </div>
+            <div class="box">
+                <a class="boxfont"  href="/admin/mguser">ADMIN 회원 관리</a>
+            </div>
+            <div class="box">
+                <a class="boxfont"  href="/admin/mgorder">ADMIN 주문 관리</a>
+            </div>
+            <div class="box">
+                <a class="boxfont"  href="/admin/rgproduct">ADMIN 상품 등록</a>
+            </div>
+        </div>
     </div>
-    <div class="box">
-        <a class=.abc href="/admin/mguser">ADMIN 회원 관리</a>
-    </div>
-    <div class="box">
-        <a class=.abc href="/admin/mgorder">ADMIN 주문 관리</a>
-    </div>
-    <div class="box">
-        <a class=.abc href="/admin/rgproduct">ADMIN 상품 등록</a>
-    </div>
-</div>
 </body>
 {% endblock %}
