@@ -1,13 +1,14 @@
 {% block style %}
 <style>
-    body {
+    .new_container body {
         margin: 0;
         background-color: white;
     }
-    a {font-size: 2em;
+    .new_container a {
+        font-size: 2em;
         color: black;
     }
-    header {
+    .new_container header {
         position: relative;
         height: 100px;
         display: flex;
@@ -17,58 +18,71 @@
         color: black;
         background-color: rgba(0, 0, 0, 0);
     }
-    nav {
+    .new_container nav {
         flex-grow: 1;
     }
-    .nav {
+    .new_container .nav {
         display: flex;
         list-style: none;
         margin: 0;
         padding: 0;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
     }
-    .nav-item {
-        margin: 0 10px;
+    .new_container .nav-item {
+        margin-left: 5%;
     }
-    .nav-link {
+    .new_container .nav-link {
         text-decoration: none;
         color: black;
+        font-size: 1em;
     }
-    .nav-link.active {
-
-    }
-    .auth-links {
+    .new_container .auth-links {
         margin-left: 190px;
         display: flex;
         align-items: center;
         text-align: right;
     }
-    .auth-links a {
+    .new_container .auth-links a {
         text-decoration: none;
         margin-left: 10px;
         color: black;
         font-size: 15px;
     }
+    .logo {
+        text-decoration: none;
+        color: black;
+    }
 </style>
 {% endblock %}
-<header class="py-3">
-    <h1>KOCAP</h1>
-    <nav>
-        <ul class="nav">
-            <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/shop/item_gallery">Shop</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/menu/company">Company</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/menu/welcome">Welcome</a></li>
-        </ul>
-    </nav>
-    <div class="auth-links">
-        {% if 'userid' in request.session %}
-        <a href="/shop/cart">Cart / </a>
-        <a href="/member/myinfo">My info / </a>
-        <a href="/member/logout">Log Out</a>
-        {% else %}
-        <a href="/member/join">Create an account / </a>
-        <a href="/member/login">Sign in</a>
-        {% endif %}
-    </div>
-</header>
-
+<div class="new_container">
+    <header class="py-3">
+        <a href="/" class="logo">
+            <h1>KOCAP</h1>
+        </a>
+        <nav>
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/shop/item_gallery">Shop</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/menu/company">Company</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/menu/welcome">Welcome</a></li>
+            </ul>
+        </nav>
+        <div class="auth-links">
+            {% if 'logined_uid' in request.session %}
+            <!-- 일반 회원으로 로그인했을 때 -->
+            <a href="/member/myinfo">My Info</a>
+            <a href="/cart/mycart">My Cart</a>
+            <a href="/member/logout">로그아웃</a>
+            {% elif request.session.get('is_admin') %}
+            <!-- Admin으로 로그인했을 때 -->
+            <a href="/admin/admin">관리자페이지</a>
+            <a href="/member/logout">로그아웃</a>
+            {% else %}
+            <!-- 로그인하지 않았을 때 -->
+            <a href="/member/join">Create an account</a>
+            <a href="/member/login">Sign in</a>
+            {% endif %}
+        </div>
+    </header>
+</div>
