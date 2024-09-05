@@ -120,7 +120,7 @@ async def update_cart_item(cno: int, qty: int, db: Session = Depends(get_db)):
 
         product.qty += cart_item.qty
         cart_item.qty = qty
-        cart_item.price = qty * product.price
+        cart_item.price = product.price
         product.qty -= qty
 
         db.commit()
