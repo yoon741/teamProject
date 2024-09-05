@@ -5,37 +5,32 @@
 {% endblock %}
 
 {% block style %}
-<style>
+    <style>
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: white;
     }
-    .container {
+    .container-unique {
         width: 80%;
         margin: 0 auto;
         padding: 20px;
     }
-    table {
+    table.unique-table {
         width: 100%;
         border-collapse: collapse;
         background: white;
     }
-    th, td {
+    td.unique-td {
         padding: 0;
         vertical-align: top;
     }
-    th {
-        background-color: white;
-        text-align: left;
-        padding: 10px;
-    }
-    td {
+    td.unique-td {
         text-align: center;
         padding: 25px;
     }
-    .product {
+    .product-unique {
         width: 400px;
         height: 300px;
         background: white;
@@ -44,72 +39,81 @@
         position: relative;
         margin: 0 auto;
     }
-    .product img {
+    .product-unique img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         border-top: 1.8px solid black;
     }
-    .product-info {
-        padding: 10px;
+    .product-unique img:hover {
+        border: 2px solid black;
     }
-    .product-price {
-        color: white;
-        font-size: 0.95em;
-        margin: 20px 0;
-        text-align: center;
+    .product-info-unique {
         position: absolute;
-        top: 15px;
-        left: 30%;
+        top: 10px;
+        left: 15px;
+        right: 15px;
+        padding: 0;
+        z-index: 2;
     }
-    .product-button {
-        display: inline-block;
-        padding: 10px 100px 10px 10px;
-        background-color: rgba(0, 0, 0, 0.2);
+    .product-price-unique {
         color: white;
-        font-size: 1.1em;
-        text-decoration: none;
+        font-size: 0.85em;
+        margin-top: 10px;
         text-align: left;
-        position: absolute;
-        top: 20px;
-        left: 27%;
-        transform: translateX(-50%);
-        transition: background-color 0.3s, color 0.3s;
     }
-    .product-button:hover {
+    .product-button-unique {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        right: 0;
+        padding: 30px 10px 10px 10px;
+        z-index: 1;
+        color: white;
+        font-size: 1.2em;
+        text-align: left;
+        height: auto;
+        width: auto;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    .product-button-unique:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }
-
-    .product-button:active {
-        background-color: rgba(0, 0, 0, 0.3);
+    .product-button-unique:active {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .hidden {
+        display: none;
     }
 </style>
 {% endblock %}
 
 {% block main %}
 <main>
-    <div class="container">
+    <hr>
+    <div class="container-unique">
         <h1>SHOP</h1>
-        <table>
+        <table class="unique-table">
             <tbody>
             {% for i in range(0, prdlist|length, 2) %}
             <tr>
-                <td>
-                    <div class="product">
+                <!-- 첫 번째 상품 -->
+                <td class="unique-td">
+                    <div class="product-unique">
                         <img src="/static/img/{{ prdlist[i].fname }}" alt="...">
-                        <div class="product-info">
-                            <p class="product-price">₩{{ "{:,}".format(prdlist[i].price) }}</p>
-                            <a href="/shop/item_detail/{{ prdlist[i].prdno }}" class="product-button">{{ prdlist[i].prdname }}</a>
+                        <div class="product-info-unique">
+                            <p class="product-price-unique" style="padding: 5px 0 0 15px;">₩{{ "{:,}".format(prdlist[i].price) }}</p>
+                            <a href="/shop/item_detail/{{ prdlist[i].prdno }}" class="product-button-unique">{{ prdlist[i].prdname }}</a>
                         </div>
                     </div>
                 </td>
                 {% if i + 1 < prdlist|length %}
-                <td>
-                    <div class="product">
+                <td class="unique-td">
+                    <div class="product-unique">
                         <img src="/static/img/{{ prdlist[i + 1].fname }}" alt="...">
-                        <div class="product-info">
-                            <p class="product-price">₩{{ "{:,}".format(prdlist[i + 1].price) }}</p>
-                            <a href="/shop/item_detail/{{ prdlist[i + 1].prdno }}" class="product-button">{{ prdlist[i + 1].prdname }}</a>
+                        <div class="product-info-unique">
+                            <p class="product-price-unique" style="padding: 5px 0 0 15px;>₩{{ "{:,}".format(prdlist[i + 1].price) }}</p>
+                            <a href="/shop/item_detail/{{ prdlist[i + 1].prdno }}" class="product-button-unique">{{ prdlist[i + 1].prdname }}</a>
                         </div>
                     </div>
                 </td>
