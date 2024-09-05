@@ -7,6 +7,7 @@
 {% block style %}
 <style>
     body {
+        font-family: Arial, sans-serif;
         background-color: white;
         margin: 0;
         padding: 0;
@@ -37,14 +38,15 @@
         box-sizing: border-box;
         flex-grow: 1;
     }
-    h2 {
+    h1, h2 {
         font-size: 2.4em;
         margin-bottom: 50px;
         color: black;
         text-align: left;
     }
     hr {
-        margin-bottom: 40px;
+        border: 2px solid black;
+        margin-bottom: 20px;
     }
     .form-group {
         margin-bottom: 20px;
@@ -108,12 +110,42 @@
         margin-bottom: 0;
         opacity: 0;
     }
+    .custom-file-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+    .custom-file-label::after {
+        content: "Browse";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: calc(1.5em + .75rem);
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #e9ecef;
+        border-left: inherit;
+        border-radius: 0 .25rem .25rem 0;
+    }
 </style>
 {% endblock %}
 
 {% block main %}
 <main>
-    <hr>
     <div class="container">
         <h2>상품 등록</h2>
         <form name="productfrm" enctype='multipart/form-data' method="post">
@@ -127,13 +159,7 @@
             </div>
             <div class="form-group">
                 <label for="type">타입 *</label>
-                <select class="form-control" name="type" id="type" required>
-                    <option value="">선택하세요</option>
-                    <option value="소파">소파</option>
-                    <option value="의자">의자</option>
-                    <option value="테이블">테이블</option>
-                    <option value="기타">기타</option>
-                </select>
+                <input type="text" name="type" id="type" required placeholder="예시) 쇼파, 의자, 테이블 등">
             </div>
             <div class="form-group">
                 <label for="qty">수량 *</label>
@@ -144,11 +170,12 @@
                 <textarea name="description" id="description" rows="10" required placeholder="상품설명"></textarea>
             </div>
             <div class="form-group">
-                <div><label for="imgfile">상품이미지 *</label></div>
+                <div><label for="imgfile">상품이미지</label></div>
                 <div><input type="file" name="files" id="file1" required></div>
 
             </div>
             <div class="button-group">
+                {#                    <button type="button" id="listbtn" onclick="location.href='/admin/mgproduct'">상품리스트로</button>#}
                 <button type="submit" id="writeokbtn">입력완료</button>
             </div>
         </form>
