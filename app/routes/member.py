@@ -86,7 +86,7 @@ async def login(req: Request):
 #         print(f'[ERROR] 로그인 오류: {str(ex)}')
 #         return RedirectResponse(url='/member/error', status_code=303)
 @member_router.post("/login", response_class=HTMLResponse)
-async def loginok(req: Request, db: Session = Depends(get_db)):
+async def login(req: Request, db: Session = Depends(get_db)):
     try:
         body = await req.body()
         print(f"Request body: {body}")  # 로그에 요청 본문 출력
