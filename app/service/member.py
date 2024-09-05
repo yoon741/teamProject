@@ -49,31 +49,7 @@ class MemberService:
             print(f'Insert Member Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
-    @staticmethod
-    def login_member(db: Session, data: dict):
-        """
-        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
-        """
-        try:
-            # 비밀번호 해시 처리
-            hashed_password = MemberService.sha256_hash(data['password'])
 
-            # 회원 정보 조회
-            member = db.query(Member).filter(
-                Member.userid == data['userid'],
-                Member.password == hashed_password
-            ).first()
-
-            # 로그인 성공 여부 반환
-            if member:
-                # 관리자 역할 확인
-                role = "admin" if member.mno == 1 else "user"
-                return {"member": member, "role": role}
-            else:
-                raise HTTPException(status_code=400, detail="Invalid username or password")
-        except SQLAlchemyError as ex:
-            print(f'Login Error: {str(ex)}')
-            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     @staticmethod
     def is_userid_taken(db: Session, userid: str) -> bool:
@@ -124,9 +100,35 @@ class MemberService:
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     @staticmethod
+    def login_member(db: Session, data: dict):
+        """
+        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
+        일반 사용자와 관리자 구분
+        """
+        try:
+            # 비밀번호 해시 처리
+            hashed_password = MemberService.sha256_hash(data['password'])
+
+            # 회원 정보 조회
+            member = db.query(Member).filter(
+                Member.userid == data['userid'],
+                Member.password == hashed_password
+            ).first()
+
+            # 로그인 성공 여부 반환
+            if member:
+                role = "admin" if member.mno == 1 else "user"
+                return {"member": member, "role": role}
+            else:
+                raise HTTPException(status_code=400, detail="Invalid username or password")
+        except SQLAlchemyError as ex:
+            print(f'Login Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    @staticmethod
     def login_admin(db: Session, data: dict):
         """
-        Admin 로그인 함수: mno가 1인 사용자를 관리자 계정으로 간주하여 로그인 처리
+        관리자 로그인 함수: mno가 1인 사용자를 관리자 계정으로 간주하여 로그인 처리
         """
         try:
             hashed_password = MemberService.sha256_hash(data['password'])
