@@ -7,7 +7,6 @@
 {% block style %}
 <style>
     body {
-        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: white;
@@ -43,11 +42,12 @@
         background-color: whitesmoke;
     }
     .cart-title {
-        font-size: 0.8em;
-        margin-bottom: 10px;
+        font-size: 1.7em;
+        color: black;
+        margin-bottom: 20px;
     }
     .cart-price, .cart-qty, .cart-total-item {
-        font-size: 0.6em;
+        font-size: 1.2em;
         color: gray;
         margin-bottom: 10px;
     }
@@ -55,6 +55,10 @@
         font-size: 1.5em;
         color: #333;
         text-align: right; /* 오른쪽 정렬 */
+    }
+    .item-detail-button {
+        text-decoration: none;
+        color: inherit;
     }
     .cart-summary {
         text-align: right; /* 오른쪽 정렬 */
@@ -130,10 +134,10 @@
         {% endif %}
         <div class="cart-info">
             <a href="/shop/item_detail/{{ item.product.prdno }}" class="item-detail-button">
-                <h2 style="margin-bottom: 20px; font-size: 0.8em" class="cart-title">{{ item.product.prdname }}</h2>
+                <h2 class="cart-title">{{ item.product.prdname }}</h2>
                 <p class="cart-price">가격 : ₩  {{ "{:,}".format(item.price) }}</p>
                 <p class="cart-qty">수량 : {{ item.qty }}</p>
-                <p class="cart-total-item">합계 : ₩  {{ "{:,}".format(item.price * item.qty) }}</p>
+                <p class="cart-total-item">합계 : ₩  {{ "{:,}".format(total_price) }}</p>
             </a>
         </div>
 
@@ -154,15 +158,15 @@
         </div>
     </div>
     {% endfor %}
-        <div class="cart-summary">
-            <div class="cart-total">
-                <a style="font-size: 0.8em">배송비 : 무료</a>
-                <p>총 금액 : ₩  {{ "{:,}".format(total_price) }}</p>
-            </div>
-            <a href="/order/order" class="checkout-button">결제하기</a>
+    <div class="cart-summary">
+        <div class="cart-total">
+            <a style="font-size: 0.8em">배송비 : 무료</a>
+            <p>총 금액 : ₩  {{ "{:,}".format(total_price) }}</p>
         </div>
+        <a href="/order/order" class="checkout-button">결제하기</a>
+    </div>
     {% else %}
-        <p>장바구니에 상품이 없습니다.</p>
+    <p>장바구니에 상품이 없습니다.</p>
     {% endif %}
 </div>
 
