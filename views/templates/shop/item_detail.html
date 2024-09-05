@@ -82,7 +82,7 @@
     }
     .product-button {
         display: inline-block;
-    /*{#padding: 13px 20px;#}*/
+        /*{#padding: 13px 20px;#}*/
         background-color: #333;
         color: white;
         text-decoration: none;
@@ -153,7 +153,7 @@
 
         async function buy_now(prdno, qty) {
             try {
-                const addToCartResponse = await fetch('/cart/add', {
+                const sessionSaveResponse = await fetch('/order/setsession', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -161,18 +161,20 @@
                     body: JSON.stringify({ prdno: prdno, qty: qty }),
                 });
 
-                if (!addToCartResponse.ok) {
-                    const result = await addToCartResponse.json();
-                    alert(`장바구니에 추가하는 중 에러 발생: ${result.detail}`);
+                if (!sessionSaveResponse.ok) {
+                    const result = await sessionSaveResponse.json();
+                    alert(`상품을 세션에 저장하는 중 에러 발생: ${result.detail}`);
                     return;
                 }
 
-                window.location.href = '/order/order';
+                // 성공 시 결제 페이지로 리다이렉트
+                window.location.href = '/order/sessionorder';
             } catch (error) {
                 console.error('Error:', error);
                 alert('구매 과정에서 오류가 발생했습니다.');
             }
         }
+
 
 
     </script>
