@@ -93,12 +93,26 @@ class ProductService:
             db.rollback()
 
     @staticmethod
-    def select_product(db):
+    def select_product(db, category=None):
         try:
-            stmt = select(Product.prdno, Product.prdname, Product.price, PrdAttach.fname) \
-                .join(PrdAttach) \
-                .group_by(Product.prdno, PrdAttach.fname) \
+            # 기본 쿼리 작성
+            stmt = select(Product.prdno, Product.prdname, Product.price, Product.type, PrdAttach.fname) \
+                .join(PrdAttach)
+
+            # 카테고리가 주어졌을 경우, 필터링
+            if category:
+                if category == "기타":
+                    # 의자, 테이블, 소파가 아닌 항목 필터링
+                    stmt = stmt.where(~Product.type.in_(["의자", "테이블", "소파"]))
+                else:
+                    # 특정 카테고리 필터링
+                    stmt = stmt.where(Product.type == category)
+
+            # 나머지 쿼리 설정
+            stmt = stmt.group_by(Product.prdno, PrdAttach.fname) \
                 .order_by(Product.prdno.desc()).limit(25)
+
+            print(f'Executing query: {stmt}')  # 실행되는 쿼리 로그 출력
             result = db.execute(stmt).all()
 
             return result
@@ -106,6 +120,7 @@ class ProductService:
         except SQLAlchemyError as ex:
             print(f'▶▶▶ select_product에서 오류발생 : {str(ex)}')
             db.rollback()
+            return None
 
     @staticmethod
     def selectone_product(prdno, db):

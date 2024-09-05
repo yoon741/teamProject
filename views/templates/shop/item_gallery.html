@@ -5,7 +5,24 @@
 {% endblock %}
 
 {% block style %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+    .btn-custom-black {
+        color: black;
+        border-color: black;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-custom-black:hover {
+        background-color: black;
+        color: white;
+    }
+
+    /* 선택된 버튼에 대한 스타일 */
+    .btn-custom-black.active {
+        background-color: black;
+        color: white;
+    }
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -93,6 +110,13 @@
     <hr>
     <div class="container-unique">
         <h1>SHOP</h1>
+        <div class="btn-group mb-4" role="group" aria-label="Category buttons">
+            <a href="/shop/item_gallery" class="btn btn-custom-black {% if selected_category == 'all' or not selected_category %}active{% endif %}">전체</a>
+            <a href="/shop/item_gallery?category=의자" class="btn btn-custom-black {% if selected_category == '의자' %}active{% endif %}">의자</a>
+            <a href="/shop/item_gallery?category=소파" class="btn btn-custom-black {% if selected_category == '소파' %}active{% endif %}">소파</a>
+            <a href="/shop/item_gallery?category=테이블" class="btn btn-custom-black {% if selected_category == '테이블' %}active{% endif %}">테이블</a>
+            <a href="/shop/item_gallery?category=기타" class="btn btn-custom-black {% if selected_category == '기타' %}active{% endif %}">기타</a>
+        </div>
         <table class="unique-table">
             <tbody>
             {% for i in range(0, prdlist|length, 2) %}
