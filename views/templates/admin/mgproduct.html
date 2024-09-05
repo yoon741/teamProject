@@ -5,6 +5,7 @@ Product Management
 {% endblock %}
 
 {% block style %}
+<!-- (기존의 스타일 유지) -->
 <style>
     .product-management-page {
         font-family: Arial, sans-serif;
@@ -88,47 +89,63 @@ Product Management
 
 {% block main %}
 <div class="product-management-page">
-    <h1>Product Management</h1>
-    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
+    <h1>상품 관리</h1>
+    <a href="/admin/admin" class="back-to-dashboard">뒤로가기</a>
     <table>
         <thead>
         <tr>
-            <th>Product ID</th>
-            <th>Product Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
+            <th>주문 번호</th>
+            <th>주문 상품</th>
+            <th>카테고리</th>
+            <th>가격</th>
+            <th>수량</th>
+            <th>상태</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Sample Data Row -->
-        <tr>
-            <td>P001</td>
-            <td>Widget A</td>
-            <td>Electronics</td>
-            <td>$99.99</td>
-            <td>50</td>
+        {% for product in products %}
+        <tr id="product-{{ product.prdno }}">
+            <td>{{ product.prdno }}</td>
+            <td>{{ product.prdname }}</td>
+            <td>{{ product.type }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.qty }}</td>
             <td class="action-btns">
-                <button class="btn btn-view">View</button>
-                <button class="btn btn-edit">Edit</button>
-                <button class="btn btn-delete">Delete</button>
+                <a href="/shop/item_detail/{{ product.prdno }}" class="btn btn-view">보기</a>
+                <a href="/admin/editproduct/{{ product.prdno }}" class="btn btn-edit">수정하기</a>
+                <button class="btn btn-delete" onclick="deleteProduct({{ product.prdno }})">삭제하기</button>
             </td>
         </tr>
-        <tr>
-            <td>P002</td>
-            <td>Gadget B</td>
-            <td>Home Goods</td>
-            <td>$49.99</td>
-            <td>120</td>
-            <td class="action-btns">
-                <button class="btn btn-view">View</button>
-                <button class="btn btn-edit">Edit</button>
-                <button class="btn btn-delete">Delete</button>
-            </td>
-        </tr>
-        <!-- More rows as needed -->
+        {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    async function deleteProduct(prdno) {
+        if (!confirm("정말로 이 상품을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/admin/deleteproduct/${prdno}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                document.getElementById(`product-${prdno}`).remove();
+                alert("상품이 성공적으로 삭제되었습니다.");
+            } else {
+                alert("상품 삭제에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("오류가 발생했습니다.");
+        }
+    }
+</script>
+
+
+
 {% endblock %}
+
