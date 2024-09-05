@@ -7,7 +7,6 @@
 {% block style %}
 <style>
     body {
-        font-family: Arial, sans-serif;
         background-color: white;
         margin: 0;
         padding: 0;
@@ -38,15 +37,14 @@
         box-sizing: border-box;
         flex-grow: 1;
     }
-    h1, h2 {
+    h2 {
         font-size: 2.4em;
         margin-bottom: 50px;
         color: black;
         text-align: left;
     }
     hr {
-        border: 2px solid black;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
     .form-group {
         margin-bottom: 20px;
@@ -115,6 +113,7 @@
 
 {% block main %}
 <main>
+    <hr>
     <div class="container">
         <h2>상품 등록</h2>
         <form name="productfrm" enctype='multipart/form-data' method="post">
