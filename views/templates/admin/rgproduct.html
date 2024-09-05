@@ -110,37 +110,6 @@
         margin-bottom: 0;
         opacity: 0;
     }
-    .custom-file-label {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1;
-        height: calc(1.5em + .75rem + 2px);
-        padding: .375rem .75rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        border: 1px solid #ced4da;
-        border-radius: .25rem;
-    }
-    .custom-file-label::after {
-        content: "Browse";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 3;
-        display: block;
-        height: calc(1.5em + .75rem);
-        padding: .375rem .75rem;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #e9ecef;
-        border-left: inherit;
-        border-radius: 0 .25rem .25rem 0;
-    }
 </style>
 {% endblock %}
 
@@ -159,13 +128,18 @@
             </div>
             <div class="form-group">
                 <label for="type">타입 *</label>
-                <input type="text" name="type" id="type" required placeholder="예시) 쇼파, 의자, 테이블 등">
+                <select class="form-control" name="type" id="type" required>
+                    <option value="">선택하세요</option>
+                    <option value="소파">소파</option>
+                    <option value="의자">의자</option>
+                    <option value="테이블">테이블</option>
+                    <option value="기타">기타</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="qty">수량 *</label>
                 <input type="text" name="qty" id="qty" required placeholder="상품수량">
             </div>
-<!--            {# 수량 딱히 필요없을 것 같은데 의논해서 결정하기 #}-->
             <div class="form-group">
                 <label for="description">상품 설명 *</label>
                 <textarea name="description" id="description" rows="10" required placeholder="상품설명"></textarea>
@@ -176,7 +150,6 @@
 
             </div>
             <div class="button-group">
-<!--                {#                    <button type="button" id="listbtn" onclick="location.href='/admin/mgproduct'">상품리스트로</button>#}-->
                 <button type="submit" id="writeokbtn">입력완료</button>
             </div>
         </form>
@@ -186,12 +159,6 @@
 
 {% block script %}
 <script>
-    // {#document.querySelector('.custom-file-input').addEventListener('change', function(e) {#}
-        // {#    var fileName = document.getElementById("imgfile").files[0].name;#}
-        // {#    var nextSibling = e.target.nextElementSibling#}
-        // {#    nextSibling.innerText = fileName#}
-        // {# });#}
-
     let productfrm = document.productfrm;
     productfrm.addEventListener('submit', async (e) => {
         e.preventDefault();
