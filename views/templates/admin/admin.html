@@ -21,7 +21,7 @@
     }
 
     .box {
-        background-color: #62b6f9; /* 더 밝은 파란색 */
+        background-color: lightgray; /* 더 밝은 파란색 */
         color: white;
         padding: 20px;
         text-align: center;
@@ -32,14 +32,14 @@
     }
 
     .box:hover {
-        background-color: #8fcfff; /* 밝고 산뜻한 파란색 */
+        background-color: gray; /* 밝고 산뜻한 파란색 */
         transform: translateY(-5px);
     }
 
-    a {
-        color: #ffffff;
+    .abc {
+        color: black;
         text-decoration: none;
-        font-size: 18px;
+        font-size: 25px;
         font-weight: bold;
         letter-spacing: 0.5px;
         transition: color 0.3s ease;
@@ -53,17 +53,18 @@
 {% block main %}
 <body>
 <div class="container">
+    <h1>관리자 페이지</h1>
     <div class="box">
-        <a href="/admin/mgproduct">Manage Products</a>
+        <a class=.abc href="/admin/mgproduct">ADMIN 상품 관리</a>
     </div>
     <div class="box">
-        <a href="/admin/mguser">Manage Users</a>
+        <a class=.abc href="/admin/mguser">ADMIN 회원 관리</a>
     </div>
     <div class="box">
-        <a href="/admin/mgorder">Manage Orders</a>
+        <a class=.abc href="/admin/mgorder">ADMIN 주문 관리</a>
     </div>
     <div class="box">
-        <a href="/admin/rgproduct">Register Product</a>
+        <a class=.abc href="/admin/rgproduct">ADMIN 상품 등록</a>
     </div>
 </div>
 </body>
