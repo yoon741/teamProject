@@ -52,8 +52,7 @@ class MemberService:
     @staticmethod
     def login_member(db: Session, data: dict):
         """
-        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도.
-        mno가 1인 경우에는 관리자 로그인으로 간주.
+        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
         """
         try:
             # 비밀번호 해시 처리
@@ -65,15 +64,13 @@ class MemberService:
                 Member.password == hashed_password
             ).first()
 
-            if not member:
-                raise HTTPException(status_code=400, detail="Invalid username or password")
-
-            # 관리자 여부 확인 (mno가 1이면 관리자)
-            if member.mno == 1:
-                return {"role": "admin", "member": member}
+            # 로그인 성공 여부 반환
+            if member:
+                # 관리자 역할 확인
+                role = "admin" if member.mno == 1 else "user"
+                return {"member": member, "role": role}
             else:
-                return {"role": "user", "member": member}
-
+                raise HTTPException(status_code=400, detail="Invalid username or password")
         except SQLAlchemyError as ex:
             print(f'Login Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")

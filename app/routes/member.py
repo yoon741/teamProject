@@ -93,6 +93,9 @@ async def loginok(req: Request, db: Session = Depends(get_db)):
         userid = form_data.get("userid")
         password = form_data.get("password")
 
+        if not userid or not password:
+            raise HTTPException(status_code=400, detail="Username or password missing")
+
         # 로그인 처리
         login_result = MemberService.login_member(db, {"userid": userid, "password": password})
         user = login_result["member"]
@@ -116,6 +119,9 @@ async def loginok(req: Request, db: Session = Depends(get_db)):
     except ValidationError as e:
         errors = e.errors()
         return JSONResponse(status_code=422, content={"errors": errors})
+
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
     except Exception as ex:
         print(f'[ERROR] 로그인 오류: {str(ex)}')
