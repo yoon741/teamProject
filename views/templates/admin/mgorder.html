@@ -88,46 +88,65 @@ Order Management
 
 {% block main %}
 <div class="order-management-page">
-    <h1>Order Management</h1>
-    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
+    <h1>주문 관리</h1>
+    <a href="/admin/admin" class="back-to-dashboard">Admin Dashboard</a>
     <table>
         <thead>
         <tr>
-            <th>Order ID</th>
-            <th>Customer Name</th>
-            <th>Order Date</th>
-            <th>Status</th>
-            <th>Total Amount</th>
-            <th>Actions</th>
+            <th>주문 ID</th>
+            <th>고객명</th>
+            <th>주문 날짜</th>
+            <th>배송 주소</th>
+            <th>연락처</th>
+            <th>이메일</th>
+            <th>배송 상태</th>
+            <th>총 금액</th>
+            <th>상태</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Sample Data Row -->
+        {% for order in orders %}
         <tr>
-            <td>1001</td>
-            <td>John Doe</td>
-            <td>2024-08-25</td>
-            <td>Shipped</td>
-            <td>$250</td>
+            <td>{{ order.omno }}</td>
+            <td>{{ order.member.username }}</td>
+            <td>{{ order.regdate.strftime('%Y-%m-%d') }}</td>
+            <td>{{ order.addr }}</td>
+            <td>{{ order.phone }}</td>
+            <td>{{ order.member.email }}</td>
+            <td>
+                <form action="/admin/updateShippingStatus/{{ order.omno }}" method="post">
+                    <input type="hidden" name="order_id" value="{{ order.omno }}">
+                    <label>
+                        <input type="radio" name="shipping_status" value="배송대기" {% if order.shipping_status == '배송대기' %}checked{% endif %}>
+                        배송대기
+                    </label>
+                    <label>
+                        <input type="radio" name="shipping_status" value="배송 보류" {% if order.shipping_status == '배송 보류' %}checked{% endif %}>
+                        배송 보류
+                    </label>
+                    <label>
+                        <input type="radio" name="shipping_status" value="배송중" {% if order.shipping_status == '배송중' %}checked{% endif %}>
+                        배송중
+                    </label>
+                    <label>
+                        <input type="radio" name="shipping_status" value="배송불가" {% if order.shipping_status == '배송불가' %}checked{% endif %}>
+                        배송불가
+                    </label>
+                    <label>
+                        <input type="radio" name="shipping_status" value="배송완료" {% if order.shipping_status == '배송완료' %}checked{% endif %}>
+                        배송완료
+                    </label>
+                    <button type="submit" class="btn btn-edit">상태 업데이트</button>
+                </form>
+            </td>
+            <td>₩{{ "{:,}".format(order.qty * order.price) }}</td>
             <td class="action-btns">
-                <button class="btn btn-view">View</button>
-                <button class="btn btn-edit">Edit</button>
-                <button class="btn btn-delete">Delete</button>
+                <form action="/admin/deleteorder/{{ order.omno }}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <button class="btn btn-delete" type="submit">삭제하기</button>
+                </form>
             </td>
         </tr>
-        <tr>
-            <td>1002</td>
-            <td>Jane Smith</td>
-            <td>2024-08-26</td>
-            <td>Pending</td>
-            <td>$125</td>
-            <td class="action-btns">
-                <button class="btn btn-view">View</button>
-                <button class="btn btn-edit">Edit</button>
-                <button class="btn btn-delete">Delete</button>
-            </td>
-        </tr>
-        <!-- More rows as needed -->
+        {% endfor %}
         </tbody>
     </table>
 </div>
