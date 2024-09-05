@@ -6,12 +6,13 @@
 
 {% block style %}
 <style>
-    body {
+    .order-page body {
         margin: 0;
         padding: 0;
         background-color: #f5f5f5;
     }
-    .container {
+
+    .order-page .container {
         max-width: 750px;
         margin: 40px auto;
         background-color: white;
@@ -19,53 +20,63 @@
         border-radius: 8px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-    h1 {
+
+    .order-page h1 {
         font-size: 2.5em;
         margin: 50px;
         color: #333;
         text-align: left;
     }
-    .order-list {
+
+    .order-page .order-list {
         margin-top: 30px;
     }
-    .order-item {
+
+    .order-page .order-item {
         border: 1px solid #ccc;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
         background-color: #f9f9f9;
     }
-    .order-item h2 {
+
+    .order-page .order-item h2 {
         font-size: 1.5em;
         margin-bottom: 10px;
         color: #333;
     }
-    .order-item p {
+
+    .order-page .order-item p {
         margin: 5px 0;
         color: #555;
     }
-    .order-item table {
+
+    .order-page .order-item table {
         width: 100%;
         margin-top: 10px;
         border-collapse: collapse;
     }
-    .order-item table th, .order-item table td {
+
+    .order-page .order-item table th, .order-page .order-item table td {
         padding: 12px;
         border: 1px solid #ccc;
         text-align: left;
     }
-    .order-item table th {
+
+    .order-page .order-item table th {
         background-color: #f0f0f0;
         font-weight: bold;
     }
-    .order-item .total-price {
+
+    .order-page .order-item .total-price {
         text-align: right;
         font-size: 1.2em;
         font-weight: bold;
         margin-top: 10px;
         color: #333;
     }
-    .btn {
+
+    .order-page .btn {
         display: inline-block;
         padding: 10px 20px;
         margin: 20px 0 30px 50px;
@@ -78,9 +89,11 @@
         cursor: pointer;
         text-decoration: none;
     }
-    .btn:hover {
+
+    .order-page .btn:hover {
         background-color: #555;
     }
+
 </style>
 {% endblock %}
 
