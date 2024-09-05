@@ -52,7 +52,8 @@ class MemberService:
     @staticmethod
     def login_member(db: Session, data: dict):
         """
-        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
+        사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도.
+        mno가 1인 경우에는 관리자 로그인으로 간주.
         """
         try:
             # 비밀번호 해시 처리
@@ -64,11 +65,15 @@ class MemberService:
                 Member.password == hashed_password
             ).first()
 
-            # 로그인 성공 여부 반환
-            if member:
-                return member
-            else:
+            if not member:
                 raise HTTPException(status_code=400, detail="Invalid username or password")
+
+            # 관리자 여부 확인 (mno가 1이면 관리자)
+            if member.mno == 1:
+                return {"role": "admin", "member": member}
+            else:
+                return {"role": "user", "member": member}
+
         except SQLAlchemyError as ex:
             print(f'Login Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -121,23 +126,23 @@ class MemberService:
             print(f'Update Member Info Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
-    @staticmethod
-    def login_admin(db: Session, data: dict):
-        """
-        Admin 로그인 함수: mno가 1인 사용자를 관리자 계정으로 간주하여 로그인 처리
-        """
-        try:
-            hashed_password = MemberService.sha256_hash(data['password'])
-            admin = db.query(Member).filter(
-                Member.userid == data['userid'],
-                Member.password == hashed_password,
-                Member.mno == 1  # mno가 1인 사용자를 관리자로 설정
-            ).first()
-
-            if not admin:
-                raise HTTPException(status_code=403, detail="Forbidden: Not an admin or incorrect credentials")
-
-            return admin
-        except SQLAlchemyError as ex:
-            print(f'Admin Login Error: {str(ex)}')
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+    # @staticmethod
+    # def login_admin(db: Session, data: dict):
+    #     """
+    #     Admin 로그인 함수: mno가 1인 사용자를 관리자 계정으로 간주하여 로그인 처리
+    #     """
+    #     try:
+    #         hashed_password = MemberService.sha256_hash(data['password'])
+    #         admin = db.query(Member).filter(
+    #             Member.userid == data['userid'],
+    #             Member.password == hashed_password,
+    #             Member.mno == 1  # mno가 1인 사용자를 관리자로 설정
+    #         ).first()
+    #
+    #         if not admin:
+    #             raise HTTPException(status_code=403, detail="Forbidden: Not an admin or incorrect credentials")
+    #
+    #         return admin
+    #     except SQLAlchemyError as ex:
+    #         print(f'Admin Login Error: {str(ex)}')
+    #         raise HTTPException(status_code=500, detail="Internal Server Error")
