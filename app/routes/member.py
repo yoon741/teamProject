@@ -88,39 +88,36 @@ async def login(req: Request):
 @member_router.post("/login", response_class=HTMLResponse)
 async def loginok(req: Request, db: Session = Depends(get_db)):
     try:
-        # 폼 데이터에서 userid와 password 가져오기
-        form_data = await req.form()
-        userid = form_data.get("userid")
-        password = form_data.get("password")
+        body = await req.body()
+        print(f"Request body: {body}")  # 로그에 요청 본문 출력
+        data = await req.json() # **JSON 데이터로 변경
+        userid = data.get("userid")
+        password = data.get("password")
 
-        # 로그인 처리
-        login_result = MemberService.login_member(db, {"userid": userid, "password": password})
-        user = login_result["member"]
-        role = login_result["role"]
+        # 관리자 로그인 시도
+        admin_user = MemberService.login_admin(db, {"userid": userid, "password": password})
+        if admin_user:
+            req.session['userid'] = userid  # 세션에 userid 저장
+            req.session['is_admin'] = True  # **관리자 세션 설정
+            print(f"Admin session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
+            return RedirectResponse(url='/admin/admin', status_code=303)
 
-        # 세션에 userid와 mno를 저장
-        req.session['userid'] = user.userid
-        req.session['mno'] = user.mno
-        req.session['role'] = role  # 역할 (admin or user)을 세션에 저장
-
-        print(f"[INFO] User logged in: {user.userid}, mno: {user.mno}, role: {role}")
-
-        # 관리자는 관리자 페이지로 리디렉션
-        if role == "admin":
-            return RedirectResponse(url='/admin/dashboard', status_code=303)
+        # 일반 사용자 로그인 시도
+        user = MemberService.login_member(db, {"userid": userid, "password": password})
+        if user:
+            req.session['userid'] = userid  # 세션에 userid 저장
+            req.session['is_admin'] = False  # **일반 사용자 세션 설정
+            print(f"Session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
+            return RedirectResponse(url='/', status_code=303)
         else:
-            # 일반 사용자는 메인 페이지로 리디렉션
-            next_url = req.query_params.get("next", "/")
-            return RedirectResponse(url=next_url, status_code=303)
-
+            return RedirectResponse(url='/member/loginfail', status_code=303)
     except ValidationError as e:
+        # Pydantic 유효성 검사 오류를 처리
         errors = e.errors()
         return JSONResponse(status_code=422, content={"errors": errors})
-
     except Exception as ex:
-        print(f'[ERROR] 로그인 오류: {str(ex)}')
+        print(f'로그인 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
-
 
 
 @member_router.get("/myinfo", response_class=HTMLResponse)
