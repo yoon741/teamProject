@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from typing import List
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse, JSONResponse
@@ -17,6 +17,7 @@ from app.model.product import Product as ProductModel, Product
 
 order_router = APIRouter()
 templates = Jinja2Templates(directory='views/templates')
+
 
 def check_login(req: Request):
     if 'userid' not in req.session:
@@ -79,7 +80,6 @@ def orderok(
                          "price": price[i]} for i in range(len(prdno))],
         "total_price": sum(price[i] * qty[i] for i in range(len(prdno)))
     })
-
 
 
 def generate_payment_info(payment_method: str, member: Member):
@@ -160,26 +160,155 @@ async def myorder(req: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse("order/myorder.html", {"request": req, "orders": orders})
 
-from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import JSONResponse
+@order_router.post("/setsession")
+async def set_session(request: Request, db: Session = Depends(get_db)):
+    # 세션에서 userid를 가져와서 데이터베이스에서 사용자 정보 조회
+    userid = request.session.get("userid")
 
-router = APIRouter()
+    # 로그인 여부 확인
+    if not userid:
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized. Please login first."})
 
-@router.post("/set-session")
-async def set_session(request: Request):
+    # 데이터베이스에서 사용자 정보 조회
+    member = db.query(Member).filter(Member.userid == userid).first()
+
+    if not member:
+        return JSONResponse(status_code=404, content={"detail": "User not found"})
+
+    # 클라이언트로부터 상품 정보 받음
+    data = await request.json()
+
+    # 상품 정보 조회
+    product = db.query(ProductModel).filter(ProductModel.prdno == data['prdno']).first()
+
+    if not product:
+        return JSONResponse(status_code=404, content={"detail": "Product not found"})
+
+    # 세션에 제품 정보 저장
+    request.session['product_info'] = {
+        'prdno': product.prdno,
+        'prdname': product.prdname,
+        'qty': data['qty'],
+        'price': product.price
+    }
+
+    # 세션에 member_info 저장
+    request.session['member_info'] = {
+        'mno': member.mno,
+        'username': member.username,
+        'email': member.email,
+        'phone': member.phone,
+        'address': member.address,
+        'postcode': member.postcode
+    }
+
+    # 세션에 저장된 값 확인 (디버깅용 출력)
+    print("Session after storing member_info:", request.session.get("member_info"))
+
+    # 세션에서 member_info 가져오기
+    member_info = request.session.get("member_info")
+
+    if member_info:
+        mno = member_info.get('mno')  # 세션에서 mno를 가져오기
+        print("User mno from session:", mno)
+    else:
+        print("No member_info found in session")
+
+    # 세션에 저장된 product_info도 확인
+    print("Session product info:", request.session.get("product_info"))
+
+    # 디버깅용으로 logged-in 유저 정보도 확인
+    print("Logged-in user info:", request.session.get("member_info"))
+
+    return JSONResponse(content={"success": True})
+
+
+
+@order_router.get("/sessionorder", response_class=HTMLResponse)
+async def session_order(req: Request, db: Session = Depends(get_db)):
+    # 세션에서 제품 정보 가져오기
+    product_info = req.session.get("product_info")
+    member_info = req.session.get("member_info")
+
+    # 세션 정보 디버깅 로그 추가
+    print(f"Product info: {product_info}")
+    print(f"Member info: {member_info}")
+
+    # 세션에 정보가 없으면 상품 페이지로 리다이렉트
+    if not product_info or not member_info:
+        return RedirectResponse(url="/shop/item_gallery")
+
+    # 총 가격 계산
+    total_price = int(product_info['price']) * int(product_info['qty'])
+
+    # 템플릿에 정보 전달
+    return templates.TemplateResponse("order/sessionorder.html", {
+        "request": req,
+        "product_info": product_info,
+        "member_info": member_info,
+        "total_price": total_price
+    })
+
+
+@order_router.post("/sessionorderok", response_class=HTMLResponse)
+async def session_order_ok(req: Request, payment: str = Form(...), db: Session = Depends(get_db)):
+    # 세션에서 제품 정보와 회원 정보 가져오기
+    product_info = req.session.get("product_info")
+    member_info = req.session.get("member_info")
+
+    if not product_info or not member_info:
+        # 세션에 정보가 없으면 오류 처리 또는 리다이렉트
+        return RedirectResponse(url="/shop/item_gallery", status_code=302)
+
+    # 총 결제 금액 계산
+    total_price = int(product_info['price']) * int(product_info['qty'])
+
+    # 주문 정보를 데이터베이스에 저장
     try:
-        data = await request.json()
-        prdno = data.get('prdno')
-        price = data.get('price')
-        qty = data.get('qty')
+        stmt = select(func.coalesce(func.max(Order.omno), 0) + 1)
+        new_omno = db.execute(stmt).scalar()
 
-        request.session['order'] = {
-            'prdno': prdno,
-            'price': price,
-            'qty': qty
-        }
+        new_order = Order(
+            omno=new_omno,
+            mno=member_info['mno'],  # 회원 번호
+            prdno=product_info['prdno'],  # 제품 번호
+            qty=int(product_info['qty']),  # 수량
+            price=int(product_info['price']),  # 단가
+            postcode=member_info['postcode'],  # 우편번호
+            addr=member_info['address'],  # 주소
+            phone=member_info['phone'],  # 전화번호
+            payment=payment  # 결제 방법
+        )
 
-        return JSONResponse(content={"success": True})
+        db.add(new_order)
+        db.commit()
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to set session")
+        db.rollback()
+        return JSONResponse(status_code=500, content={"detail": "Failed to save order: " + str(e)})
+
+    # 결제 완료 후 세션에서 제품 정보 삭제
+    del req.session["product_info"]
+
+    # 주문한 상품 정보 구성
+    order_items = [{
+        "product_name": product_info['prdname'],
+        "quantity": product_info['qty'],
+        "price": product_info['price']
+    }]
+
+    # 결제 완료 페이지 렌더링
+    return templates.TemplateResponse("order/sessionorderok.html", {
+        "request": req,
+        "order_id": new_omno,
+        "customer_name": member_info['username'],
+        "shipping_address": member_info['address'],
+        "contact_number": member_info['phone'],
+        "email": member_info['email'],
+        "order_items": order_items,
+        "total_price": total_price,
+        "product_info": product_info  # 템플릿에 product_info 전달
+    })
+
+
 

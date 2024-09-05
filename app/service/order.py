@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.model.order import Order as OrderModel
@@ -25,60 +25,59 @@ class OrderService:
             raise HTTPException(status_code=404, detail="Product not found")
         return product
 
-    @staticmethod
-    def create_order(
-            db: Session,
-            mno: int,
-            prdno: int,
-            qty: int,
-            price: int,
-            postcode: str,
-            addr: str,
-            phone: str,
-            payment: str
-    ) -> OrderModel:
-        try:
-            # 회원 정보 조회
-            member = db.query(Member).filter(Member.mno == mno).first()
-            if not member:
-                raise HTTPException(status_code=404, detail="User not found")
+@staticmethod
+def create_order(
+        db: Session,
+        mno: int,
+        prdno: int,
+        qty: int,
+        price: int,
+        postcode: str,
+        addr: str,
+        phone: str,
+        payment: str
+) -> OrderModel:
+    try:
+        # 회원 정보 조회
+        member = db.query(Member).filter(Member.mno == mno).first()
+        if not member:
+            raise HTTPException(status_code=404, detail="User not found")
 
-            # 제품 정보 조회
-            product = db.query(Product).filter(Product.prdno == prdno).first()
-            if not product:
-                raise HTTPException(status_code=404, detail="Product not found")
+        # 제품 정보 조회
+        product = db.query(Product).filter(Product.prdno == prdno).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
 
-            # 새로운 주문 번호 생성
-            order_number = db.query(func.max(OrderModel.omno)).scalar() + 1 if db.query(func.count(OrderModel.omno)).scalar() > 0 else 1
+        # 새로운 주문 번호 생성
+        stmt = select(func.coalesce(func.max(OrderModel.omno), 0) + 1)
+        new_omno = db.execute(stmt).scalar()
 
-            # 새로운 주문 생성
-            new_order = OrderModel(
-                omno=order_number,
-                mno=mno,
-                prdno=prdno,
-                qty=qty,
-                price=price,
-                postcode=postcode,
-                addr=addr,
-                phone=phone,
-                payment=payment
-            )
+        new_order = OrderModel(
+            omno=new_omno,
+            mno=mno,
+            prdno=prdno,
+            qty=qty,
+            price=price,
+            postcode=postcode,
+            addr=addr,
+            phone=phone,
+            payment=payment
+        )
 
-            # 주문 저장
-            db.add(new_order)
-            db.refresh()
-            db.commit()
-            db.refresh(new_order)
+        # 주문 저장
+        db.add(new_order)
+        db.commit()
+        db.refresh(new_order)
 
-            # 장바구니 아이템 제거
-            CartService.clear_cart_items(db, member.userid)
+        # 장바구니 아이템 제거
+        CartService.clear_cart_items(db, member.userid)
 
-            return new_order
+        return new_order
 
-        except Exception as ex:
-            db.rollback()
-            print(f'Create Order Error: {str(ex)}')
-            raise HTTPException(status_code=500, detail="Failed to create order")
+    except Exception as ex:
+        db.rollback()
+        print(f'Create Order Error: {str(ex)}')
+        raise HTTPException(status_code=500, detail="Failed to create order")
 
     @staticmethod
     def get_order(db: Session, omno: int):
