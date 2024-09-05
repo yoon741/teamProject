@@ -1,0 +1,139 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+    세미프로젝트 - 상품 수정
+{% endblock %}
+
+{% block style %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .button-group {
+            text-align: right;
+        }
+
+        .button-group button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <main>
+        <div class="container">
+            <h2>상품 수정</h2>
+            <form name="productfrm" enctype='multipart/form-data' method="post">
+                <div class="form-group">
+                    <label for="prdname">상품명 *</label>
+                    <input type="text" name="prdname" id="prdname" value="{{ product.prdname }}" required placeholder="상품명">
+                </div>
+                <div class="form-group">
+                    <label for="price">가격 *</label>
+                    <input type="text" name="price" id="price" value="{{ product.price }}" required placeholder="숫자만 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="type">타입 *</label>
+                    <input type="text" name="type" id="type" value="{{ product.type }}" required placeholder="예시) 쇼파, 의자, 테이블 등">
+                </div>
+                <div class="form-group">
+                    <label for="qty">수량 *</label>
+                    <input type="text" name="qty" id="qty" value="{{ product.qty }}" required placeholder="상품수량">
+                </div>
+                <div class="form-group">
+                    <label for="description">상품 설명 *</label>
+                    <textarea name="description" id="description" rows="10" required placeholder="상품설명">{{ product.description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="imgfile">상품이미지</label>
+                    <input type="file" name="files" id="imgfile">
+                </div>
+                <div class="button-group">
+                    <button type="submit" id="updatebtn">수정 완료</button>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.productfrm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(document.productfrm);
+
+            const response = await fetch('/admin/editproduct/{{ product.prdno }}', {
+                method: 'post',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.href = '/admin/mgproduct';
+            } else {
+                alert('오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+    </script>
+{% endblock %}
