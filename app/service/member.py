@@ -105,21 +105,15 @@ class MemberService:
         사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
         """
         try:
-            # 비밀번호 해시 처리
             hashed_password = MemberService.sha256_hash(data['password'])
-
-            # 회원 정보 조회
             member = db.query(Member).filter(
                 Member.userid == data['userid'],
                 Member.password == hashed_password
             ).first()
 
-            # 로그인 성공 여부 반환
             if member:
-                role = "admin" if member.mno == 1 else "user"
-                return {"member": member, "role": role}
-            else:
-                raise HTTPException(status_code=400, detail="Invalid username or password")
+                return member
+            return None  # 일반 사용자 로그인 실패
         except SQLAlchemyError as ex:
             print(f'Login Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -131,7 +125,6 @@ class MemberService:
         """
         try:
             hashed_password = MemberService.sha256_hash(data['password'])
-            print(f"Attempting admin login with userid: {data['userid']}, hashed password: {hashed_password}")  # 디버깅
             admin = db.query(Member).filter(
                 Member.userid == data['userid'],
                 Member.password == hashed_password,
@@ -139,9 +132,7 @@ class MemberService:
             ).first()
 
             if not admin:
-                print("Admin login failed: No matching admin found")  # 디버깅
-                raise HTTPException(status_code=403, detail="Forbidden: Not an admin or incorrect credentials")
-
+                return None  # 관리자 로그인 실패
             return admin
         except SQLAlchemyError as ex:
             print(f'Admin Login Error: {str(ex)}')
