@@ -24,12 +24,12 @@
     .product-detail {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center; /* 중앙 정렬 */
-        align-items: center; /* 수직 중앙 정렬 */
-        gap: 20px; /* 이미지와 정보 사이의 간격 조정 */
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
     }
     .product-detail img {
-        max-width: 70%;
+        max-width: 50%;
         height: auto;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -40,23 +40,22 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center; /* 중앙 정렬 */
-        max-width: 500px; /* 최대 너비 조정 */
-        max-width: 400px; /* 최대 너비 조정 */
+        align-items: center;
+        max-width: 400px;
     }
 
     .product-prdname {
         font-size: 2em;
         margin: 15px 0;
         color: #222;
-        text-align: center; /* 제목 중앙 정렬 */
+        text-align: center;
     }
 
     .product-price {
         font-size: 2em;
         color: #0b0707;
         margin-bottom: 20px;
-        text-align: center; /* 가격 중앙 정렬 */
+        text-align: center;
     }
 
     .product-description {
@@ -64,25 +63,20 @@
         color: #666;
         margin-bottom: 30px;
         line-height: 1.6;
-        text-align: center; /* 설명 중앙 정렬 */
+        text-align: center;
     }
 
     .product-buttons {
         display: flex;
         flex-direction: column;
         gap: 15px;
-        align-items: center; /* 버튼 중앙 정렬 */
-        width: 100%;
-    }
-    .quantity-section {
-        display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 30px;
+        width: 100%;
+        padding-top: 30px;
     }
+
     .product-button {
         display: inline-block;
-        /*{#padding: 13px 20px;#}*/
         background-color: #333;
         color: white;
         text-decoration: none;
@@ -91,18 +85,22 @@
         transition: background-color 0.3s;
         text-align: center;
         border: none;
+        padding: 13px 20px;
+        width: 100%;
+        max-width: 250px;
     }
     .product-button:hover {
         background-color: #555;
     }
     .buy-button {
-        background-color: #e60000;
-        padding: 13px 20px;
+        color: black;
+        background-color: white;
+        border: 1px solid grey;
     }
     .buy-button:hover {
-        background-color: #c00000;
-        padding: 13px 20px;
+        background-color: lightgrey;
     }
+
 </style>
 {% endblock %}
 
@@ -117,10 +115,18 @@
                 <h1 class="product-prdname">{{ product.prdname }}</h1>
                 <p class="product-price">₩{{ "{:,}".format(product.price) }}</p>
                 <p class="product-description">{{ product.description }}</p>
-                <div class="quantity-section">
-                    <label for="quantity" style="font-size: 1.2em;">수량:</label>
-                    <input type="number" id="qty" name="qty" value="1" min="1" max="{{ product.qty }}">
+
+                <!-- 부트스트랩 input-group 사용 -->
+                <div class="input-group quantity-section" style="width: 200px;">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">-</button>
+                    </div>
+                    <input type="number" id="qty" name="qty" class="form-control text-center" value="1" min="1" max="{{ product.qty }}" style="min-width: 70px;">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">+</button>
+                    </div>
                 </div>
+
                 <div class="product-buttons">
                     <a href="#" class="product-button buy-button" onclick="buy_now({{ product.prdno }}, document.getElementById('qty').value)">구매하기</a>
                     <button class="product-button" onclick="add_to_cart({{ product.prdno }}, document.getElementById('qty').value)">장바구니에 추가</button>
@@ -129,6 +135,19 @@
         </div>
     </div>
     <script>
+        async function changeQuantity(amount) {
+            const qtyInput = document.getElementById('qty');
+            let qty = parseInt(qtyInput.value);
+            const maxQty = parseInt(qtyInput.max);
+            const minQty = parseInt(qtyInput.min);
+
+            qty += amount;
+
+            if (qty >= minQty && qty <= maxQty) {
+                qtyInput.value = qty;
+            }
+        }
+
         async function add_to_cart(prdno, qty) {
             try {
                 const response = await fetch('/cart/add', {
