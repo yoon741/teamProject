@@ -7,10 +7,9 @@
 {% block style %}
 <style>
     body {
-        font-family: 'Noto Sans KR', Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #fafafa;
+        background-color: white;
         color: #333;
     }
     .container {
@@ -43,21 +42,18 @@
         align-items: center;
         max-width: 400px;
     }
-
     .product-prdname {
         font-size: 2em;
         margin: 15px 0;
         color: #222;
         text-align: center;
     }
-
     .product-price {
         font-size: 2em;
         color: #0b0707;
         margin-bottom: 20px;
         text-align: center;
     }
-
     .product-description {
         font-size: 1.2em;
         color: #666;
@@ -65,7 +61,6 @@
         line-height: 1.6;
         text-align: center;
     }
-
     .product-buttons {
         display: flex;
         flex-direction: column;
@@ -74,7 +69,6 @@
         width: 100%;
         padding-top: 30px;
     }
-
     .product-button {
         display: inline-block;
         background-color: #333;
@@ -106,6 +100,7 @@
 
 {% block main %}
 <main>
+    <hr>
     <div class="container">
         <h1 style="margin: 30px; text-align: left; font-size: 3em;">Product Detail</h1>
         <div class="product-detail">
