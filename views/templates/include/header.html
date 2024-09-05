@@ -1,16 +1,13 @@
 {% block style %}
-    <style>
-    .custom-header {
+<style>
+    body {
         margin: 0;
         background-color: white;
     }
-
-    .custom-header a {
-        font-size: 2em;
+    a {font-size: 2em;
         color: black;
     }
-
-    .custom-header header {
+    header {
         position: relative;
         height: 100px;
         display: flex;
@@ -20,48 +17,40 @@
         color: black;
         background-color: rgba(0, 0, 0, 0);
     }
-
-    .custom-header nav {
+    nav {
         flex-grow: 1;
     }
-
-    .custom-header .nav {
+    .nav {
         display: flex;
         list-style: none;
         margin: 0;
         padding: 0;
     }
-
-    .custom-header .nav-item {
+    .nav-item {
         margin: 0 10px;
     }
-
-    .custom-header .nav-link {
+    .nav-link {
         text-decoration: none;
         color: black;
     }
-
-    .custom-header .nav-link.active {
+    .nav-link.active {
 
     }
-
-    .custom-header .auth-links {
+    .auth-links {
         margin-left: 190px;
         display: flex;
         align-items: center;
         text-align: right;
     }
-
-    .custom-header .auth-links a {
+    .auth-links a {
         text-decoration: none;
         margin-left: 10px;
         color: black;
         font-size: 15px;
     }
 </style>
-
 {% endblock %}
-<header class="custom-header">
+<header class="py-3">
     <h1>KOCAP</h1>
     <nav>
         <ul class="nav">
