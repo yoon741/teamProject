@@ -103,7 +103,6 @@ class MemberService:
     def login_member(db: Session, data: dict):
         """
         사용자가 입력한 ID와 비밀번호를 이용하여 로그인 시도
-        일반 사용자와 관리자 구분
         """
         try:
             # 비밀번호 해시 처리
@@ -132,6 +131,7 @@ class MemberService:
         """
         try:
             hashed_password = MemberService.sha256_hash(data['password'])
+            print(f"Attempting admin login with userid: {data['userid']}, hashed password: {hashed_password}")  # 디버깅
             admin = db.query(Member).filter(
                 Member.userid == data['userid'],
                 Member.password == hashed_password,
@@ -139,6 +139,7 @@ class MemberService:
             ).first()
 
             if not admin:
+                print("Admin login failed: No matching admin found")  # 디버깅
                 raise HTTPException(status_code=403, detail="Forbidden: Not an admin or incorrect credentials")
 
             return admin
