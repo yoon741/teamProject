@@ -89,34 +89,70 @@ User Management
 {% block main %}
 <div class="user-management-page">
     <h1>회원 관리</h1>
-    <a href="/admin/admin" class="back-to-dashboard">Back to Admin Dashboard</a>
-    <table>
+    <a href="/admin/admin" class="back-to-dashboard">관리자 페이지로 돌아가기</a>
+
+    <!-- 실시간 검색 필드 추가 -->
+    <input type="text" id="searchInput" placeholder="이메일 또는 회원명으로 검색" onkeyup="filterUsers()">
+
+    <table id="usersTable">
         <thead>
         <tr>
             <th>회원 ID</th>
+            <th>성별</th>
             <th>회원명</th>
+            <th>생년 월일</th>
+            <th>연락처</th>
             <th>이메일</th>
+            <th>우편 번호</th>
+            <th>주소</th>
+            <th>가입 날짜</th>
             <th>역할</th>
-            <th>활동</th>
-            <th>상태</th>
         </tr>
         </thead>
         <tbody>
         {% for user in member %}
         <tr>
             <td>{{ user.userid }}</td>
+            <td>{{ user.gender }}</td>
             <td>{{ user.username }}</td>
+            <td>{{ user.birthdate }}</td>
+            <td>{{ user.phone }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ "Admin" if user.mno == 1 else "User" }}</td>
-            <td>{{ "Active" if user.active else "Inactive" }}</td>
-            <td class="action-btns">
-                <a href="/admin/user/view/{{ user.mno }}" class="btn btn-view">View</a>
-                <a href="/admin/user/edit/{{ user.mno }}" class="btn btn-edit">Edit</a>
-                <a href="/admin/user/delete/{{ user.mno }}" class="btn btn-delete">Delete</a>
-            </td>
+            <td>{{ user.postcode }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.regdate }}</td>
+            <td>{{ "관리자" if user.mno == 1 else "회원" }}</td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    function filterUsers() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("usersTable");
+        const trs = table.getElementsByTagName("tr");
+
+
+        for (let i = 1; i < trs.length; i++) {
+            const tds = trs[i].getElementsByTagName("td");
+            let match = false;
+
+
+            for (let j = 0; j < tds.length; j++) {
+                if (tds[j]) {
+                    const txtValue = tds[j].textContent || tds[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+
+            trs[i].style.display = match ? "" : "none";
+        }
+    }
+</script>
 {% endblock %}

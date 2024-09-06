@@ -89,8 +89,12 @@ Order Management
 {% block main %}
 <div class="order-management-page">
     <h1>주문 관리</h1>
-    <a href="/admin/admin" class="back-to-dashboard">Admin Dashboard</a>
-    <table>
+    <a href="/admin/admin" class="back-to-dashboard">관리자 페이지로 돌아가기</a>
+
+    <!-- 실시간 검색 필드 추가 -->
+    <input type="text" id="searchInput" placeholder="고객명 또는 주문 ID로 검색" onkeyup="filterOrders()">
+
+    <table id="ordersTable">
         <thead>
         <tr>
             <th>주문 ID</th>
@@ -101,7 +105,6 @@ Order Management
             <th>이메일</th>
             <th>배송 상태</th>
             <th>총 금액</th>
-            <th>상태</th>
         </tr>
         </thead>
         <tbody>
@@ -140,14 +143,38 @@ Order Management
                 </form>
             </td>
             <td>₩{{ "{:,}".format(order.qty * order.price) }}</td>
-            <td class="action-btns">
-                <form action="/admin/deleteorder/{{ order.omno }}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                    <button class="btn btn-delete" type="submit">삭제하기</button>
-                </form>
-            </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    function filterOrders() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("ordersTable");
+        const trs = table.getElementsByTagName("tr");
+
+        // Iterate through all table rows (except the first, which is the header)
+        for (let i = 1; i < trs.length; i++) {
+            const tds = trs[i].getElementsByTagName("td");
+            let match = false;
+
+            // Check each cell in the row
+            for (let j = 0; j < tds.length; j++) {
+                if (tds[j]) {
+                    const txtValue = tds[j].textContent || tds[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                        break; // Stop searching once a match is found
+                    }
+                }
+            }
+
+            // Display the row if it matches the filter
+            trs[i].style.display = match ? "" : "none";
+        }
+    }
+</script>
 {% endblock %}
