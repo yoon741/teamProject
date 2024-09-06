@@ -130,11 +130,11 @@
                 <button type="submit" id="saveBtn" class="btn" style="display:none;">수정 완료</button>
                 <a href="/order/myorder" class="btn">내 주문 확인</a>
             </div>
-            <div>
-                <form id="deleteForm">
-                    <button type="button" class="btn btn-danger" id="deleteBtn">회원 탈퇴</button>
-                </form>
-            </div>
+<!--            <div>-->
+<!--                <form id="deleteForm">-->
+<!--                    <button type="button" class="btn btn-danger" id="deleteBtn">회원 탈퇴</button>-->
+<!--                </form>-->
+<!--            </div>-->
         </form>
     </div>
 
@@ -181,29 +181,29 @@
                 });
         });
 
-        document.getElementById('deleteBtn').addEventListener('click', function () {
-            if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
-                const mno = {{ user.mno }};  // 세션에서 가져온 mno 값
-                fetch(`/member/{{ user.mno }}`, {
-                    method: 'DELETE ',  // 메서드가 일치해야 합니다.
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('회원 탈퇴가 완료되었습니다.');
-                            window.location.href = '/';  // 탈퇴 후 메인 페이지로 리디렉션
-                        } else {
-                            alert('회원 탈퇴에 실패하였습니다.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('오류가 발생했습니다.');
-                    });
-            }
-        });
+        // document.getElementById('deleteBtn').addEventListener('click', function () {
+        //     if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
+        //         const mno = {{ user.mno }};  // 세션에서 가져온 mno 값
+        //         fetch(`/member/{{ user.mno }}`, {
+        //             method: 'DELETE ',  // 메서드가 일치해야 합니다.
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             }
+        //         })
+        //             .then(response => {
+        //                 if (response.ok) {
+        //                     alert('회원 탈퇴가 완료되었습니다.');
+        //                     window.location.href = '/';  // 탈퇴 후 메인 페이지로 리디렉션
+        //                 } else {
+        //                     alert('회원 탈퇴에 실패하였습니다.');
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 console.error('Error:', error);
+        //                 alert('오류가 발생했습니다.');
+        //             });
+        //     }
+        // });
     </script>
 </main>
 {% endblock %}

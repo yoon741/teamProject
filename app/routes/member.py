@@ -184,21 +184,21 @@ async def error(req: Request):
     return templates.TemplateResponse("member/error.html", {"request": req})
 
 
-@member_router.delete("/{mno}", response_class=HTMLResponse)
-async def delete_user(req: Request, mno: int, db: Session = Depends(get_db)):
-    try:
-        session_mno = req.session.get('mno')  # 세션에서 mno 가져오기
-        if session_mno != mno:
-            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
-
-        # 회원 탈퇴 실행
-        MemberService.delete_member(db, mno)
-
-        # 로그아웃 처리
-        req.session.clear()  # 세션에서 사용자 정보 제거
-        return JSONResponse(status_code=200, content={"message": "회원 탈퇴가 완료되었습니다."})
-
-    except Exception as ex:
-        print(f'[ERROR] 회원 탈퇴 오류: {str(ex)}')
-        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+# @member_router.delete("/{mno}", response_class=HTMLResponse)
+# async def delete_user(req: Request, mno: int, db: Session = Depends(get_db)):
+#     try:
+#         session_mno = req.session.get('mno')  # 세션에서 mno 가져오기
+#         if session_mno != mno:
+#             return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+#
+#         # 회원 탈퇴 실행
+#         MemberService.delete_member(db, mno)
+#
+#         # 로그아웃 처리
+#         req.session.clear()  # 세션에서 사용자 정보 제거
+#         return JSONResponse(status_code=200, content={"message": "회원 탈퇴가 완료되었습니다."})
+#
+#     except Exception as ex:
+#         print(f'[ERROR] 회원 탈퇴 오류: {str(ex)}')
+#         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
