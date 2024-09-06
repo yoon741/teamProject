@@ -134,7 +134,6 @@
                     </tbody>
                 </table>
                 <p class="total-price">총 결제 금액: ₩{{ "{:,}".format(order.price * order.qty) }}</p>
-                <a href="/order-detail.html?orderId={{ order.omno }}" class="btn">주문 상세 보기</a>
             </div>
             {% endfor %}
             {% else %}
