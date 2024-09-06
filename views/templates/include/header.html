@@ -70,18 +70,18 @@
         </nav>
         <div class="auth-links">
             {% if 'userid' in request.session %}
-            <!-- 일반 회원으로 로그인했을 때 -->
-            <a href="/member/myinfo">My Info</a>
-            <a href="/cart/mycart">My Cart</a>
-            <a href="/member/logout">로그아웃</a>
+                <!-- 일반 회원으로 로그인했을 때 -->
+                <a href="/member/myinfo">My Info</a>
+                <a href="/cart/mycart">My Cart</a>
+                <a href="/member/logout">log out</a>
             {% elif request.session.get('is_admin') %}
-            <!-- Admin으로 로그인했을 때 -->
-            <a href="/admin/admin">관리자페이지</a>
-            <a href="/member/logout">로그아웃</a>
+                <!-- Admin으로 로그인했을 때 -->
+                <a href="/admin/admin">admin</a>
+                <a href="/member/logout">log out</a>
             {% else %}
-            <!-- 로그인하지 않았을 때 -->
-            <a href="/member/join">Create an account</a>
-            <a href="/member/login">Sign in</a>
+                <!-- 로그인하지 않았을 때 -->
+                <a href="/member/join">Create an account</a>
+                <a href="/member/login">Sign in</a>
             {% endif %}
         </div>
     </header>

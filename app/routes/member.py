@@ -63,47 +63,14 @@ async def joinok(req: Request, db: Session = Depends(get_db)):
 async def login(req: Request):
     return templates.TemplateResponse("member/login.html", {"request": req})
 
-# @member_router.post("/login", response_class=HTMLResponse)
-# async def loginok(req: Request, db: Session = Depends(get_db)):
-#     try:
-#         form_data = await req.form()
-#         userid = form_data.get("userid")
-#         password = form_data.get("password")
-#
-#         user = MemberService.login_member(db, {"userid": userid, "password": password})
-#         if user:
-#             req.session['userid'] = userid
-#             print(f"[INFO] User logged in: {userid}")
-#             next_url = req.query_params.get("next", "/")
-#             return RedirectResponse(url=next_url, status_code=303)
-#         else:
-#             print("[WARNING] Login failed: Invalid username or password")
-#             return RedirectResponse(url='/member/loginfail', status_code=303)
-#     except ValidationError as e:
-#         errors = e.errors()
-#         return JSONResponse(status_code=422, content={"errors": errors})
-#     except Exception as ex:
-#         print(f'[ERROR] 로그인 오류: {str(ex)}')
-#         return RedirectResponse(url='/member/error', status_code=303)
 @member_router.post("/login", response_class=HTMLResponse)
-async def login(req: Request, db: Session = Depends(get_db)):
+async def loginok(req: Request, db: Session = Depends(get_db)):
     try:
-        # body = await req.body()
-        # print(f"Request body: {body}")  # 로그에 요청 본문 출력
-        # data = await req.json()  # JSON 데이터로 변경
-        # userid = data.get("userid")
-        # password = data.get("password")
-
-        form_data = await req.form()
-        userid = form_data.get("userid")
-        password = form_data.get("password")
-
-        # 유효성 검사
-        if not userid or not password:
-            print("Login failed: userid or password is missing")
-            return RedirectResponse(url='/member/loginfail', status_code=303)
-
-        print(f"Login attempt for userid: {userid}")
+        body = await req.body()
+        print(f"Request body: {body}")  # 로그에 요청 본문 출력
+        data = await req.json()  # JSON 데이터로 변경
+        userid = data.get("userid")
+        password = data.get("password")
 
         # 관리자 로그인 시도
         admin_user = MemberService.login_admin(db, {"userid": userid, "password": password})

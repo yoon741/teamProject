@@ -122,11 +122,11 @@
             <!-- 일반 회원으로 로그인했을 때 -->
             <a href="/member/myinfo">My Info</a>
             <a href="/cart/mycart">My Cart</a>
-            <a href="/member/logout">로그아웃</a>
+            <a href="/member/logout">log out</a>
         {% elif request.session.get('is_admin') %}
             <!-- Admin으로 로그인했을 때 -->
-            <a href="/admin/admin">관리자페이지</a>
-            <a href="/member/logout">로그아웃</a>
+            <a href="/admin/admin">admin</a>
+            <a href="/member/logout">log out</a>
         {% else %}
             <!-- 로그인하지 않았을 때 -->
             <a href="/member/join">Create an account</a>
@@ -145,13 +145,10 @@
     <section id="section3">
         <h2></h2>
     </section>
+    <footer>
+        <hr>
+        <p>copyright &copy; 2024. kocap. all rights reserved.</p>
+    </footer>
 </main>
-
-<footer>
-    <hr>
-    <p>copyright &copy; 2024. kocap. all rights reserved.</p>
-</footer>
-
-
 </body>
 </html>
