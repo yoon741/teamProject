@@ -13,7 +13,8 @@ class Product(Base):
     type: Mapped[str] = mapped_column (String(50), nullable=False)
     qty: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     description: Mapped[int] = mapped_column(String(250))
-    regdate: Mapped[int] = mapped_column(default=datetime.now, nullable=True)
+    # regdate: Mapped[int] = mapped_column(default=datetime.now, nullable=True)
+    regdate: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now, nullable=True)
 
     carts = relationship("Cart", back_populates="product")
     orders = relationship("Order", back_populates="product")
