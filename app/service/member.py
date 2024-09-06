@@ -141,21 +141,13 @@ class MemberService:
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @staticmethod
-def delete_member(db: Session, mno: int, current_user: dict):
+def delete_member(db: Session, mno: int):
     try:
-        # 권한 검증: 관리자인지 또는 본인인지 확인
-        if not current_user['is_admin'] and current_user['mno'] != mno:
-            raise HTTPException(status_code=403, detail="Permission denied")
-
         # 회원 정보 조회
         member = db.query(Member).filter(Member.mno == mno).first()
 
         if not member:
             raise HTTPException(status_code=404, detail="User not found")
-
-        # 관련된 주문 및 장바구니 정보 삭제 (외래 키에 따라 필요할 경우)
-        db.query(Order).filter(Order.mno == mno).delete()
-        db.query(Cart).filter(Cart.mno == mno).delete()
 
         # 회원 정보 삭제
         db.delete(member)
