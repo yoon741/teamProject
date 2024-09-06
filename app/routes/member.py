@@ -160,3 +160,14 @@ async def logout(req: Request):
 @member_router.get("/error", response_class=HTMLResponse)
 async def error(req: Request):
     return templates.TemplateResponse("member/error.html", {"request": req})
+
+
+
+def get_current_user():
+    # 세션 또는 토큰을 통해 현재 사용자를 확인하는 로직이 필요합니다.
+    # 이 부분이 올바르게 구현되어 있는지 확인하세요.
+    return {"userid": "current_user"}
+
+@member_router.delete("/member/{mno}/delete", response_class=JSONResponse)
+async def delete_member(mno: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    return MemberService.delete_member(db, mno, current_user)
