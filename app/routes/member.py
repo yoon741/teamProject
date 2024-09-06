@@ -106,6 +106,7 @@ async def login(req: Request, db: Session = Depends(get_db)):
         user = MemberService.login_member(db, {"userid": userid, "password": password})
         if user:
             req.session['userid'] = userid  # 세션에 userid 저장
+            req.session['mno'] = user.mno
             req.session['is_admin'] = False  # 일반 사용자 세션 설정
             print(f"Session userid set: {req.session['userid']}")  # 세션에 저장된 userid 출력
             return RedirectResponse(url='/', status_code=303)
@@ -119,6 +120,7 @@ async def login(req: Request, db: Session = Depends(get_db)):
     except Exception as ex:
         print(f'로그인 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
+
 
 
 
