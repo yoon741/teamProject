@@ -162,7 +162,7 @@ async def error(req: Request):
     return templates.TemplateResponse("member/error.html", {"request": req})
 
 
-@member_router.DELETE ("/member/{mno}/delete", response_class=JSONResponse)
+@member_router.delete("/member/{mno}/delete", response_class=JSONResponse)
 async def delete_member(mno: int, db: Session = Depends(get_db)):
     # 회원 삭제 로직
     return MemberService.delete_member(db, mno)
