@@ -104,7 +104,7 @@
                 <!-- 첫 번째 상품 -->
                 <td class="unique-td">
                     <div class="product-unique">
-                        <img src="/cdn/img/{{ prdlist[i].fname }}" alt="...">
+                        <img src="/views/cdn/img/{{ prdlist[i].fname }}" alt="...">
                         <div class="product-info-unique">
                             <p class="product-price-unique" style="padding: 5px 0 0 15px;">₩  {{ "{:,}".format(prdlist[i].price) }}</p>
                             <a href="/shop/item_detail/{{ prdlist[i].prdno }}" class="product-button-unique">{{ prdlist[i].prdname }}</a>
@@ -114,7 +114,7 @@
                 {% if i + 1 < prdlist|length %}
                 <td class="unique-td">
                     <div class="product-unique">
-                        <img src="/cdn/img/{{ prdlist[i + 1].fname }}" alt="...">
+                        <img src="/views/cdn/img/{{ prdlist[i + 1].fname }}" alt="...">
                         <div class="product-info-unique">
                             <p class="product-price-unique" style="padding: 5px 0 0 15px;">₩  {{ "{:,}".format(prdlist[i + 1].price) }}</p>
                             <a href="/shop/item_detail/{{ prdlist[i + 1].prdno }}" class="product-button-unique">{{ prdlist[i + 1].prdname }}</a>
