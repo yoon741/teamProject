@@ -140,24 +140,24 @@ class MemberService:
             print(f'Admin Login Error: {str(ex)}')
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
-@staticmethod
-def delete_member(db: Session, mno: int):
-    try:
-        # 회원 정보 조회
-        member = db.query(Member).filter(Member.mno == mno).first()
+    @staticmethod
+    def delete_member(db: Session, mno: int):
+        try:
+            # 회원 정보 조회
+            member = db.query(Member).filter(Member.mno == mno).first()
 
-        if not member:
-            raise HTTPException(status_code=404, detail="User not found")
+            if not member:
+                raise HTTPException(status_code=404, detail="User not found")
 
-        # 회원 정보 삭제
-        db.delete(member)
-        db.commit()
+            # 회원 정보 삭제
+            db.delete(member)
+            db.commit()
 
-        print(f"Deleted member with mno: {mno}")
-        return {"message": "Member deleted successfully"}
+            print(f"Deleted member with mno: {mno}")
+            return {"message": "Member deleted successfully"}
 
-    except SQLAlchemyError as ex:
-        db.rollback()
-        print(f'Delete Member Error: {str(ex)}')
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        except SQLAlchemyError as ex:
+            db.rollback()
+            print(f'Delete Member Error: {str(ex)}')
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
