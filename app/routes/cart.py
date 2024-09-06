@@ -39,9 +39,8 @@ async def add_to_cart(request: Request, db: Session = Depends(get_db)):
 
     if cart_item:
         cart_item.qty += qty
-        cart_item.price += product.price * qty
     else:
-        cart_item = CartModel(mno=mno, prdno=prdno, qty=qty, price=product.price * qty)
+        cart_item = CartModel(mno=mno, prdno=prdno, qty=qty, price=product.price)
         db.add(cart_item)
 
     product.qty -= qty
@@ -120,7 +119,6 @@ async def update_cart_item(cno: int, qty: int, db: Session = Depends(get_db)):
 
         product.qty += cart_item.qty
         cart_item.qty = qty
-        cart_item.price = product.price
         product.qty -= qty
 
         db.commit()

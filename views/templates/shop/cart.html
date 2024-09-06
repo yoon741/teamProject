@@ -137,7 +137,7 @@
                 <h2 class="cart-title">{{ item.product.prdname }}</h2>
                 <p class="cart-price">가격 : ₩  {{ "{:,}".format(item.price) }}</p>
                 <p class="cart-qty">수량 : {{ item.qty }}</p>
-                <p class="cart-total-item">합계 : ₩  {{ "{:,}".format(total_price) }}</p>
+                <p class="cart-total-item">합계 : ₩  {{ "{:,}".format(item.qty * item.price) }}</p>
             </a>
         </div>
 
