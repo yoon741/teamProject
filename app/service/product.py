@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.model.product import Product, PrdAttach
 from app.schema.product import NewProduct
 
-UPLOAD_PATH = 'http://54.180.202.98/html/cdn/img/'
+UPLOAD_PATH = '/usr/share/nginx/html/cdn/img/'
 
 class ProductService:
     @staticmethod
