@@ -88,13 +88,18 @@ async def login(req: Request):
 @member_router.post("/login", response_class=HTMLResponse)
 async def login(req: Request, db: Session = Depends(get_db)):
     try:
-        body = await req.body()
-        print(f"Request body: {body}")  # 로그에 요청 본문 출력
-        data = await req.json()  # JSON 데이터로 변경
-        userid = data.get("userid")
-        password = data.get("password")
+        # body = await req.body()
+        # print(f"Request body: {body}")  # 로그에 요청 본문 출력
+        # data = await req.json()  # JSON 데이터로 변경
+        # userid = data.get("userid")
+        # password = data.get("password")
 
-        # 관리자 로그인 시도
+        form_data = await req.form()
+        userid = form_data.get("userid")
+        password = form_data.get("password")
+
+
+    # 관리자 로그인 시도
         admin_user = MemberService.login_admin(db, {"userid": userid, "password": password})
         if admin_user:
             req.session['userid'] = userid  # 세션에 userid 저장
