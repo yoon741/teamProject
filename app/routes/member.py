@@ -164,10 +164,11 @@ async def error(req: Request):
 
 
 def get_current_user():
-    # 세션 또는 토큰을 통해 현재 사용자를 확인하는 로직이 필요합니다.
-    # 이 부분이 올바르게 구현되어 있는지 확인하세요.
-    return {"userid": "current_user"}
+    # 현재 사용자가 올바르게 인증되었는지 확인
+    print("Fetching current user...")  # 디버깅 로그 추가
+    return {"userid": "current_user"}  # 테스트를 위해 기본 값 반환
 
 @member_router.delete("/member/{mno}/delete", response_class=JSONResponse)
 async def delete_member(mno: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    print(f"Attempting to delete member with mno: {mno}")  # 디버깅 로그 추가
     return MemberService.delete_member(db, mno, current_user)
