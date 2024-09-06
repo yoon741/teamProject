@@ -98,8 +98,14 @@ async def login(req: Request, db: Session = Depends(get_db)):
         userid = form_data.get("userid")
         password = form_data.get("password")
 
+        # 유효성 검사
+        if not userid or not password:
+            print("Login failed: userid or password is missing")
+            return RedirectResponse(url='/member/loginfail', status_code=303)
 
-    # 관리자 로그인 시도
+        print(f"Login attempt for userid: {userid}")
+
+        # 관리자 로그인 시도
         admin_user = MemberService.login_admin(db, {"userid": userid, "password": password})
         if admin_user:
             req.session['userid'] = userid  # 세션에 userid 저장
