@@ -72,7 +72,7 @@
             {% if 'userid' in request.session %}
                 <!-- 일반 회원으로 로그인했을 때 -->
                 <a href="/member/myinfo">My Info</a>
-                <a href="/cart/mycart">My Cart</a>
+                <a href="/shop/cart">My Cart</a>
                 <a href="/member/logout">log out</a>
             {% elif request.session.get('is_admin') %}
                 <!-- Admin으로 로그인했을 때 -->

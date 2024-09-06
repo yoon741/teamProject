@@ -58,7 +58,7 @@ async def joinok(req: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url='/member/login', status_code=303)
 
     except Exception as ex:
-        return RedirectResponse(url='/member/error', status_code=303)
+        pass
 
 @member_router.get("/login", response_class=HTMLResponse)
 async def login(req: Request):
