@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse, RedirectResponse, JSONResponse
 from starlette.templating import Jinja2Templates
@@ -99,6 +100,27 @@ async def loginok(req: Request, db: Session = Depends(get_db)):
         print(f'로그인 오류: {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
+@staticmethod
+def login_member(db: Session, data: dict):
+    try:
+        # 비밀번호 해시 처리
+        hashed_password = MemberService.sha256_hash(data['password'])
+
+        # 회원 정보 조회
+        member = db.query(Member).filter(
+            Member.userid == data['userid'],
+            Member.password == hashed_password
+        ).first()
+
+        # 로그인 성공 여부 반환
+        if member:
+            Request.session['mno'] = member.mno
+            return member
+        else:
+            raise HTTPException(status_code=400, detail="Invalid username or password")
+    except SQLAlchemyError as ex:
+        print(f'Login Error: {str(ex)}')
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 
