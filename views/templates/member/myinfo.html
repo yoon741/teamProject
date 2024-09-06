@@ -183,9 +183,9 @@
 
         document.getElementById('deleteBtn').addEventListener('click', function () {
             if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
-                const mno = {{ user.mno }};  // 회원의 mno 가져오기
+                const mno = {{ user.mno }};  // 세션에서 가져온 mno 값
                 fetch(`/member/${mno}/delete`, {
-                    method: 'POST',
+                    method: 'POST',  // 메서드가 일치해야 합니다.
                     headers: {
                         'Content-Type': 'application/json',
                     }
