@@ -184,7 +184,7 @@ async def error(req: Request):
     return templates.TemplateResponse("member/error.html", {"request": req})
 
 
-@member_router.post("/{mno}/delete", response_class=HTMLResponse)
+@member_router.delete("/{mno}", response_class=HTMLResponse)
 async def delete_user(req: Request, mno: int, db: Session = Depends(get_db)):
     try:
         session_mno = req.session.get('mno')  # 세션에서 mno 가져오기
