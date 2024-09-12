@@ -3,6 +3,7 @@ from pydantic.v1 import BaseSettings
 class Settings(BaseSettings):
     userid: str = 'ubuntu'
     passwd: str = 'ubuntu'
+    # dbname: str = 'clouds2024'
     dbname: str = 'ubuntu'
     dburl: str = 'localhost'
     #dbconn: str = f'sqlite:///app/{dbname}.db'
