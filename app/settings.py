@@ -3,8 +3,7 @@ from pydantic.v1 import BaseSettings
 class Settings(BaseSettings):
     userid: str = 'ubuntu'
     passwd: str = 'ubuntu'
-    #dbname: str = 'clouds2024'
-    dbname: str = 'ubuntu'
+    dbname: str = 'clouds2024'
     dburl: str = 'localhost'
     #dbconn: str = f'sqlite:///app/{dbname}.db'
     #?charset=utf8mb4 이모지 추가기능
